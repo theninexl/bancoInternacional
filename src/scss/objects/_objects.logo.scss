@@ -1,0 +1,23 @@
+.bi-o-logo {
+    $block:&;
+    color:getColor(primary);
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    gap:getSize($small);
+    @include bi-ps-bold;
+
+    &:hover {
+        text-decoration:none;
+    }
+
+    .icon {
+        height: getSize($bigger);
+        width: getSize($bigger);
+    }
+}
+
+.bi-o-logo--centered {
+    @extend .bi-o-logo;
+    justify-content: center;
+}

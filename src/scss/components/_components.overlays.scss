@@ -1,0 +1,18 @@
+.cm-c-overlay {
+    $block:&;
+    &--notifications, &--activeUser {
+        @extend .cm-o-overlay;
+        background-color: getColor(white);
+        position:absolute;
+        z-index: 99;
+        margin-top:8px;
+    }
+
+    &--notifications {
+        right:0;
+    }
+
+    &--activeUser {
+        right: 142px;
+    }
+}

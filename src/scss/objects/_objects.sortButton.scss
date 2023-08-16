@@ -1,0 +1,11 @@
+.cm-o-sortButton {
+    @extend .bi-u-text-base-black;
+    border:0;
+    background: transparent;
+    color:getColor(primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 0;
+    min-height: getLines(1);
+}

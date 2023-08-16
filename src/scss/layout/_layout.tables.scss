@@ -1,0 +1,94 @@
+.cm-l-tabledata {
+    $block:&;
+    display: flex;
+    flex-direction: column;
+
+    &__row, &__header, &__footer {        
+        display:flex;
+        gap: 8px;
+    }
+
+    &__row, &__header {
+        border-bottom:1px solid getColor(scarpaFlowLight);  
+    }
+
+    &__header {
+        @extend .bi-u-text-base-black;
+    }
+
+    &__row, &__footer {
+        @extend .bi-u-text-base;
+        align-items: center;
+        min-height: getSize($large);
+        height: auto;
+        padding: getSize($small) 0;
+    }
+
+    &__row--noRead {
+        @extend .bi-u-text-base-black;
+        background-color: getColor(scarpaFlowLightFade);
+    }
+
+    .tablecell {
+        $block:&;
+        &-long, &-medium, &-short {
+            display: flex;
+            align-items: center;
+        }
+        &-long {
+            flex:2;
+            //overflow: hidden;
+            //white-space: nowrap;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            hyphens: auto;
+        }
+
+        &-medium {
+            flex:1;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            hyphens: auto;
+        }
+        &-short {
+            flex:0;
+            max-width: 60px;
+            min-width: 60px;
+        }
+    }
+}
+
+.cm-l-table-players {
+    $block:&;
+    display: flex;
+    flex-direction: column;
+
+    &__header tr, &__body tr {
+        border-bottom:1px solid getColor(scarpaFlowLight);  
+        display: flex;
+        flex:1;
+
+        .table-players-td-long {
+            flex:1;
+        }
+
+        .table-players-td-short {
+            width: 60px;
+        }
+
+        .table-players-td-auto {
+            flex-grow:0;
+        }
+    }
+
+    &__header tr {
+        @extend .bi-u-text-base-black;
+        align-items: end;
+    }
+
+    &__body tr {
+        @extend .bi-u-text-base;
+        align-items: center;
+        height: getSize($huge);
+    }
+}

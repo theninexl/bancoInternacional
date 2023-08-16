@@ -1,0 +1,285 @@
+.bi-c-form-simple {
+    $block:&;
+
+    label {
+        color:getColor(secondary);
+    }
+
+    label.error {
+
+        color: getColor(danger);
+        
+        input[type=text], input[type=number], input[type=email], input[type=password], input[type=date], .cm-c-field-icon {
+            $block:&;
+            border:2px solid getColor(danger);
+            color: getColor(danger) !important;
+            @include bi-ps-bold;
+
+            &::placeholder, input::placeholder {
+                color: getColor(danger);
+            }
+
+            input::placeholder {
+                @include bi-ps-bold;
+            }
+        }
+
+        .assistance {
+            @include bi-ps-bold;
+        }
+    }
+
+    input[type=text], input[type=number], input[type=email], input[type=password], input[type=date]{
+        border:1px solid getColor(gray-medium);
+        border-radius: getSize($small);
+        height:getSize($huge);
+        text-indent: getSize($medium);
+        @include font-size($defFontSizeDT, $lineHeightDT);
+        @include bi-ps-normal;
+
+
+        &:focus, &:focus-visible, &:active {
+            border-color:getColor(primary);
+            border-width:2px;
+            outline:none;
+        }
+
+        &:invalid, &:focus:invalid {
+            border-color:getColor(primary);
+            border-width:2px;
+            outline:none;
+        }
+
+        &:-internal-autofill-selected {
+            background-color: getColor(white) !important;
+        }
+
+        &::placeholder {
+            color:getColor(gray-medium);
+            @include bi-ps-bold;
+        }
+    }
+
+    input[type="radio"], input[type="checkbox"] {
+        /* Add if not using autoprefixer */
+        -webkit-appearance: none;
+        appearance: none;
+        /* For iOS < 15 to remove gradient background */
+        background-color: #fff;
+        /* Not removed via appearance */
+        margin: 0;
+        border:1px solid getColor(primaryLight);
+        border-radius:getSize($small);
+        height: getSize($bigger);
+        width: getSize($bigger);
+        display: grid;
+        place-content: center;
+
+        &::before {
+            content:"check";
+            border-radius:getSize($small);
+            box-shadow: inset getSize($bigger) getSize($bigger) getColor(success);
+            display: flex;
+            justify-content:center;
+            align-items: center;
+            height: getSize($bigger);
+            width: getSize($bigger);
+            transform: scale(0);
+            transition: 120ms transform ease-in-out;
+        }
+
+        &:checked::before {
+            color:getColor(scarpaFlow);
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 20px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+            transform: scale(1);
+        }
+    }
+
+    &__radio-toggle {
+        border:1px solid getColor(primaryLight);
+        background-color: getColor(white);
+        border-radius:getSize($small);
+        position: relative;
+        height: getSize($huge);
+        width: getSize($doubleHuge);
+
+        input[type="checkbox"] {
+            border:1px solid getColor(scarpaFlowLight);
+            background-color: getColor(scarpaFlowLight);
+            height: getSize($huge);
+            width: getSize($huge);
+            right:0;
+            position: absolute;
+            transition: transform 0.4s cubic-bezier(0.45, 1.8, 0.5, 0.75);
+        }
+
+        input[type="checkbox"]::before {
+            right:0;
+            position: absolute;
+            transform: scale(1);
+            opacity:0;
+        }
+
+        input[type="checkbox"]:checked::before {
+            content:"check";
+            border-radius:getSize($small);
+            box-shadow: inset 0 getSize($huge) getColor(success);
+            display: flex;
+            justify-content:center;
+            align-items: center;
+            height: getSize($huge);
+            width: getSize($huge);
+            opacity:1;
+        }
+
+        input[type="checkbox"]:checked {
+            transform:translateX(-48px);
+            position: absolute;
+            
+        }
+
+    }  
+}
+
+.bi-c-field-icon {
+    $block:&;
+    border:1px solid getColor(primaryLight);
+    border-radius: getSize($small);
+    height:getSize($huge);
+    display: flex;
+    overflow: hidden;
+    
+    &__input {
+        $block:&;
+        border:0;
+        outline: none;
+        text-indent: getSize($medium);
+        flex-grow:1;
+        @include font-size($defFontSizeDT, $lineHeightDT);
+        @include bi-ps-normal;
+
+        &:invalid, &:focus:invalid {
+            border-color:getColor(primary);
+            border-width:2px;
+            outline:none;
+        }
+    }
+
+    &--focus {
+        border-color:getColor(primary);
+        border-width:2px;
+        outline:none;
+    }
+
+    &.error {
+        border:1px solid getColor(danger);
+
+        .cm-c-field-icon__input {
+            color: getColor(danger);
+            @include bi-ps-bold;
+        }
+        
+    
+        .cm-c-field-icon__input::placeholder {
+            color: getColor(danger);
+        }
+    }
+    /*hides input file and restyles input */
+    input[type=file] {
+        width: 0.1px;
+        height: 0.1px;
+        opacity: 0;
+        overflow: hidden;
+        position: absolute;
+        z-index: -1;
+    }
+
+    &.fileUpload {
+        cursor: pointer;
+        display: flex;
+        flex-direction: row-reverse;
+    }
+
+    
+
+    /* clears the ‘X’ from Internet Explorer */
+    input[type=search]::-ms-clear { display: none; width : 0; height: 0; }
+    input[type=search]::-ms-reveal { display: none; width : 0; height: 0; }
+    /* clears the ‘X’ from Chrome */
+    input[type="search"]::-webkit-search-decoration,
+    input[type="search"]::-webkit-search-cancel-button,
+    input[type="search"]::-webkit-search-results-button,
+    input[type="search"]::-webkit-search-results-decoration { display: none; }
+
+
+}
+
+.cm-c-select-icon {
+    $block:&;
+    border:1px solid getColor(primaryLight);
+    border-radius: getSize($small);
+    height:getSize($huge);
+    display: inline-flex;
+    overflow: hidden;
+    flex-grow:1;
+    position:relative;
+
+    &__select {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        background: transparent;
+        border:0;
+        color:getColor(scarpaFlow);
+        outline: none;
+        padding: 0 getSize($medium);
+        width: 100%;
+        
+        @include font-size($defFontSizeDT, $lineHeightDT);
+        @include bi-ps-normal;
+    }
+
+    &--focus {
+        border-color:getColor(primary);
+        border-width:2px;
+        outline:none;
+    }
+
+    &::after {
+        content:"expand_more";
+        border-radius:getSize($small);
+        box-shadow: inset getSize($huge) getSize($huge) getColor(scarpaFlowLight);
+        display: flex;
+        justify-content:center;
+        align-items: center;
+        height: getSize($huge);
+        width: getSize($huge);
+        color:getColor(scarpaFlow);
+        font-family: 'Material Symbols Outlined';
+        font-weight: normal;
+        font-style: normal;
+        font-size: 20px;
+        line-height: 1;
+        letter-spacing: normal;
+        text-transform: none;
+        white-space: nowrap;
+        word-wrap: normal;
+        direction: ltr;
+        -webkit-font-feature-settings: 'liga';
+        -webkit-font-smoothing: antialiased;
+        position:absolute;
+        right:0;
+        z-index: -1;
+    }
+}

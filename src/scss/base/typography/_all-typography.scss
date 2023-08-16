@@ -1,0 +1,78 @@
+// import google fonts
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:ital,wght@0,500;1,500&display=swap');
+
+html {
+    font-size: 62.5%; /*Transform to base 10 for easier REM calculations*/ 
+    box-sizing: border-box;
+}
+
+body {
+    @include font-size($defFontSizeDT, $lineHeightDT);
+    @include bi-ps-normal;
+    color:getColor(primary);
+}
+
+.bi-u-text-base {
+    @include font-size($mouseFontSizeDT, $lineHeightDT);
+}
+
+.bi-u-text-base-links {
+    @extend .bi-u-text-base;
+    @include bi-ps-medium;
+}
+
+.bi-u-text-base-black {
+    @extend .bi-u-text-base;
+    @include bi-ps-bold;
+}
+
+.bi-u-text-headS {
+    @include font-size($fontSizeJumpDT1, $lineHeightDT);
+    @include bi-psc-medium;
+}
+
+.bi-u-text-headM {
+    @include font-size($fontSizeJumpDT2, calc($lineHeightDT*2));
+    @include bi-psc-medium;
+}
+
+.bi-u-text-headL {
+    @include font-size($fontSizeJumpDT3, calc($lineHeightDT*2));
+    @include bi-psc-medium;
+}
+
+.bi-u-text-headXL {
+    @include font-size($fontSizeJumpDT4, calc($lineHeightDT*2));
+    @include bi-psc-medium;
+}
+
+.bi-u-text-link {
+    $block: &;
+    color:getColor(secondary);
+    text-decoration: none;
+    &:hover {
+        cursor: pointer;
+        text-decoration: underline;
+    }
+
+    &__active {
+        color:getColor(primary);
+    }
+
+    &__inactive {
+        color:getColor(gray-medium);
+        &:hover {
+            cursor: auto;
+            text-decoration: none;
+        }
+    }
+}
+
+a {
+    @extend .bi-u-text-link;
+}
+
+strong {
+    @include bi-ps-bold;
+}

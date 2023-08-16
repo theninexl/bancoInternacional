@@ -1,0 +1,96 @@
+.bi-o-button-large {
+    $block:&;
+
+    &--primary {
+        @include button-large;
+        @include button-primary;
+    }
+    
+    &--secondary {
+        @include button-large;
+        @include button-secondary;        
+    }
+    
+    &--transparent {
+        @include button-large;
+        @include button-transparent;        
+    }
+
+    &--ghost {
+        @include button-large;
+        @include button-ghost;
+        
+        &.active {
+            @include button-primary;
+        }
+    }
+
+    &--ghost-inactive {
+        @include button-large;
+        @include button-ghost-inactive;
+    }
+
+    &--inactive {
+        @include button-large;
+        @include button-inactive;        
+    }
+}
+
+.bi-o-button-medium {
+    $block:&;
+    
+    &--primary {
+        @include button-primary;
+        @include button-medium;
+    }
+
+    &--secondary {
+        @include button-medium;
+        @include button-secondary;        
+    }
+
+    &--transparent {
+        @include button-medium;
+        @include button-transparent;        
+    }
+
+    &--ghost {
+        @include button-medium;
+        @include button-ghost;        
+    }
+
+    &--inactive {
+        @include button-medium;
+        @include button-inactive;        
+    }
+    
+}
+
+.bi-o-button-small {
+    $block:&;
+    
+    &--primary {
+        @include button-small;
+        @include button-primary;
+    }
+
+    &--secondary {
+        @include button-small;
+        @include button-secondary;
+    }
+    
+    &--transparent {
+        @include button-small;
+        @include button-transparent;
+    }
+
+    &--ghost {
+        @include button-small;
+        @include button-ghost;
+    }
+
+    &--inactive {
+        @include button-small;
+        @include button-inactive;
+    }      
+}

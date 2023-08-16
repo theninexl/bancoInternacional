@@ -1,0 +1,24 @@
+.bi-l-header {
+    background-color: getColor(white);
+    border-bottom: 1px solid getColor(gray-medium);
+    position: fixed;
+    top:0;
+    z-index: 1;
+    width: 100%;
+    padding-top: getLines(1);
+    padding-bottom: getLines(1);
+}
+
+.bi-l-footer {
+    border-top:1px solid getColor(gray-medium);
+    padding-top: getLines(1);
+    padding-bottom: getLines(1);
+}
+
+.bi-l-body-static-header {
+    border-bottom:1px solid getColor(gray-medium);
+    display: flex;
+    align-items: center;
+    height: getSize($huge);
+    color:getColor(secondary);
+}

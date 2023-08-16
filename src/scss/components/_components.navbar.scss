@@ -1,0 +1,80 @@
+.bi-c-navbar {
+    $block: &;
+    border-bottom: 1px solid getColot(scarpaFlowLight);
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    padding: 0 getGutter(regular);
+
+    &__left, &__right, &__center {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+    }
+    
+
+    &__left {
+        flex-grow: 0;
+        gap:getSize($bigger);
+    }
+
+    &__center {
+        flex-grow: 1;
+        justify-content: center;
+        gap:getSize($bigger);
+    }
+
+    &__right {
+        flex-grow: 0;
+        gap:getSize($medium);
+    }
+}
+
+.bi-c-navbar-links {
+    $block: &;
+
+    &-hrz {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: stretch;
+        gap: getSize($small);
+        height: getSize($huge);
+    }
+
+    &-vert {
+        display: flex;
+        flex-flow: column nowrap;
+        gap: getSize($small);
+    }
+
+    &__textbutt {
+        background-color:getColor(white);
+        box-shadow:0px 0px 0px 1px getColor(gray-medium) inset;
+        border-radius:getSize($small);
+        color:getColor(secondary);
+        cursor:pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: getSize($medium);
+        line-height: getSize($huge);
+        padding: 0 getSize($medium);
+        @extend .bi-u-text-base-black;
+
+        &:hover {
+            text-decoration: none;
+            background-color: getColor(gray-light);
+        }
+
+        &.active {
+            background-color: getColor(primary);
+            box-shadow: 0px 0px 0px 0px;
+            color:getColor(white);
+        }
+
+        .icon {
+            height: getSize($bigger);
+            width: getSize($bigger);
+        }
+    }
+}

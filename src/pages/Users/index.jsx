@@ -1,6 +1,8 @@
 function Users(){
   return (
-    <p>Listado usuarios</p>
+    <main className="bi-u-centerAbs bi-u-h-screen">
+      <p>Users</p>
+    </main>
   );
 }
 

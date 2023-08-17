@@ -1,10 +1,10 @@
-.cm-o-overlay {
+.bi-o-overlay {
     $block:&;
-    border:2px solid getColor(scarpaFlowLight);
+    border:1px solid getColor(gray-medium);
     border-radius: getSize($small);
     box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.1);
     padding: getSize($small) 0;
-    width: 250px;
+    width: 150px;
 
     &__option {
         display: flex;

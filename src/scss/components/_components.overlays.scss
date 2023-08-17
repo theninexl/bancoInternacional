@@ -1,7 +1,7 @@
-.cm-c-overlay {
+.bi-c-overlay {
     $block:&;
     &--notifications, &--activeUser {
-        @extend .cm-o-overlay;
+        @extend .bi-o-overlay;
         background-color: getColor(white);
         position:absolute;
         z-index: 99;
@@ -13,6 +13,6 @@
     }
 
     &--activeUser {
-        right: 142px;
+        right: 32px;
     }
 }

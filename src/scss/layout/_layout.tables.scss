@@ -1,4 +1,4 @@
-.cm-l-tabledata {
+.bi-l-tabledata {
     $block:&;
     display: flex;
     flex-direction: column;
@@ -6,14 +6,17 @@
     &__row, &__header, &__footer {        
         display:flex;
         gap: 8px;
+        
     }
 
     &__row, &__header {
-        border-bottom:1px solid getColor(scarpaFlowLight);  
+        border-bottom:1px solid getColor(gray-medium);  
+        padding: getSize($big) getGutter(regular);
     }
 
     &__header {
         @extend .bi-u-text-base-black;
+        
     }
 
     &__row, &__footer {
@@ -21,12 +24,12 @@
         align-items: center;
         min-height: getSize($large);
         height: auto;
-        padding: getSize($small) 0;
     }
+    
 
     &__row--noRead {
         @extend .bi-u-text-base-black;
-        background-color: getColor(scarpaFlowLightFade);
+        background-color: getColor(gray-light);
     }
 
     .tablecell {
@@ -58,7 +61,7 @@
     }
 }
 
-.cm-l-table-players {
+.bi-l-table-players {
     $block:&;
     display: flex;
     flex-direction: column;

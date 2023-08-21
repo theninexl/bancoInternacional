@@ -1,32 +1,36 @@
 .bi-c-navbar {
     $block: &;
-    border-bottom: 1px solid getColot(scarpaFlowLight);
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
+    gap:getSize($bigger);
     padding: 0 getGutter(regular);
 
     &__left, &__right, &__center {
         display: flex;
         flex-flow: row nowrap;
         align-items: center;
-    }
-    
-
-    &__left {
-        flex-grow: 0;
         gap:getSize($bigger);
+    }    
+
+    &__left, &__right {
+        flex-grow: 0;
+        
     }
 
     &__center {
         flex-grow: 1;
-        justify-content: center;
-        gap:getSize($bigger);
     }
 
-    &__right {
-        flex-grow: 0;
-        gap:getSize($medium);
+    &--secondary {
+        gap:0;
+
+        #{$block}__left {
+            padding: getSize($small) 0;
+            border-right: 1px solid getColor(gray-medium);
+            padding-right: getSize($bigger);
+            margin-right: getSize($bigger);
+        }
     }
 }
 

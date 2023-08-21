@@ -3,3 +3,9 @@
     margin:0 auto;
     width: getCols(4);
 }
+
+.bi-l-6col {
+    $block: &;
+    margin:0 auto;
+    width: getCols(6);
+}

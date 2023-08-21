@@ -94,3 +94,12 @@
         @include button-inactive;
     }      
 }
+
+.bi-o-button {
+    $block:&;
+
+    &--short {
+        min-width: getCols(2);
+        max-width: 35%;
+    }
+}

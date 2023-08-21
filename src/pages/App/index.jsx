@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { useRoutes, BrowserRouter, Navigate } from 'react-router-dom';
-import { GlobalContext, GlobalContextProvider } from '../../context';
+import { GlobalContext, GlobalContextProvider, InitializeLocalStorage } from '../../context';
 import HedgeAccounting from '../HedgeAccounting';
 import Login from '../Login';
 import Users from '../Users';
@@ -11,11 +11,11 @@ import '../../scss/styles.scss';
 const AppRoutes = () => {
   const context = useContext(GlobalContext)
   //evaluar account
-  const account = localStorage.getItem('account');
-  const parsedAccount = JSON.parse(account);
-  const noAccountInLocalStorage = parsedAccount ? Object.keys(parsedAccount).length === 0 : true;
-  const noAccountInLocalState = context.account ? Object.keys(context.account).lenght === 0: true;
-  const hasUserAnAccount = !noAccountInLocalStorage || !noAccountInLocalState;
+  // const account = localStorage.getItem('account');
+  // const parsedAccount = JSON.parse(account);
+  // const noAccountInLocalStorage = parsedAccount ? Object.keys(parsedAccount).length === 0 : true;
+  // const noAccountInLocalState = context.account ? Object.keys(context.account).lenght === 0: true;
+  // const hasUserAnAccount = !noAccountInLocalStorage || !noAccountInLocalState;
   //evaluar signout
   const signOUt = localStorage.getItem('sign-out');
   const parsedSignOut = JSON.parse(signOUt);
@@ -32,12 +32,15 @@ const AppRoutes = () => {
 }
 
 const App = () => {
+
+  InitializeLocalStorage();
+
   return (
     <>
       <GlobalContextProvider>
         <BrowserRouter>
-          <AppRoutes/>
           <MainNavbar/>
+          <AppRoutes/>          
         </BrowserRouter>
       </GlobalContextProvider>
     </>

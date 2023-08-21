@@ -34,20 +34,21 @@
 
 @mixin icon-button-small {
     @include icon-button;  
-    width: getSize($large);
-    height: getSize($large);
+    width: getSize($huge);
+    height: getSize($huge);
 
-    span {
-        font-size: getSize($big);
+    svg {
+        width: getSize($bigger);
+        height: getSize($bigger);
     }
 }
 
 @mixin icon-button-primary {
-    background-color:getColor(white);
+    background-color:getColor(gray-light);
     box-shadow:0px 0px 0px 1px getColor(scarpaFlowLight) inset;
 
-    span {
-        color:getColor(scarpaFlow);
+    svg {
+        color:getColor(primary);
     }
 
     &:is(a, a:hover){
@@ -61,11 +62,11 @@
 }
 
 @mixin icon-button-secondary {
-    background-color:getColor(scarpaFlowLight);
+    background: getColor(gray-light);
     box-shadow:none;
 
-    span {
-        color:getColor(scarpaFlow);
+    svg {
+        color:getColor(secondary);
     }
 }
 

@@ -10,7 +10,7 @@ html {
 body {
     @include font-size($defFontSizeDT, $lineHeightDT);
     @include bi-ps-normal;
-    color:getColor(primary);
+    color:getColor(secondary);
 }
 
 .bi-u-text-base {
@@ -67,6 +67,10 @@ body {
             text-decoration: none;
         }
     }
+}
+
+.bi-u-gray-text {
+    color:getColor(gray-dark);
 }
 
 a {

@@ -1,0 +1,8 @@
+.bi-l-section {
+  $block:&;
+  padding: 0 getGutter(regular);
+
+  &--table-head {
+    padding: getSize($bigger) getGutter(regular) getSize($medium) getGutter(regular);
+  }
+}

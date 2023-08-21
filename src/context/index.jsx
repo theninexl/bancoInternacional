@@ -1,5 +1,6 @@
 import { createContext, useState } from 'react';
 
+
 export const GlobalContext = createContext();
 
 export const InitializeLocalStorage = () => {
@@ -28,15 +29,22 @@ export const GlobalContextProvider = ({ children }) => {
   const [account, setAccount] = useState({});
   //signout
   const [signOut, setSignOut] = useState(false);
+
+  //getUsers
+  const [users, setUsers] = useState([]);  
+
   //main navbar
   //UserBox component
   const [userBoxOpen, setUserBoxOpen] = useState(false);
+
   return (
     <GlobalContext.Provider value={{
       account,
       setAccount,
       signOut,
       setSignOut,
+      users,
+      setUsers,
       userBoxOpen,
       setUserBoxOpen
     }}>

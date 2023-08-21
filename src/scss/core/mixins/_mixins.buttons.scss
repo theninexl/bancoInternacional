@@ -26,19 +26,19 @@
 }
 
 @mixin button-ghost {
-    color:getColor(primary);
+    color:getColor(secondary);
     background:transparent;
 }
 
 @mixin button-ghost-inactive {
-    color:getColor(scarpaFlowLight);
+    color:getColor(gray-medium);
     background: transparent;
     cursor: default;
 }
 
 @mixin button-inactive {
     color:getColor(white);
-    background-color: getColor(scarpaFlowLight);
+    background-color: getColor(gray-light);
 }
 
 @mixin button-large {

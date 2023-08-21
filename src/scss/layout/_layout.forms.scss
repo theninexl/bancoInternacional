@@ -17,6 +17,29 @@
                 gap:getSize($small);
             }
         }
+
+        &--hrz { 
+            #{$block}__row {
+                gap:getSize($small);
+                flex-flow: nowrap;
+            }  
+
+            label {
+                display: inline-flex;
+                align-items: center;
+                flex-direction: row;
+
+                span {
+                    display: flex;
+                    justify-content: end;
+                    width: getCols(2);
+                }
+
+                input {
+                    flex-grow: 1;
+                }
+            }
+        }
     }
 
     &-panel {

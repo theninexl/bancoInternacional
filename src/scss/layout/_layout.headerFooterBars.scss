@@ -1,12 +1,20 @@
 .bi-l-header {
+    $block: &;
     background-color: getColor(white);
-    border-bottom: 1px solid getColor(gray-medium);
     position: fixed;
     top:0;
     z-index: 1;
     width: 100%;
-    padding-top: getLines(1);
-    padding-bottom: getLines(1);
+
+    &__main-bar {
+        border-bottom: 1px solid getColor(gray-medium);
+        padding: getSize($bigger) 0;
+    }
+
+    &__sec-bar {
+        border-bottom: 1px solid getColor(gray-medium);
+        padding: getSize($big) 0;
+    }
 }
 
 .bi-l-footer {

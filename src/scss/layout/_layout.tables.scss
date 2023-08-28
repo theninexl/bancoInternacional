@@ -5,8 +5,7 @@
 
     &__row, &__header, &__footer {        
         display:flex;
-        gap: 8px;
-        
+        gap: 8px;        
     }
 
     &__row, &__header {
@@ -15,17 +14,16 @@
     }
 
     &__header {
-        @extend .bi-u-text-base-black;
-        
+        @extend .bi-u-text-base-black;        
     }
 
     &__row, &__footer {
         @extend .bi-u-text-base;
-        align-items: center;
-        min-height: getSize($large);
-        height: auto;
     }
     
+    &__row {
+        flex-grow: 1;      
+    }   
 
     &__row--noRead {
         @extend .bi-u-text-base-black;

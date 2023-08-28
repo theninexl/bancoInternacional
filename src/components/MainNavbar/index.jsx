@@ -8,6 +8,7 @@ import UserBox from './UserBox';
 const MainNavbar = () => {
   const context = useContext(GlobalContext);
   const path = useLocation().pathname;
+
   
   //evaluar account
   const account = localStorage.getItem('account');
@@ -17,7 +18,7 @@ const MainNavbar = () => {
   const parsedSignOut = JSON.parse(signOUt);
   const isUserSignOut = context.signOut || parsedSignOut;
   
-
+  //manejar signout
   const handleSignOut = (e) => {
     e.preventDefault();
     //seteo signout y account en localStorage y context
@@ -29,10 +30,10 @@ const MainNavbar = () => {
     //fuerzo ocultar el overlay
     context.setUserBoxOpen(false);
   }
-  
+  //overlay boton signout
   const handleUserOverlay = () => {  
     context.setUserBoxOpen(!context.userBoxOpen);
-  }
+  }  
 
   const renderLoginButton = () => {
     if (!isUserSignOut) {
@@ -47,21 +48,22 @@ const MainNavbar = () => {
   }
 
   const renderMainLinks = () => {
+    const isUsersActive = path.includes('/users');
+    const isHedgeActive = path.includes('/hedges');
+
     if (!isUserSignOut) {
       return (
         <>
-          <NavLink
-            to='/'
-            className={({isActive}) => 
-            isActive ? 'bi-u-text-link bi-u-text-link__active' : 'bi-u-text-link'}>
-            HedgeAccounting
-          </NavLink>
-          <NavLink
+          <Link
+            to='/hedges'
+            className={isHedgeActive ? 'bi-u-text-link bi-u-text-link__active' : 'bi-u-text-link'}>
+            Coberturas
+          </Link>
+          <Link
             to='/users'
-            className={({isActive}) => 
-            isActive ? 'bi-u-text-link bi-u-text-link__active' : 'bi-u-text-link'}>
+            className={isUsersActive ? 'bi-u-text-link bi-u-text-link__active' : 'bi-u-text-link'}>
             Usuarios
-          </NavLink>
+          </Link>
           <a className="bi-u-text-link bi-u-text-link__inactive">Amet consecteur</a>
         </>
       )
@@ -94,7 +96,7 @@ const MainNavbar = () => {
           </div>
         </div>
       </div>
-      {['/login'].includes(path) ? null : <SecNavbar/>}
+      {['/login','/'].includes(path) ? null : <SecNavbar/>}
     </header>
     </>
   );

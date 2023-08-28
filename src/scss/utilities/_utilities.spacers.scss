@@ -25,4 +25,14 @@
     // margin auto
     &-m-auto{margin:auto};
     &-mlr-auto{margin:0 auto};
+    // padding top
+    &-pt-bigger{ padding-top: getSize($bigger);}
+    &-pt-large{ padding-top: getSize($large);}
+    &-pt-huge{ padding-top: getSize($huge);}
+    &-pt-enormous{ padding-top: getSize($enormous);}
+    //padding bottom
+    &-pb-bigger{ padding-bottom: getSize($bigger);}
+    &-pb-large{ padding-bottom: getSize($large);}
+    &-pb-huge{ padding-bottom: getSize($huge);}
+    &-pb-enormous{ padding-bottom: getSize($enormous);}
 }

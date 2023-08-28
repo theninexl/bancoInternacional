@@ -37,7 +37,9 @@
 }
 
 .bi-o-icon-button-small {
-    $block:&;    
+    $block:&;
+    
+
     &--primary {
         @include icon-button-small;
         @include icon-button-primary;
@@ -56,6 +58,11 @@
     &--success {
         @include icon-button-small;
         @include icon-button-success;
+    }
+
+    &--warning {
+        @include icon-button-small;
+        @include icon-button-warning;
     }
 
     &--error {

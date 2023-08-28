@@ -9,6 +9,17 @@ export const ButtonLPrimary = (props) => {
   );
 }
 
+export const ButtonLSecondary = (props) => {
+  return (
+    <button
+      type={props.type}
+      className={`bi-o-button-large--secondary ${props.className}`}
+      onClick={props.handleClick}>
+        {props.children}
+    </button>
+  );
+}
+
 export const ButtonLGhost = (props) => {
   return (
     <button

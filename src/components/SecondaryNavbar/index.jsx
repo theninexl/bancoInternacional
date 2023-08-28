@@ -5,49 +5,45 @@ const SecNavbar = () => {
   const path = useLocation().pathname;
 
   const secNavInfo = [
-    { currentPath: '/',
-      pageTitle: 'Hedge Accounting',
+    { currentPath: '/hedges',
+      pageTitle: 'Coberturas',
       secNavLinks: {
-        1: {
-          url:'/',
-          title:'Link1'
-        },
-        2: {
-          url:'/',
-          title:'Link2'
-        }
+        1: { url:'/hedges', title:'Listado coberturas'},
+        2: { url:'/hedges-new', title:'Nueva Alta'},
+      }
+    },
+    { currentPath: '/hedges-new',
+      pageTitle: 'Coberturas',
+      secNavLinks: {
+        1: { url:'/hedges', title:'Listado coberturas'},
+        2: { url:'/hedges-new', title:'Nueva Alta'},
       }
     },
     { currentPath: '/users',
       pageTitle: 'Usuarios',
       secNavLinks: {
-        1: {
-          url:'/users',
-          title:'Usuarios registrados'
-        },
-        2: {
-          url:'/new-user',
-          title:'Alta nuevo usuario'
-        }
+        1: { url:'/users',title:'Usuarios registrados'},
+        2: { url:'/users-new',title:'Alta nuevo usuario'},
       }
     },
-    { currentPath: '/new-user',
+    { currentPath: '/users-new',
       pageTitle: 'Alta nuevo usuario',
       secNavLinks: {
-        1: {
-          url:'/users',
-          title:'Usuarios registrados'
-        },
-        2: {
-          url:'/new-user',
-          title:'Alta nuevo usuario'
-        }
+        1: { url:'/users',title:'Usuarios registrados'},
+        2: { url:'/users-new',title:'Alta nuevo usuario'},
+      }
+    },
+    { currentPath: '/users-edit',
+      pageTitle: 'Editar',
+      secNavLinks: {
+        1: { url:'/users',title:'Usuarios registrados'},
+        2: { url:'/users-new',title:'Alta nuevo usuario'},
       }
     },
   ]
 
   const currentInfo = secNavInfo?.find(item => item.currentPath === path);
-  let secNavLinks = Object.values(currentInfo.secNavLinks);
+  let secNavLinks = Object.values(currentInfo?.secNavLinks);
   
 
   return(
@@ -60,13 +56,13 @@ const SecNavbar = () => {
             </div>
             <div className="bi-c-navbar__center"> 
               {
-                secNavLinks.map(item => {
+                secNavLinks?.map(item => {
                   return (
                     <NavLink
                       key={uuidv4()}
                       to={item.url}
-                      className={({isActive}) => 
-                      isActive ? 'bi-u-text-link bi-u-text-link__active' : 'bi-u-text-link'}>
+                      className={({isActive}) =>
+                        isActive ? 'bi-u-text-link bi-u-text-link__active' : 'bi-u-text-link'}>
                       {item.title}
                     </NavLink>
                   );

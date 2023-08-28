@@ -6,7 +6,6 @@
     }
 
     label.error {
-
         color: getColor(danger);
         
         input[type=text], input[type=number], input[type=email], input[type=password], input[type=date], .cm-c-field-icon {
@@ -76,7 +75,7 @@
         background-color: #fff;
         /* Not removed via appearance */
         margin: 0;
-        border:1px solid getColor(primaryLight);
+        border:1px solid getColor(gray-medium);
         border-radius:getSize($small);
         height: getSize($bigger);
         width: getSize($bigger);
@@ -97,7 +96,7 @@
         }
 
         &:checked::before {
-            color:getColor(scarpaFlow);
+            color:getColor(gray-medium);
             font-family: 'Material Symbols Outlined';
             font-weight: normal;
             font-style: normal;
@@ -115,16 +114,16 @@
     }
 
     &__radio-toggle {
-        border:1px solid getColor(primaryLight);
-        background-color: getColor(white);
+        border:1px solid getColor(gray-medium);
+        background-color: getColor(gray-light);
         border-radius:getSize($small);
         position: relative;
         height: getSize($huge);
         width: getSize($doubleHuge);
 
         input[type="checkbox"] {
-            border:1px solid getColor(scarpaFlowLight);
-            background-color: getColor(scarpaFlowLight);
+            border:1px solid getColor(gray-medium);
+            background-color: getColor(white);
             height: getSize($huge);
             width: getSize($huge);
             right:0;
@@ -140,7 +139,7 @@
         }
 
         input[type="checkbox"]:checked::before {
-            content:"check";
+            content:'';
             border-radius:getSize($small);
             box-shadow: inset 0 getSize($huge) getColor(success);
             display: flex;
@@ -160,13 +159,17 @@
     }  
 }
 
-.bi-c-field-icon {
+.bi-c-uploadfield-icon {
     $block:&;
-    border:1px solid getColor(primaryLight);
+    border:1px solid getColor(gray-medium);
     border-radius: getSize($small);
+    cursor: pointer;
+    display: flex;
+    flex-direction: row-reverse;
+    flex-grow:1;
     height:getSize($huge);
     display: flex;
-    overflow: hidden;
+    overflow: hidden;    
     
     &__input {
         $block:&;
@@ -211,15 +214,7 @@
         overflow: hidden;
         position: absolute;
         z-index: -1;
-    }
-
-    &.fileUpload {
-        cursor: pointer;
-        display: flex;
-        flex-direction: row-reverse;
-    }
-
-    
+    }    
 
     /* clears the ‘X’ from Internet Explorer */
     input[type=search]::-ms-clear { display: none; width : 0; height: 0; }
@@ -230,12 +225,25 @@
     input[type="search"]::-webkit-search-results-button,
     input[type="search"]::-webkit-search-results-decoration { display: none; }
 
+    span.placeholder {
+        color:getColor(gray-medium);
+        display: flex;
+        align-self: center;
+        justify-content: flex-start;
+        padding-left: 16px;
+        padding-right: 16px;
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
 
 }
 
-.cm-c-select-icon {
+.bi-c-select-icon {
     $block:&;
-    border:1px solid getColor(primaryLight);
+    border:1px solid getColor(gray-medium);
     border-radius: getSize($small);
     height:getSize($huge);
     display: inline-flex;
@@ -249,13 +257,18 @@
         appearance: none;
         background: transparent;
         border:0;
-        color:getColor(scarpaFlow);
+        color:getColor(secondary);
         outline: none;
         padding: 0 getSize($medium);
         width: 100%;
         
         @include font-size($defFontSizeDT, $lineHeightDT);
         @include bi-ps-normal;
+
+        &::placeholder {
+            color:getColor(gray-medium);
+            @include bi-ps-bold;
+        }
     }
 
     &--focus {
@@ -265,29 +278,17 @@
     }
 
     &::after {
-        content:"expand_more";
-        border-radius:getSize($small);
-        box-shadow: inset getSize($huge) getSize($huge) getColor(scarpaFlowLight);
+        content:'';
+        background-image:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>');    
         display: flex;
         justify-content:center;
         align-items: center;
-        height: getSize($huge);
-        width: getSize($huge);
-        color:getColor(scarpaFlow);
-        font-family: 'Material Symbols Outlined';
-        font-weight: normal;
-        font-style: normal;
-        font-size: 20px;
-        line-height: 1;
-        letter-spacing: normal;
-        text-transform: none;
-        white-space: nowrap;
-        word-wrap: normal;
-        direction: ltr;
-        -webkit-font-feature-settings: 'liga';
-        -webkit-font-smoothing: antialiased;
-        position:absolute;
-        right:0;
+        height: getSize($bigger);
+        width: getSize($bigger);
+        color:getColor(secondary);
+        position: absolute;
+        right:8px;
+        top:12px;
         z-index: -1;
     }
 }

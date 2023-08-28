@@ -6,7 +6,6 @@ export const TableData = (props) => {
   );
 }
 
-
 export const TableDataHeader = (props) => {
   return (
     <div className={`bi-l-tabledata__header ${props.className}`}>
@@ -14,6 +13,15 @@ export const TableDataHeader = (props) => {
     </div>
   );
 }
+
+export const TableDataFooter = (props) => {
+  return (
+    <div className={`bi-l-tabledata__footer ${props.className}`}>
+      {props.children}
+    </div>
+  );
+}
+
 
 export const TableDataRow = (props) => {
   return (

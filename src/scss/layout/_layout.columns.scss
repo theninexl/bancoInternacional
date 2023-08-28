@@ -1,3 +1,14 @@
+.bi-l-col {
+    $block: &;
+    border-right: 1px solid getColor(gray-medium);
+    flex-grow: 1;
+    padding: 0 getGutter(regular);
+
+    &:last-child {
+        border: 0;
+    }
+}
+
 .bi-l-4col {
     $block: &;
     margin:0 auto;

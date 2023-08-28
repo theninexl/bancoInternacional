@@ -2,14 +2,18 @@ import { useContext } from 'react';
 import { useRoutes, BrowserRouter, Navigate } from 'react-router-dom';
 import { GlobalContext, GlobalContextProvider, InitializeLocalStorage } from '../../context';
 import HedgeAccounting from '../HedgeAccounting';
+import NewHedge from '../NewHedge';
 import Login from '../Login';
 import Users from '../Users';
 import NewUser from '../NewUser';
+import EditUser from '../EditUser';
 import MainNavbar from '../../components/MainNavbar';
 import '../../scss/styles.scss';
 
+
+
 const AppRoutes = () => {
-  const context = useContext(GlobalContext)
+  const context = useContext(GlobalContext);
   //evaluar account
   // const account = localStorage.getItem('account');
   // const parsedAccount = JSON.parse(account);
@@ -22,11 +26,13 @@ const AppRoutes = () => {
   const isUserSignOut = context.signOut || parsedSignOut;
 
   let routes = useRoutes([
-    { path: '/', element: !isUserSignOut ? <HedgeAccounting/> : <Navigate replace to={'/login'}/> },
-    { path: '/login', element: isUserSignOut ? <Login/> : <Navigate replace to={'/'}/> },
+    { path: '/', element: !isUserSignOut ? <Navigate replace to={'/hedges'}/> : <Navigate replace to={'/login'}/> },
+    { path: '/hedges', element: !isUserSignOut ? <HedgeAccounting/> : <Navigate replace to={'/login'}/> },
+    { path: '/hedges-new', element: !isUserSignOut ? <NewHedge/> : <Navigate replace to={'/login'}/>},
+    { path: '/login', element: isUserSignOut ? <Login/> : <Navigate replace to={'/hedges'}/> },
     { path: '/users', element: !isUserSignOut ? <Users/> : <Navigate replace to={'/login'}/> },
-    { path: '/new-user', element: !isUserSignOut ? <NewUser/> : <Navigate replace to={'/login'}/> }
-    
+    { path: '/users-new', element: !isUserSignOut ? <NewUser/> : <Navigate replace to={'/login'}/> },
+    { path: '/users-edit', element: !isUserSignOut ? <EditUser/> : <Navigate replace to={'/login'}/>} 
   ])
   return routes;
 }
@@ -34,6 +40,7 @@ const AppRoutes = () => {
 const App = () => {
 
   InitializeLocalStorage();
+
 
   return (
     <>

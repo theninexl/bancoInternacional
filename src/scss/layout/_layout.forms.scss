@@ -9,7 +9,8 @@
         &__row {
             display: flex;
             flex-flow: column nowrap;
-            margin-bottom:getSize($big);
+            //margin-bottom:getSize($big);
+            padding: getSize($big) 0;
             label {
                 display: flex;
                 flex-direction: column;
@@ -32,13 +33,29 @@
                 span {
                     display: flex;
                     justify-content: end;
-                    width: getCols(2);
+                    text-align: right;
+                    width: getCols(1.5);
                 }
 
                 input {
                     flex-grow: 1;
                 }
             }
+
+            #{$block}__row.items-2 {
+                label {
+                    flex-grow: 0;
+                }
+
+                label + label {
+                    flex-grow:0;
+                    span {
+                        min-width:getCols(1);
+                    }
+                }
+            }
+
+            
         }
     }
 

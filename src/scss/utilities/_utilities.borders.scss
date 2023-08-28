@@ -1,0 +1,7 @@
+.bi-u-border {
+  $block:&;
+  // border top
+  &-bt-gm { border-top: 1px solid getColor(gray-medium); }
+  // border bottom
+  &-bb-gm { border-bottom: 1px solid getColor(gray-medium); }
+}

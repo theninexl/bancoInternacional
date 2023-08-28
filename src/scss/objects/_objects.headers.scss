@@ -1,0 +1,13 @@
+.bi-o-header {
+  $block:&;
+
+  &-sub-section {
+    background-color: getColor(gray-light);
+    border-radius: getSize($small);
+    color:getColor(primary);
+    padding:getSize($medium) getSize($bigger);
+    margin: getSize($big) 0;
+    @include font-size($fontSizeJumpDT1, $lineHeightDT);
+    @include bi-psc-medium;
+  }
+}

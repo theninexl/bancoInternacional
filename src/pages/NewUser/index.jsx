@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Api from '../../services/api';
 import { SectionHalf } from "../../components/UI/layout/LayoutSections";
+import { TableHeader } from "../../components/UI/tables/TableHeaders";
 import { ButtonLGhost, ButtonLPrimary } from "../../components/UI/buttons/Buttons.jsx";
 import { LabelElement, SimpleFormHrz, SimpleFormRow } from "../../components/UI/forms/SimpleForms";
 
@@ -23,17 +24,15 @@ function NewUser(){
   const HandleSignIn = (e) => {    
     e.preventDefault();
     const formData = new FormData(form.current);
-
-    
+        
     const data = {
-      name: formData.get('newUserName').toLowerCase(),
+      name: formData.get('newUserName'),
       surname: formData.get('newUserSurname'),
       email: formData.get('newUserEmail'),
       password: formData.get('newUserPwd'),
       password2: formData.get('newUserPwd2'),
     }
-    console.log(data);
-
+    
     const dataSent = {
       "name":`${data.name}`,
       "surname":data.surname,
@@ -43,30 +42,30 @@ function NewUser(){
       "cat_role":""
     }
 
-    console.log(dataSent);
-
     if (data.password === data.password2) {
       Api.call.post("users/create",dataSent,{ headers:headers })
       .then(res => {
-        console.log('res',res);
         navigate('/users');
       })
       .catch(err => {
-        console.log('err',err);
-        console.log(err.response)
-        setFormError('Error ',err,' al realizar la solicitud')})
+        //console.log('err',err);
+        //console.log(err.response)
+        setFormError('Error ',err,' al realizar la solicitud. Inténtalo de nuevo.')})
     } else {
       setFormError('La contraseña no coincide')
     }    
   }
 
-  const HandleCancel = (e) => {
+  const HandleCancel = () => {
     navigate('/users');
   }
 
   return(
     <>      
-       <main className="bi-u-centerAbs bi-u-h-screen">
+       <main className="bi-u-h-screen--wSubNav">
+       <TableHeader>
+          Alta nuevo usuario
+        </TableHeader>
         <SectionHalf>
           <SimpleFormHrz innerRef={form}>
             <SimpleFormRow>

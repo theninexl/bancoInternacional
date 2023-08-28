@@ -30,26 +30,29 @@
         }
     }
 
-    &-2col {
-        $block: &;
+    &-cols {
         display: flex;
         flex-flow: row nowrap;
-        min-height: calc(100vh - getLines(8));
-        padding-top: getLines(4);
-        @include bi-container;
-
-        &__aside {
-            border-right:1px solid getColor(secondaryLight);
-            width: getCols(2.5);
-            min-width: getCols(2.5);
-            & nav {
-                position: fixed;
-            }
-        }
-
-        &__body {
-            flex-grow: 1;
-            padding: 0 getGutter(regular);
-        }
     }
+
+    // &-2col {
+    //     $block: &;
+    //     display: flex;
+    //     flex-flow: row nowrap;
+    //     @include bi-container;
+
+    //     &__aside {
+    //         border-right:1px solid getColor(secondaryLight);
+    //         width: getCols(2.5);
+    //         min-width: getCols(2.5);
+    //         & nav {
+    //             position: fixed;
+    //         }
+    //     }
+
+    //     &__body {
+    //         flex-grow: 1;
+    //         padding: 0 getGutter(regular);
+    //     }
+    // }
 }

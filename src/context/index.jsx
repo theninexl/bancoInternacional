@@ -31,7 +31,17 @@ export const GlobalContextProvider = ({ children }) => {
   const [signOut, setSignOut] = useState(false);
 
   //getUsers
-  const [users, setUsers] = useState([]);  
+  const [users, setUsers] = useState([]); 
+
+  //getHedges
+  const [hedges, setHedges] = useState([]);
+  const [newHedgeData, setNewHedgeData] = useState([]);
+  const [fileInstrument, setFileInstrument] = useState([]);
+  const [test, setTest] = useState('');
+
+  //list pagination
+  const [page, setPage] = useState(1); 
+  const [totalPages, setTotalPages] = useState(null);
 
   //main navbar
   //UserBox component
@@ -45,8 +55,20 @@ export const GlobalContextProvider = ({ children }) => {
       setSignOut,
       users,
       setUsers,
+      page,
+      setPage,
+      totalPages,
+      setTotalPages,
       userBoxOpen,
-      setUserBoxOpen
+      setUserBoxOpen,
+      hedges,
+      setHedges,
+      fileInstrument,
+      setFileInstrument,
+      newHedgeData,
+      setNewHedgeData,
+      test,
+      setTest
     }}>
       { children }
     </GlobalContext.Provider>

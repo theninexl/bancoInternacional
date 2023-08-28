@@ -15,8 +15,8 @@
 }
 
 @mixin button-secondary {
-    color:getColor(scarpaFlow);
-    background-color: getColor(straw);
+    color:getColor(white);
+    background-color: getColor(secondary);
 }
 
 @mixin button-transparent {

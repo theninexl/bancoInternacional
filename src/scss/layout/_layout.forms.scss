@@ -37,6 +37,10 @@
                     width: getCols(1.5);
                 }
 
+                span:empty {
+                    width: 0;
+                }
+
                 input {
                     flex-grow: 1;
                 }

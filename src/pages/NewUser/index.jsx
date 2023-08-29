@@ -5,6 +5,7 @@ import { SectionHalf } from "../../components/UI/layout/LayoutSections";
 import { TableHeader } from "../../components/UI/tables/TableHeaders";
 import { ButtonLGhost, ButtonLPrimary } from "../../components/UI/buttons/Buttons.jsx";
 import { LabelElement, SimpleFormHrz, SimpleFormRow } from "../../components/UI/forms/SimpleForms";
+import { MainHeading } from "../../components/UI/headings";
 
 
 function NewUser(){
@@ -64,7 +65,9 @@ function NewUser(){
     <>      
        <main className="bi-u-h-screen--wSubNav">
        <TableHeader>
-          Alta nuevo usuario
+          <MainHeading>
+            Alta nuevo usuario
+          </MainHeading>
         </TableHeader>
         <SectionHalf>
           <SimpleFormHrz innerRef={form}>

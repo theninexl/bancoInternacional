@@ -3,8 +3,8 @@ export const TableHeader = (props) => {
     <header
       style={props.style}
       className={`bi-l-section--table-head bi-l-container ${props.className}`}>
-          <h1 className='bi-u-text-headM bi-u-gray-text'>{props.children}</h1>
-        </header>
+        {props.children}
+    </header>
   );
 }
 

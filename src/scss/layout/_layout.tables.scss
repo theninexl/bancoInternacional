@@ -23,7 +23,11 @@
     
     &__row {
         flex-grow: 1;      
-    }   
+    }  
+    
+    &__row:last-child {
+        border-bottom: 0;
+    }
 
     &__row--noRead {
         @extend .bi-u-text-base-black;

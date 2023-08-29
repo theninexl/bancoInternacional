@@ -1,4 +1,5 @@
 import { useEffect, useContext } from 'react';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { GlobalContext } from '../../context';
 import Api from '../../services/api';
@@ -7,8 +8,11 @@ import { TableData, TableDataHeader, TableDataRow, TableCellMedium, TableCellSho
 import TablePagination from '../../components/TablePagination';
 import { IconButSm } from '../../components/UI/buttons/IconButtons';
 import { DocumentArrowDownIcon, InformationCircleIcon, BoltIcon } from '@heroicons/react/24/solid';
+import { MainHeading } from '../../components/UI/headings';
+
 
 function HedgeAccounting(){
+  const navigate = useNavigate();
   const context = useContext(GlobalContext);
   const rowspage = 10;
 
@@ -31,9 +35,9 @@ function HedgeAccounting(){
       'rowspage':rowspage
     }
     Api.call.post('hedges/getAll',data,{ headers:headers })
-    .then(response => {
-      calcTotalPages(response.data.rowscount[0].count, rowspage);
-      context.setHedges(response?.data?.data)
+    .then(res => {
+      calcTotalPages(res.data.rowscount[0].count, rowspage);
+      context.setHedges(res.data.data)
     }).catch(err => console.warn(err))
   }
   //resetear pagina a 1
@@ -41,17 +45,36 @@ function HedgeAccounting(){
     context.setPage(1);
   },[context.setPage])
 
-  useEffect(()=>{  
-    
+  useEffect(()=>{
     const execGetHedges = async () => await getHedges(token, context.page);
     execGetHedges();
   },[context.page]);
 
+  //editar usuario
+  const seeStatus = (id) => {
+    navigate({      
+      pathname:'/hedges-status',
+      search: createSearchParams({
+        id:id
+      }).toString()
+    });
+  }
+
+  const requestDisarm = (id) => {
+    navigate({      
+      pathname:'/hedges-disarm',
+      search: createSearchParams({
+        id:id
+      }).toString()
+    });
+  }
 
   return (
     <main className="bi-u-h-screen--wSubNav">
        <TableHeader>
-          Listado coberturas
+          <MainHeading>
+            Listado coberturas
+          </MainHeading>          
         </TableHeader>
         <TableData>
           <TableDataHeader>
@@ -72,6 +95,36 @@ function HedgeAccounting(){
           </TableDataHeader>
           {
             context.hedges.map(hedge => {
+              const renderStatus = () => {
+                if (hedge.status == 'Ok') {
+                  return (
+                    <>
+                    <IconButSm
+                      handleClick={() => seeStatus(hedge.hedge_ref)}
+                      className="bi-o-icon-button-small--success">
+                      <InformationCircleIcon/>
+                    </IconButSm>
+                    </>);  
+                } else if (hedge.status == 'Pending') {
+                  return (
+                    <>
+                    <IconButSm
+                      handleClick={() => seeStatus(hedge.hedge_ref)}
+                      className="bi-o-icon-button-small--warning">
+                      <InformationCircleIcon/>
+                    </IconButSm>
+                    </>);  
+                } else if (hedge.status == 'Denegada') {
+                  return (
+                    <>
+                    <IconButSm
+                      handleClick={() => seeStatus(hedge.hedge_ref)}
+                      className="bi-o-icon-button-small--error">
+                      <InformationCircleIcon/>
+                    </IconButSm>
+                    </>);    
+                }        
+              } 
               return (
                 <TableDataRow key={uuidv4()}>
                   <TableCellMedium
@@ -87,19 +140,17 @@ function HedgeAccounting(){
                   <TableCellMedium>{hedge.date_expire}</TableCellMedium>
                   <TableCellMedium>{hedge.user_create}</TableCellMedium>
                   <TableCellShort>
-                  <IconButSm
+                    <IconButSm
                       className="bi-o-icon-button-small--disabled">
                       <DocumentArrowDownIcon/>
                     </IconButSm>
                   </TableCellShort>
                   <TableCellShort>
-                    <IconButSm
-                      className="bi-o-icon-button-small--secondary">
-                      <InformationCircleIcon/>
-                    </IconButSm>
+                    {renderStatus()}
                   </TableCellShort>
                   <TableCellShort>
                     <IconButSm
+                      handleClick={() => requestDisarm(hedge.hedge_ref)}
                       className="bi-o-icon-button-small--primary">
                       <BoltIcon/>
                     </IconButSm>

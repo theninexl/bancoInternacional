@@ -5,6 +5,7 @@ import { SectionHalf } from "../../components/UI/layout/LayoutSections";
 import { ButtonLGhost, ButtonLPrimary } from "../../components/UI/buttons/Buttons.jsx";
 import { LabelElement, SimpleFormHrz, SimpleFormRow } from "../../components/UI/forms/SimpleForms";
 import { TableHeader } from "../../components/UI/tables/TableHeaders";
+import { MainHeading } from "../../components/UI/headings";
 
 
 function EditUser(){
@@ -88,7 +89,7 @@ function EditUser(){
   }
 
   //cancelar
-  const HandleCancel = (e) => {
+  const HandleCancel = () => {
     navigate('/users');
   }
 
@@ -96,7 +97,9 @@ function EditUser(){
     <>      
        <main className="bi-u-h-screen--wSubNav">
        <TableHeader>
-          Editar usuario
+          <MainHeading>
+            Editar usuario
+          </MainHeading>
         </TableHeader>
         <SectionHalf>
           <SimpleFormHrz innerRef={form}>

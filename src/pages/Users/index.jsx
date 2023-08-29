@@ -9,6 +9,7 @@ import TablePagination from '../../components/TablePagination';
 import { ButtonLPrimary, ButtonLSecondary } from '../../components/UI/buttons/Buttons';
 import ModalSmall from '../../components/ModalSmall';
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/solid';
+import { MainHeading } from '../../components/UI/headings';
 
 
 const Users = () => {   
@@ -117,7 +118,9 @@ const Users = () => {
       <main className="bi-u-h-screen--wSubNav">
         {renderView()}
         <TableHeader>
-          Listado usuarios registrados en el sistema
+          <MainHeading>
+            Listado usuarios registrados en el sistema
+          </MainHeading>
         </TableHeader>
         <TableData>
           <TableDataHeader>

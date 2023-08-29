@@ -3,6 +3,16 @@
   padding: 0 getGutter(regular);
 
   &--table-head {
-    padding: getSize($bigger) getGutter(regular) getSize($medium) getGutter(regular);
+    padding-top: getSize($bigger);
+
+    .bi-u-text-headM,.bi-u-text-headS, .bi-u-text-headL {
+      padding: 0 getGutter(regular);
+      padding-bottom: getSize($medium);
+    }
+
+    .bi-u-text-headM + .bi-u-text-headS {
+      padding-bottom: getSize($medium);
+      padding-top: getSize($medium);
+    }
   }
 }

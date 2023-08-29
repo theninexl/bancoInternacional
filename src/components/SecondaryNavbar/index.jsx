@@ -19,6 +19,20 @@ const SecNavbar = () => {
         2: { url:'/hedges-new', title:'Nueva Alta'},
       }
     },
+    { currentPath: '/hedges-status',
+      pageTitle: 'Status coberturas',
+      secNavLinks: {
+        1: { url:'/hedges', title:'Listado coberturas'},
+        2: { url:'/hedges-new', title:'Nueva Alta'},
+      }
+    },
+    { currentPath: '/hedges-disarm',
+      pageTitle: 'Desarme coberturas',
+      secNavLinks: {
+        1: { url:'/hedges', title:'Listado coberturas'},
+        2: { url:'/hedges-new', title:'Nueva Alta'},
+      }
+    },
     { currentPath: '/users',
       pageTitle: 'Usuarios',
       secNavLinks: {

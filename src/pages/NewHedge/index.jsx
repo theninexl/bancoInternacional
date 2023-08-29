@@ -7,6 +7,7 @@ import { TableHeader, TableHeaderSub } from '../../components/UI/tables/TableHea
 import { LabelElement, SelectElement, SimpleFormHrz, SimpleFormRow,  ToggleElement,  UploadFileTo64 } from "../../components/UI/forms/SimpleForms";
 import { ButtonLGhost, ButtonLPrimary } from "../../components/UI/buttons/Buttons";
 import Api from '../../services/api';
+import { MainHeading } from "../../components/UI/headings";
 
 
 const NewHedge = () => {
@@ -59,10 +60,10 @@ const NewHedge = () => {
     // console.log('use effect fixed Element')
     if (itemFinancingType) {          
       if (itemFinancingType.value === 'Fijo') {
-        console.log('es fijo');
+        //console.log('es fijo');
         setFixedElement(true);
       } else if (itemFinancingType.value === 'Variable') {
-        console.log('es variable');
+        //console.log('es variable');
         setFixedElement(false);
       }
       // console.log(fixedElement);
@@ -253,7 +254,9 @@ const NewHedge = () => {
   return (
     <main className="bi-u-h-screen--wSubNav">
       <TableHeader className='bi-u-border-bb-gm'>
-        Alta instrumento cobertura
+        <MainHeading>
+          Alta instrumento cobertura
+        </MainHeading>
       </TableHeader>
       <ColsContainer className='bi-u-border-bb-gm'>
         <SectionHalf className='bi-u-stuckLeft'>
@@ -831,10 +834,12 @@ const NewHedge = () => {
           </SimpleCol>       
         </ColsContainer>
         <ColsContainer>
-        <TableHeader
-          style={{'flexGrow':1}}   
+        <TableHeader 
+          style={{'flexGrow':1}}
           className='bi-u-border-bb-gm bi-u-border-bt-gm bi-u-spacer-pt-enormous'>
-          Alta partida cubierta
+        <MainHeading>
+          Alta instrumento cobertura
+          </MainHeading>
         </TableHeader>
         </ColsContainer>
         <SectionHalf>

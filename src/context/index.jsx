@@ -37,7 +37,11 @@ export const GlobalContextProvider = ({ children }) => {
   const [hedges, setHedges] = useState([]);
   const [newHedgeData, setNewHedgeData] = useState([]);
   const [fileInstrument, setFileInstrument] = useState([]);
-  const [test, setTest] = useState('');
+
+  //getHedge
+  const [hedgeStatusData, setHedgeStatusData] = useState([]);
+  const [hedgeStatus,setHedgeStatus] = useState([]);
+  const [hedgeDisarmData, setHedgeDisarmData] = useState([]);
 
   //list pagination
   const [page, setPage] = useState(1); 
@@ -67,8 +71,12 @@ export const GlobalContextProvider = ({ children }) => {
       setFileInstrument,
       newHedgeData,
       setNewHedgeData,
-      test,
-      setTest
+      hedgeStatusData,
+      setHedgeStatusData,
+      hedgeStatus,
+      setHedgeStatus,
+      hedgeDisarmData,
+      setHedgeDisarmData
     }}>
       { children }
     </GlobalContext.Provider>

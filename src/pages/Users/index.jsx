@@ -1,6 +1,6 @@
-import { useEffect, useContext, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, createSearchParams } from 'react-router-dom';
-import { GlobalContext } from '../../context';
+// import { GlobalContext } from '../../context';
 import Api from '../../services/api';
 import { TableHeader } from "../../components/UI/tables/TableHeaders";
 import { TableData, TableDataHeader, TableDataRow, TableCellMedium, TableCellShort } from '../../components/UI/tables/TableDataElements';
@@ -12,9 +12,9 @@ import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/solid';
 import { MainHeading } from '../../components/UI/headings';
 
 
-const Users = () => {   
+const Users = ({ totalPages,setTotalPages,users,setUsers,page,setPage }) => {   
   const navigate = useNavigate();  
-  const context = useContext(GlobalContext);
+  // const context = useContext(GlobalContext);
   const rowspage = 10;
 
   const accountInLocalStorage = localStorage.getItem('account');
@@ -22,7 +22,7 @@ const Users = () => {
   const token = parsedAccount.token;
 
   //calcular paginacion
-  const calcTotalPages = (totalResults,totalRows) => context.setTotalPages(Math.ceil(totalResults/totalRows));
+  const calcTotalPages = (totalResults,totalRows) => setTotalPages(Math.ceil(totalResults/totalRows));
 
   //listar usuarios
   const getUsers = (token, page) => {
@@ -38,18 +38,18 @@ const Users = () => {
     Api.call.post('users/getAll',data,{ headers:headers })
     .then(response => {
       calcTotalPages(response?.data?.rowscount[0]?.count, rowspage)
-      context.setUsers(response?.data?.data)
+      setUsers(response?.data?.data)
     }).catch(err => console.warn(err))
   }
   //resetear pagina a 1
   useEffect(()=>{
-    context.setPage(1);
-  },[context.setPage])
+    setPage(1);
+  },[setPage])
 
   useEffect(()=>{  
-    const execGetUsers = async () => await getUsers(token, context.page);
+    const execGetUsers = async () => await getUsers(token, page);
     execGetUsers();
-  },[context.page]);
+  },[page]);
 
   //mostrar modal delete
   const [modalOpen, setModalOpen] = useState(false);
@@ -72,8 +72,8 @@ const Users = () => {
     Api.call.post('users/remove',data,{ headers:headers })
     .then(response => { 
       setModalOpen(false);
-      context.setPage(1);
-      const execGetUsers = async () => await getUsers(token, context.page);
+      setPage(1);
+      const execGetUsers = async () => await getUsers(token, page);
       execGetUsers();
     }).catch(err => console.warn(err))
   }
@@ -81,7 +81,7 @@ const Users = () => {
   //editar usuario
   const sendToEdit = (id) => {
     navigate({
-      pathname: '/users-edit',
+      pathname: '/bancoInternacional/users-edit',
       search: createSearchParams({
         id:id
       }).toString()
@@ -131,7 +131,7 @@ const Users = () => {
             <TableCellShort>Eliminar</TableCellShort>
           </TableDataHeader>
           {
-            context.users.map(user => {
+            users.map(user => {
               return (
                 <TableDataRow key={user.id_user}>
                   <TableCellMedium
@@ -155,7 +155,11 @@ const Users = () => {
             })
           }
         </TableData>
-        <TablePagination/>       
+        <TablePagination
+          page={page}
+          setPage={setPage}
+          totalPages={totalPages}
+          />        
       </main>
     </>
     

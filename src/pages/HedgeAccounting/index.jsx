@@ -1,7 +1,7 @@
-import { useEffect, useContext } from 'react';
+import { useEffect } from 'react';
 import { createSearchParams, useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
-import { GlobalContext } from '../../context';
+// import { GlobalContext } from '../../context';
 import Api from '../../services/api';
 import { TableHeader } from '../../components/UI/tables/TableHeaders';
 import { TableData, TableDataHeader, TableDataRow, TableCellMedium, TableCellShort } from '../../components/UI/tables/TableDataElements';
@@ -11,9 +11,8 @@ import { DocumentArrowDownIcon, InformationCircleIcon, BoltIcon } from '@heroico
 import { MainHeading } from '../../components/UI/headings';
 
 
-function HedgeAccounting(){
+function HedgeAccounting({ totalPages,setTotalPages,setHedges,page,setPage,hedges }){
   const navigate = useNavigate();
-  const context = useContext(GlobalContext);
   const rowspage = 10;
 
   const accountInLocalStorage = localStorage.getItem('account');
@@ -21,7 +20,7 @@ function HedgeAccounting(){
   const token = parsedAccount.token;
 
   //calcular paginacion
-  const calcTotalPages = (totalResults,totalRows) => context.setTotalPages(Math.ceil(totalResults/totalRows));
+  const calcTotalPages = (totalResults,totalRows) => setTotalPages(Math.ceil(totalResults/totalRows));
 
   //listar usuarios
   const getHedges = (token, page) => {
@@ -37,23 +36,24 @@ function HedgeAccounting(){
     Api.call.post('hedges/getAll',data,{ headers:headers })
     .then(res => {
       calcTotalPages(res.data.rowscount[0].count, rowspage);
-      context.setHedges(res.data.data)
+      setHedges(res.data.data)
     }).catch(err => console.warn(err))
   }
+
   //resetear pagina a 1
   useEffect(()=>{
-    context.setPage(1);
-  },[context.setPage])
+    setPage(1);
+  },[setPage])
 
   useEffect(()=>{
-    const execGetHedges = async () => await getHedges(token, context.page);
+    const execGetHedges = async () => await getHedges(token, page);
     execGetHedges();
-  },[context.page]);
+  },[page]);
 
   //editar usuario
   const seeStatus = (id) => {
     navigate({      
-      pathname:'/hedges-status',
+      pathname:'/bancoInternacional/hedges-status',
       search: createSearchParams({
         id:id
       }).toString()
@@ -62,7 +62,7 @@ function HedgeAccounting(){
 
   const requestDisarm = (id) => {
     navigate({      
-      pathname:'/hedges-disarm',
+      pathname:'/bancoInternacional/hedges-disarm',
       search: createSearchParams({
         id:id
       }).toString()
@@ -94,7 +94,7 @@ function HedgeAccounting(){
             <TableCellShort>Desarmar</TableCellShort>
           </TableDataHeader>
           {
-            context.hedges.map(hedge => {
+            hedges?.map(hedge => {
               const renderStatus = () => {
                 if (hedge.status == 'Ok') {
                   return (
@@ -160,7 +160,11 @@ function HedgeAccounting(){
             })
           }
         </TableData>
-        <TablePagination/>    
+        <TablePagination
+          page={page}
+          setPage={setPage}
+          totalPages={totalPages}
+          />    
     </main>
   );
 }

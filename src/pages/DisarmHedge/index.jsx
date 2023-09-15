@@ -1,6 +1,6 @@
-import { useEffect, useContext, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { GlobalContext } from '../../context';
+// import { GlobalContext } from '../../context';
 import Api from '../../services/api';
 import { TableHeader } from '../../components/UI/tables/TableHeaders';
 import { TableData, TableDataHeader, TableDataRow, TableCellMedium } from '../../components/UI/tables/TableDataElements';
@@ -11,9 +11,9 @@ import { LabelElement, SelectElement, SimpleFormHrz, SimpleFormRow } from '../..
 import { ButtonLGhost, ButtonLPrimary, ButtonLSecondary } from '../../components/UI/buttons/Buttons';
 import ModalSmall from '../../components/ModalSmall';
 
-function DisarmHedge(){
+function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData,setHedgeDisarmData }){
   const navigate = useNavigate();
-  const context = useContext(GlobalContext);
+  // const context = useContext(GlobalContext);
   const [partialDisarm, setPartialDisarm] = useState(false);
   const [formError, setFormError] = useState(null);
   const [searchParams] = useSearchParams();
@@ -50,7 +50,7 @@ function DisarmHedge(){
     const data = {'hedge':id}
     Api.call.post('hedges/disarmStatus',data,{ headers:headers })
     .then(res => {
-      context.setHedgeStatusData(res.data);
+      setHedgeStatusData(res.data);
     }).catch(err => {
       console.warn(err)})
   }
@@ -61,7 +61,7 @@ function DisarmHedge(){
     Api.call.post('hedges/disarmGetOne',data,{ headers:headers })
     .then(res => {
       // console.log(res.data);
-      context.setHedgeDisarmData(res.data);
+      setHedgeDisarmData(res.data);
     }).catch(err => {
       //setFormError(err);
       console.warn(err)})
@@ -86,7 +86,7 @@ function DisarmHedge(){
     if (modalOpen) {
       return (
         <ModalSmall
-          message={`Estas seguro que deseas solicitar un desarme ${MsgDisarmType} sobre la relación de cobertura ${context.hedgeStatusData.hedge_ref}`} 
+          message={`Estas seguro que deseas solicitar un desarme ${MsgDisarmType} sobre la relación de cobertura ${hedgeStatusData.hedge_ref}`} 
           buttons={
             <>
               <ButtonLSecondary
@@ -110,7 +110,7 @@ function DisarmHedge(){
     const formData = new FormData(disarmForm.current);
 
     const data = {
-      hedge:context.hedgeStatusData.hedge_ref,
+      hedge:hedgeStatusData.hedge_ref,
       disarm_type: parseInt(formData.get('disarm_type')),
       disarm_reason: formData.get('disarm_reason'),
       object_new_notional: formData.get('object_new_notional'),
@@ -122,7 +122,7 @@ function DisarmHedge(){
     Api.call.post("hedges/disarm",data,{ headers:headers })
       .then(res => {
         //console.log(res);
-        navigate('/hedges');
+        navigate('/bancoInternacional/hedges');
       })
       .catch(err => {
         // console.log(data);
@@ -134,7 +134,7 @@ function DisarmHedge(){
   }
 
   const HandleCancel = () => {
-    navigate('/');
+    navigate('/bancoInternacional/hedges');
   }
 
   return (
@@ -161,19 +161,19 @@ function DisarmHedge(){
           <TableCellMedium>Fecha Desarme</TableCellMedium>
         </TableDataHeader>
         {
-          context.hedgeStatusData &&
+          hedgeStatusData &&
             <>
               <TableDataRow key={uuidv4()}>
                 <TableCellMedium
-                  className='bi-u-text-base-black'>{context.hedgeStatusData.hedge_ref}</TableCellMedium>
-                <TableCellMedium>{context.hedgeStatusData.hedge_item_ref}</TableCellMedium>
-                <TableCellMedium>{context.hedgeStatusData.hedge_instrument_ref}</TableCellMedium>
-                <TableCellMedium>{context.hedgeStatusData.hedge_type}</TableCellMedium>
-                <TableCellMedium>{context.hedgeStatusData.amount}</TableCellMedium>
-                <TableCellMedium>{context.hedgeStatusData.date_start}</TableCellMedium>
-                <TableCellMedium>{context.hedgeStatusData.date_expire}</TableCellMedium>
-                <TableCellMedium>{context.hedgeStatusData.disarm_reason}</TableCellMedium>
-                <TableCellMedium>{context.hedgeStatusData.date_request}</TableCellMedium>
+                  className='bi-u-text-base-black'>{hedgeStatusData.hedge_ref}</TableCellMedium>
+                <TableCellMedium>{hedgeStatusData.hedge_item_ref}</TableCellMedium>
+                <TableCellMedium>{hedgeStatusData.hedge_instrument_ref}</TableCellMedium>
+                <TableCellMedium>{hedgeStatusData.hedge_type}</TableCellMedium>
+                <TableCellMedium>{hedgeStatusData.amount}</TableCellMedium>
+                <TableCellMedium>{hedgeStatusData.date_start}</TableCellMedium>
+                <TableCellMedium>{hedgeStatusData.date_expire}</TableCellMedium>
+                <TableCellMedium>{hedgeStatusData.disarm_reason}</TableCellMedium>
+                <TableCellMedium>{hedgeStatusData.date_request}</TableCellMedium>
               </TableDataRow>
             </>
         }
@@ -216,7 +216,7 @@ function DisarmHedge(){
               </TableDataHeader>
               <TableDataRow>
                 <TableCellMedium className='bi-u-text-base-black'>Objeto cubierto</TableCellMedium>
-                <TableCellMedium>{context.hedgeDisarmData.object_notional}</TableCellMedium>
+                <TableCellMedium>{hedgeDisarmData.object_notional}</TableCellMedium>
                 <TableCellMedium>
                   {partialDisarm ? 
                     <LabelElement
@@ -230,7 +230,7 @@ function DisarmHedge(){
               </TableDataRow>
               <TableDataRow>
                 <TableCellMedium>Instrumento cobertura 1</TableCellMedium>
-                <TableCellMedium>{context.hedgeDisarmData.instrument_notional_1}</TableCellMedium>
+                <TableCellMedium>{hedgeDisarmData.instrument_notional_1}</TableCellMedium>
                 <TableCellMedium>
                   {partialDisarm ? 
                     <LabelElement
@@ -244,7 +244,7 @@ function DisarmHedge(){
               </TableDataRow>
               <TableDataRow>
                 <TableCellMedium>Instrumento cobertura 2</TableCellMedium>
-                <TableCellMedium>{context.hedgeDisarmData.instrument_notional_2}</TableCellMedium>
+                <TableCellMedium>{hedgeDisarmData.instrument_notional_2}</TableCellMedium>
                 <TableCellMedium>
                   {partialDisarm ? 
                     <LabelElement
@@ -258,7 +258,7 @@ function DisarmHedge(){
               </TableDataRow>
               <TableDataRow>
                 <TableCellMedium>Instrumento cobertura 3</TableCellMedium>
-                <TableCellMedium>{context.hedgeDisarmData.instrument_notional_3}</TableCellMedium>
+                <TableCellMedium>{hedgeDisarmData.instrument_notional_3}</TableCellMedium>
                 <TableCellMedium>
                   {partialDisarm ? 
                     <LabelElement

@@ -77,7 +77,7 @@ function EditUser(){
 
       Api.call.post("users/edit",dataSent,{ headers:headers })
       .then(res => {
-        navigate('/users/list');
+        navigate('/bancoInternacional/users');
       })
       .catch(err => {
         console.log('err',err);
@@ -90,7 +90,7 @@ function EditUser(){
 
   //cancelar
   const HandleCancel = () => {
-    navigate('/users');
+    navigate('/bancoInternacional/users');
   }
 
   return(

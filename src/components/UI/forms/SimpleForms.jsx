@@ -29,7 +29,8 @@ export const LabelElement = (props) => {
         id={props.htmlFor}
         placeholder={props.placeholder}
         defaultValue={props.value}
-        onChange={props.handleOnChange}/>
+        onChange={props.handleOnChange}
+        required={props.required}/>
     </label>
   );
 }

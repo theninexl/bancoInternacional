@@ -1,7 +1,6 @@
-import { useRef, useState, useContext, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Papa from 'papaparse';
-import { GlobalContext } from '../../context';
 import { ColsContainer, SectionHalf, SimpleCol } from '../../components/UI/layout/LayoutSections';
 import { TableHeader, TableHeaderSub } from '../../components/UI/tables/TableHeaders';
 import { LabelElement, SelectElement, SimpleFormHrz, SimpleFormRow,  ToggleElement,  UploadFileTo64 } from "../../components/UI/forms/SimpleForms";
@@ -10,9 +9,8 @@ import Api from '../../services/api';
 import { MainHeading } from "../../components/UI/headings";
 
 
-const NewHedge = () => {
+const NewHedge = ({ fileInstrument, setFileInstrument }) => {
   const navigate = useNavigate();
-  const context = useContext(GlobalContext);
   const [fixedElement, setFixedElement] = useState(true);
 
   const accountInLocalStorage = localStorage.getItem('account');
@@ -49,7 +47,7 @@ const NewHedge = () => {
 
    //resetear datos csv 
    useEffect(()=>{
-    context.setFileInstrument([]);
+    setFileInstrument([]);
    },[])
 
   //render view primera vez 
@@ -93,7 +91,7 @@ const NewHedge = () => {
     const inputFile = e.target.files[0];
     Papa.parse(inputFile, {
       complete: function(results) {
-        context.setFileInstrument(results.data);     
+        setFileInstrument(results.data);     
       }
     });
   }
@@ -101,8 +99,8 @@ const NewHedge = () => {
   //si cambia el csv buscar el nuevo campo de financiación para actualizar el tipo de interés
   useEffect(()=>{
     // console.log('use effect csv');
-    if (context.fileInstrument.length > 0) {
-      const financingToState = context.fileInstrument.find(t => {
+    if (fileInstrument.length > 0) {
+      const financingToState = fileInstrument.find(t => {
         return t.find(item => item === 'item_financing')
       })
       // console.log('if tipo de interés');
@@ -116,13 +114,13 @@ const NewHedge = () => {
         setFixedElement(false);
       }
     }
-  },[context.fileInstrument])
+  },[fileInstrument])
 
   //colocar los valores en los campos de alta cubierta al hacer click
   const handleInstrFile = (e) => {
     e.preventDefault();
     
-    context.fileInstrument.map(item => {
+    fileInstrument.map(item => {
       const hedgeItemField = document.getElementById(item[0]);
       hedgeItemField.value = item[1];
     })
@@ -239,7 +237,7 @@ const NewHedge = () => {
     Api.call.post("hedges/create",data,{ headers:headers })
       .then(res => {
         console.log(res);
-        navigate('/hedges');
+        navigate('/bancoInternacional/hedges');
       })
       .catch(err => {
         console.log('err',err);
@@ -248,7 +246,7 @@ const NewHedge = () => {
   }
 
   const HandleCancel = () => {
-    navigate('/hedges');
+    navigate('/bancoInternacional/hedges');
   }
 
   return (

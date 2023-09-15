@@ -46,7 +46,7 @@ function NewUser(){
     if (data.password === data.password2) {
       Api.call.post("users/create",dataSent,{ headers:headers })
       .then(res => {
-        navigate('/users');
+        navigate('/bancoInternacional/users');
       })
       .catch(err => {
         //console.log('err',err);
@@ -58,7 +58,7 @@ function NewUser(){
   }
 
   const HandleCancel = () => {
-    navigate('/users');
+    navigate('/bancoInternacional/users');
   }
 
   return(

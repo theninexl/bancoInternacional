@@ -24,7 +24,7 @@ export const InitializeLocalStorage = () => {
   }
 }
 
-export const GlobalContextProvider = ({ children }) => {
+export const useData = () => {
   //account
   const [account, setAccount] = useState({});
   //signout
@@ -51,8 +51,7 @@ export const GlobalContextProvider = ({ children }) => {
   //UserBox component
   const [userBoxOpen, setUserBoxOpen] = useState(false);
 
-  return (
-    <GlobalContext.Provider value={{
+  return {
       account,
       setAccount,
       signOut,
@@ -77,8 +76,5 @@ export const GlobalContextProvider = ({ children }) => {
       setHedgeStatus,
       hedgeDisarmData,
       setHedgeDisarmData
-    }}>
-      { children }
-    </GlobalContext.Provider>
-  );
+    };
 }

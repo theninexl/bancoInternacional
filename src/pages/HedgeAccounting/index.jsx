@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect,useState } from 'react';
 import { createSearchParams, useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 // import { GlobalContext } from '../../context';
@@ -6,14 +6,20 @@ import Api from '../../services/api';
 import { TableHeader } from '../../components/UI/tables/TableHeaders';
 import { TableData, TableDataHeader, TableDataRow, TableCellMedium, TableCellShort } from '../../components/UI/tables/TableDataElements';
 import TablePagination from '../../components/TablePagination';
+import { SortButton } from '../../components/UI/buttons/Buttons';
 import { IconButSm } from '../../components/UI/buttons/IconButtons';
 import { DocumentArrowDownIcon, InformationCircleIcon, BoltIcon } from '@heroicons/react/24/solid';
 import { MainHeading } from '../../components/UI/headings';
+import { LabelElement } from '../../components/UI/forms/SimpleForms';
 
 
-function HedgeAccounting({ totalPages,setTotalPages,setHedges,page,setPage,hedges }){
+
+function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPage }){
   const navigate = useNavigate();
   const rowspage = 10;
+  const [searchValue, setSearchValue] = useState('');
+  const [order, setOrder] = useState(1);
+  const sortBtns = document.querySelectorAll('.bi-o-sortButton');
 
   const accountInLocalStorage = localStorage.getItem('account');
   const parsedAccount = JSON.parse(accountInLocalStorage);
@@ -23,15 +29,16 @@ function HedgeAccounting({ totalPages,setTotalPages,setHedges,page,setPage,hedge
   const calcTotalPages = (totalResults,totalRows) => setTotalPages(Math.ceil(totalResults/totalRows));
 
   //listar usuarios
-  const getHedges = (token, page) => {
+  const getHedges = (busqueda, orden) => {
     const headers = {
       'Content-Type': 'application/json',
       'x-access-token': token,
     }
     const data = {
-      'search':'',
+      'search':busqueda,
       'pagenumber':page,
-      'rowspage':rowspage
+      'rowspage':rowspage,
+      'orderby':orden
     }
     Api.call.post('hedges/getAll',data,{ headers:headers })
     .then(res => {
@@ -40,15 +47,16 @@ function HedgeAccounting({ totalPages,setTotalPages,setHedges,page,setPage,hedge
     }).catch(err => console.warn(err))
   }
 
+  const execGetHedges = async (search,order) => await getHedges(search = search, order = order);
+
   //resetear pagina a 1
   useEffect(()=>{
     setPage(1);
   },[setPage])
 
   useEffect(()=>{
-    const execGetHedges = async () => await getHedges(token, page);
-    execGetHedges();
-  },[page]);
+    execGetHedges(searchValue,order);
+  },[page, order, searchValue]);
 
   //editar usuario
   const seeStatus = (id) => {
@@ -59,7 +67,7 @@ function HedgeAccounting({ totalPages,setTotalPages,setHedges,page,setPage,hedge
       }).toString()
     });
   }
-
+  //desarmar cobertura
   const requestDisarm = (id) => {
     navigate({      
       pathname:'/bancoInternacional/hedges-disarm',
@@ -69,26 +77,91 @@ function HedgeAccounting({ totalPages,setTotalPages,setHedges,page,setPage,hedge
     });
   }
 
+  //reordenar resultados
+  const sortItems = () => {
+    const sortCol = event.target.getAttribute('data-column');
+    const descIcon = event.target.querySelector(':scope > span.sortIcon--desc');
+    const ascIcon = event.target.querySelector(':scope > span.sortIcon--asc');
+
+    sortBtns.forEach(btn =>{
+      const descIcon = btn.querySelector(':scope > span.sortIcon--desc');
+      const ascIcon = btn.querySelector(':scope > span.sortIcon--asc');
+      descIcon.classList.add('bi-u-inactive');
+      ascIcon.classList.add('bi-u-inactive');
+    })
+    
+    if (Math.abs(order) === Math.abs(sortCol)) {
+      if (order < 0) {
+        setOrder(Math.abs(order));
+        descIcon.classList.remove('bi-u-inactive');
+        ascIcon.classList.add('bi-u-inactive');
+      } else {
+        setOrder(-Math.abs(order));
+        descIcon.classList.add('bi-u-inactive');
+        ascIcon.classList.remove('bi-u-inactive');
+      }
+    } else {
+      if (sortCol < 0) {
+        setOrder(Math.abs(sortCol));
+        descIcon.classList.remove('bi-u-inactive');
+        ascIcon.classList.add('bi-u-inactive');
+      } else {
+        setOrder(-Math.abs(sortCol));
+        descIcon.classList.add('bi-u-inactive');
+        ascIcon.classList.remove('bi-u-inactive');
+      }
+    }
+  }
+
   return (
     <main className="bi-u-h-screen--wSubNav">
        <TableHeader>
           <MainHeading>
             Listado coberturas
-          </MainHeading>          
+          </MainHeading>
+          <div className='bi-c-form-simple'>
+            <input 
+              type='text'
+              placeholder='Busca coberturas'
+              value={searchValue}      
+              onChange={(event)=>{setSearchValue(event.target.value)}} />
+          </div>
         </TableHeader>
         <TableData>
           <TableDataHeader>
-            <TableCellMedium>Ref.</TableCellMedium>
-            <TableCellMedium>Ref. Part. Cubierta</TableCellMedium>
-            <TableCellMedium>Ref. Instrumento</TableCellMedium>
-            <TableCellMedium>Tipo Cobertura</TableCellMedium>
-            <TableCellMedium>Ratio Eficacia</TableCellMedium>
-            <TableCellMedium>MtM Derivado</TableCellMedium>
-            <TableCellMedium>Impacto OCI</TableCellMedium>
-            <TableCellMedium>Impacto P&L</TableCellMedium>
-            <TableCellMedium>Monto Subyacente</TableCellMedium>
-            <TableCellMedium>Fecha Final</TableCellMedium>
-            <TableCellMedium>Usuario</TableCellMedium>
+            <TableCellMedium>
+              <SortButton orderCol={1} handleClick={() => sortItems()}>Ref.</SortButton>
+            </TableCellMedium>
+            <TableCellMedium>
+              <SortButton orderCol={2} handleClick={() => sortItems()}>Ref. Part. Cubierta</SortButton>
+            </TableCellMedium>
+            <TableCellMedium>
+              <SortButton orderCol={3} handleClick={() => sortItems()}>Ref. Instr.</SortButton>
+            </TableCellMedium>
+            <TableCellMedium>
+              <SortButton orderCol={4} handleClick={() => sortItems()}>Tipo Cobertura</SortButton>
+            </TableCellMedium>
+            <TableCellMedium>
+              <SortButton orderCol={5} handleClick={() => sortItems()}>Ratio Eficacia</SortButton>
+            </TableCellMedium>
+            <TableCellMedium>
+              <SortButton orderCol={6} handleClick={() => sortItems()}>MtM Derivado</SortButton>
+            </TableCellMedium>
+            <TableCellMedium>
+              <SortButton orderCol={7} handleClick={() => sortItems()}>Impacto OCI</SortButton>
+            </TableCellMedium>
+            <TableCellMedium>
+              <SortButton orderCol={8} handleClick={() => sortItems()}>Impacto P&L</SortButton>
+            </TableCellMedium>
+            <TableCellMedium>
+              <SortButton orderCol={9} handleClick={() => sortItems()}>Monto Subyacente</SortButton>
+            </TableCellMedium>
+            <TableCellMedium>
+              <SortButton orderCol={10} handleClick={() => sortItems()}>Fecha Final</SortButton>
+            </TableCellMedium>
+            <TableCellMedium>
+              <SortButton orderCol={11} handleClick={() => sortItems()}>Usuario</SortButton>
+            </TableCellMedium>
             <TableCellShort>Ficha</TableCellShort>
             <TableCellShort>Status</TableCellShort>
             <TableCellShort>Desarmar</TableCellShort>

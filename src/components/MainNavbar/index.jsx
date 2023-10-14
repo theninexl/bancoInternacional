@@ -1,12 +1,9 @@
-// import { useContext } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-// import { GlobalContext } from '../../context';
 import SecNavbar from '../SecondaryNavbar';
 import Logo from '../UI/Logo';
 import UserBox from './UserBox';
 
 const MainNavbar = ({ signOut,setSignOut,setAccount,userBoxOpen,setUserBoxOpen }) => {
-  // const context = useContext(GlobalContext);
   const path = useLocation().pathname;
 
   

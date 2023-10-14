@@ -12,9 +12,27 @@ import MainNavbar from '../../components/MainNavbar';
 import '../../scss/styles.scss';
 
 
-const AppRoutes = ({ setAccount,setSignOut,users,setUsers,totalPages,setTotalPages,setHedges,page,setPage,hedges,fileInstrument,setFileInstrument,hedgeStatusData,setHedgeStatusData,hedgeStatus,setHedgeStatus,hedgeDisarmData,setHedgeDisarmData }) => {
+const AppRoutes = () => {  
   const {
-    signOut
+    setAccount,
+    signOut,
+    setSignOut,
+    users,
+    setUsers,
+    totalPages,
+    setTotalPages,
+    hedges,
+    setHedges,
+    page,
+    setPage,
+    fileInstrument,
+    setFileInstrument,
+    hedgeStatus,
+    setHedgeStatus,
+    hedgeStatusData,
+    setHedgeStatusData,
+    hedgeDisarmData,
+    setHedgeDisarmData
   } = useData();
 
   //evaluar signout
@@ -27,12 +45,12 @@ const AppRoutes = ({ setAccount,setSignOut,users,setUsers,totalPages,setTotalPag
     { path: '/bancoInternacional/hedges', 
       element: !isUserSignOut ? 
       <HedgeAccounting
-        totalPages={totalPages}
-        setTotalPages={setTotalPages}
+        hedges={hedges}
         setHedges={setHedges}
         page={page}
         setPage={setPage}
-        hedges={hedges}
+        totalPages={totalPages}
+        setTotalPages={setTotalPages}
         /> 
       : 
       <Navigate replace to={'/bancoInternacional/login'}/> },
@@ -96,24 +114,8 @@ const App = () => {
     setAccount,
     signOut,
     setSignOut,
-    users,
-    setUsers,
-    page,
-    setPage,
-    totalPages,
-    setTotalPages,
     userBoxOpen,
     setUserBoxOpen,
-    hedges,
-    setHedges,
-    fileInstrument,
-    setFileInstrument,
-    hedgeStatusData,
-    setHedgeStatusData,
-    hedgeStatus,
-    setHedgeStatus,
-    hedgeDisarmData,
-    setHedgeDisarmData
   } = useData();
 
   InitializeLocalStorage();
@@ -121,35 +123,16 @@ const App = () => {
 
   return (
     <>
-        <BrowserRouter>
-          <MainNavbar
-            signOut={signOut}
-            setSignOut={setSignOut}
-            setAccount={setAccount}
-            userBoxOpen={userBoxOpen}
-            setUserBoxOpen={setUserBoxOpen}
-            />
-          <AppRoutes
-            setAccount={setAccount}
-            setSignOut={setSignOut}
-            users={users}
-            setUsers={setUsers}
-            totalPages={totalPages}
-            setTotalPages={setTotalPages}
-            setHedges={setHedges}
-            page={page}
-            setPage={setPage}
-            hedges={hedges}
-            fileInstrument={fileInstrument}
-            setFileInstrument={setFileInstrument}
-            hedgeStatusData={hedgeStatusData}
-            setHedgeStatusData={setHedgeStatusData}
-            hedgeStatus={hedgeStatus}
-            setHedgeStatus={setHedgeStatus}
-            hedgeDisarmData={hedgeDisarmData}
-            setHedgeDisarmData={setHedgeDisarmData}
-            />          
-        </BrowserRouter>
+      <BrowserRouter>
+        <MainNavbar
+          signOut={signOut}
+          setSignOut={setSignOut}
+          setAccount={setAccount}
+          userBoxOpen={userBoxOpen}
+          setUserBoxOpen={setUserBoxOpen}
+          />
+        <AppRoutes/>          
+      </BrowserRouter>
     </>
   )
 }

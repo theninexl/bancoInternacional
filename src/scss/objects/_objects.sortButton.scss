@@ -1,11 +1,20 @@
-.cm-o-sortButton {
+.bi-o-sortButton {
     @extend .bi-u-text-base-black;
     border:0;
     background: transparent;
-    color:getColor(primary);
+    color:getColor(secondary);
     cursor: pointer;
     display: flex;
     align-items: center;
     padding: 0;
     min-height: getLines(1);
+
+    span {
+        display: flex;
+    }
+
+    svg {
+        width: getSize($big);
+        height: getSize($big);
+    }
 }

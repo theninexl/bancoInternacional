@@ -120,11 +120,14 @@ function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPag
             Listado coberturas
           </MainHeading>
           <div className='bi-c-form-simple'>
-            <input 
+            <LabelElement
+              htmlFor='searchHedges'
               type='text'
               placeholder='Busca coberturas'
-              value={searchValue}      
-              onChange={(event)=>{setSearchValue(event.target.value)}} />
+              handleOnChange={(event)=>{
+                console.log(event.target.value);
+                setSearchValue(event.target.value)
+              }} />
           </div>
         </TableHeader>
         <TableData>

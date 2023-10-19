@@ -3,61 +3,64 @@ import { v4 as uuidv4 } from 'uuid';
 
 const SecNavbar = () => {
   const path = useLocation().pathname;
-
   const secNavInfo = [
-    { currentPath: '/hedges',
+    { currentPath: '/bancoInternacional/',
+      pageTitle: 'Inicio',
+      secNavLinks: {}
+    },
+    { currentPath: '/bancoInternacional/hedges',
       pageTitle: 'Coberturas',
       secNavLinks: {
-        1: { url:'/hedges', title:'Listado coberturas'},
-        2: { url:'/hedges-new', title:'Nueva Alta'},
+        1: { url:'/bancoInternacional/hedges', title:'Listado coberturas'},
+        2: { url:'/bancoInternacional/hedges-new', title:'Nueva Alta'},
       }
     },
-    { currentPath: '/hedges-new',
+    { currentPath: '/bancoInternacional/hedges-new',
       pageTitle: 'Coberturas',
       secNavLinks: {
-        1: { url:'/hedges', title:'Listado coberturas'},
-        2: { url:'/hedges-new', title:'Nueva Alta'},
+        1: { url:'/bancoInternacional/hedges', title:'Listado coberturas'},
+        2: { url:'/bancoInternacional/hedges-new', title:'Nueva Alta'},
       }
     },
-    { currentPath: '/hedges-status',
+    { currentPath: '/bancoInternacional/hedges-status',
       pageTitle: 'Status coberturas',
       secNavLinks: {
-        1: { url:'/hedges', title:'Listado coberturas'},
-        2: { url:'/hedges-new', title:'Nueva Alta'},
+        1: { url:'/bancoInternacional/hedges', title:'Listado coberturas'},
+        2: { url:'/bancoInternacional/hedges-new', title:'Nueva Alta'},
       }
     },
-    { currentPath: '/hedges-disarm',
+    { currentPath: '/bancoInternacional/hedges-disarm',
       pageTitle: 'Desarme coberturas',
       secNavLinks: {
-        1: { url:'/hedges', title:'Listado coberturas'},
-        2: { url:'/hedges-new', title:'Nueva Alta'},
+        1: { url:'/bancoInternacional/hedges', title:'Listado coberturas'},
+        2: { url:'/bancoInternacional/hedges-new', title:'Nueva Alta'},
       }
     },
-    { currentPath: '/users',
+    { currentPath: '/bancoInternacional/users',
       pageTitle: 'Usuarios',
       secNavLinks: {
-        1: { url:'/users',title:'Usuarios registrados'},
-        2: { url:'/users-new',title:'Alta nuevo usuario'},
+        1: { url:'/bancoInternacional/users',title:'Usuarios registrados'},
+        2: { url:'/bancoInternacional/users-new',title:'Alta nuevo usuario'},
       }
     },
-    { currentPath: '/users-new',
+    { currentPath: '/bancoInternacional/users-new',
       pageTitle: 'Alta nuevo usuario',
       secNavLinks: {
-        1: { url:'/users',title:'Usuarios registrados'},
-        2: { url:'/users-new',title:'Alta nuevo usuario'},
+        1: { url:'/bancoInternacional/users',title:'Usuarios registrados'},
+        2: { url:'/bancoInternacional/users-new',title:'Alta nuevo usuario'},
       }
     },
-    { currentPath: '/users-edit',
+    { currentPath: '/bancoInternacional/users-edit',
       pageTitle: 'Editar',
       secNavLinks: {
-        1: { url:'/users',title:'Usuarios registrados'},
-        2: { url:'/users-new',title:'Alta nuevo usuario'},
+        1: { url:'/bancoInternacional/users',title:'Usuarios registrados'},
+        2: { url:'/bancoInternacional/users-new',title:'Alta nuevo usuario'},
       }
     },
   ]
 
-  const currentInfo = secNavInfo?.find(item => item.currentPath === path);
-  let secNavLinks = Object.values(currentInfo?.secNavLinks);
+  const currentInfo = secNavInfo.find(item => item.currentPath === path);
+  let secNavLinks = Object.values(currentInfo.secNavLinks);
   
 
   return(
@@ -70,7 +73,7 @@ const SecNavbar = () => {
             </div>
             <div className="bi-c-navbar__center"> 
               {
-                secNavLinks?.map(item => {
+                secNavLinks.map(item => {
                   return (
                     <NavLink
                       key={uuidv4()}

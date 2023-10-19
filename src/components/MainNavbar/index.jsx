@@ -1,12 +1,9 @@
-import { useContext } from 'react';
-import { NavLink, Link, useLocation } from 'react-router-dom';
-import { GlobalContext } from '../../context';
+import { Link, useLocation } from 'react-router-dom';
 import SecNavbar from '../SecondaryNavbar';
 import Logo from '../UI/Logo';
 import UserBox from './UserBox';
 
-const MainNavbar = () => {
-  const context = useContext(GlobalContext);
+const MainNavbar = ({ signOut,setSignOut,setAccount,userBoxOpen,setUserBoxOpen }) => {
   const path = useLocation().pathname;
 
   
@@ -16,7 +13,7 @@ const MainNavbar = () => {
   //evaluar signout
   const signOUt = localStorage.getItem('sign-out');
   const parsedSignOut = JSON.parse(signOUt);
-  const isUserSignOut = context.signOut || parsedSignOut;
+  const isUserSignOut = signOut || parsedSignOut;
   
   //manejar signout
   const handleSignOut = (e) => {
@@ -24,15 +21,15 @@ const MainNavbar = () => {
     //seteo signout y account en localStorage y context
     const stringifiedSignOut = JSON.stringify(true);
     localStorage.setItem('sign-out',stringifiedSignOut);
-    context.setSignOut(true);
+    setSignOut(true);
     localStorage.removeItem('account');
-    context.setAccount({});
+    setAccount({});
     //fuerzo ocultar el overlay
-    context.setUserBoxOpen(false);
+    setUserBoxOpen(false);
   }
   //overlay boton signout
   const handleUserOverlay = () => {  
-    context.setUserBoxOpen(!context.userBoxOpen);
+    setUserBoxOpen(!userBoxOpen);
   }  
 
   const renderLoginButton = () => {
@@ -48,23 +45,22 @@ const MainNavbar = () => {
   }
 
   const renderMainLinks = () => {
-    const isUsersActive = path.includes('/users');
-    const isHedgeActive = path.includes('/hedges');
+    const isUsersActive = path.includes('/bancoInternacional/users');
+    const isHedgeActive = path.includes('/bancoInternacional/hedges');
 
     if (!isUserSignOut) {
       return (
         <>
           <Link
-            to='/hedges'
+            to='/bancoInternacional/hedges'
             className={isHedgeActive ? 'bi-u-text-link bi-u-text-link__active' : 'bi-u-text-link'}>
             Coberturas
           </Link>
           <Link
-            to='/users'
+            to='/bancoInternacional/users'
             className={isUsersActive ? 'bi-u-text-link bi-u-text-link__active' : 'bi-u-text-link'}>
             Usuarios
           </Link>
-          <a className="bi-u-text-link bi-u-text-link__inactive">Amet consecteur</a>
         </>
       )
     } 
@@ -87,7 +83,7 @@ const MainNavbar = () => {
               {renderLoginButton()}
             </div>
           </nav>
-          <div className={context.userBoxOpen ? 'bi-c-overlay--activeUser': 'bi-u-inactive'}>
+          <div className={userBoxOpen ? 'bi-c-overlay--activeUser': 'bi-u-inactive'}>
             <Link
               className='bi-o-overlay__notification'
               onClick={handleSignOut}>
@@ -96,7 +92,7 @@ const MainNavbar = () => {
           </div>
         </div>
       </div>
-      {['/login','/'].includes(path) ? null : <SecNavbar/>}
+      {['/bancoInternacional/login','/'].includes(path) ? null : <SecNavbar/>}
     </header>
     </>
   );

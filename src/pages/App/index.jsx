@@ -1,6 +1,5 @@
-import { useContext } from 'react';
 import { useRoutes, BrowserRouter, Navigate } from 'react-router-dom';
-import { GlobalContext, GlobalContextProvider, InitializeLocalStorage } from '../../context';
+import { useData, InitializeLocalStorage } from './useData';
 import HedgeAccounting from '../HedgeAccounting';
 import NewHedge from '../NewHedge';
 import DisarmStatus from '../DisarmStatus';
@@ -13,41 +12,127 @@ import MainNavbar from '../../components/MainNavbar';
 import '../../scss/styles.scss';
 
 
+const AppRoutes = () => {  
+  const {
+    setAccount,
+    signOut,
+    setSignOut,
+    users,
+    setUsers,
+    totalPages,
+    setTotalPages,
+    hedges,
+    setHedges,
+    page,
+    setPage,
+    fileInstrument,
+    setFileInstrument,
+    hedgeStatus,
+    setHedgeStatus,
+    hedgeStatusData,
+    setHedgeStatusData,
+    hedgeDisarmData,
+    setHedgeDisarmData
+  } = useData();
 
-const AppRoutes = () => {
-  const context = useContext(GlobalContext);
   //evaluar signout
   const signOUt = localStorage.getItem('sign-out');
   const parsedSignOut = JSON.parse(signOUt);
-  const isUserSignOut = context.signOut || parsedSignOut;
+  const isUserSignOut = signOut || parsedSignOut;
 
   let routes = useRoutes([
-    { path: '/', element: !isUserSignOut ? <Navigate replace to={'/hedges'}/> : <Navigate replace to={'/login'}/> },
-    { path: '/hedges', element: !isUserSignOut ? <HedgeAccounting/> : <Navigate replace to={'/login'}/> },
-    { path: '/hedges-new', element: !isUserSignOut ? <NewHedge/> : <Navigate replace to={'/login'}/>},
-    { path: '/hedges-status', element: !isUserSignOut ? <DisarmStatus/> : <Navigate replace to={'/login'}/>},
-    { path: '/hedges-disarm', element: !isUserSignOut ? <DisarmHedge/> : <Navigate replace to={'/login'}/>},
-    { path: '/login', element: isUserSignOut ? <Login/> : <Navigate replace to={'/hedges'}/> },
-    { path: '/users', element: !isUserSignOut ? <Users/> : <Navigate replace to={'/login'}/> },
-    { path: '/users-new', element: !isUserSignOut ? <NewUser/> : <Navigate replace to={'/login'}/> },
-    { path: '/users-edit', element: !isUserSignOut ? <EditUser/> : <Navigate replace to={'/login'}/>} 
+    { path: '/bancoInternacional/', element: !isUserSignOut ? <Navigate replace to={'/bancoInternacional/hedges'}/> : <Navigate replace to={'/bancoInternacional/login'}/> },
+    { path: '/bancoInternacional/hedges', 
+      element: !isUserSignOut ? 
+      <HedgeAccounting
+        hedges={hedges}
+        setHedges={setHedges}
+        page={page}
+        setPage={setPage}
+        totalPages={totalPages}
+        setTotalPages={setTotalPages}
+        /> 
+      : 
+      <Navigate replace to={'/bancoInternacional/login'}/> },
+    { path: '/bancoInternacional/hedges-new', 
+      element: !isUserSignOut ? 
+      <NewHedge
+        fileInstrument={fileInstrument}
+        setFileInstrument={setFileInstrument}/> 
+      : 
+      <Navigate replace to={'/bancoInternacional/login'}/>},
+    { path: '/bancoInternacional/hedges-status', 
+      element: !isUserSignOut ? 
+      <DisarmStatus
+        hedgeStatusData={hedgeStatusData}
+        setHedgeStatusData={setHedgeStatusData}
+        hedgeStatus={hedgeStatus}
+        setHedgeStatus={setHedgeStatus}
+      /> 
+      : 
+      <Navigate replace to={'/bancoInternacional/login'}/>},
+    { path: '/bancoInternacional/hedges-disarm', 
+      element: !isUserSignOut ?
+      <DisarmHedge
+        hedgeStatusData={hedgeStatusData}
+        setHedgeStatusData={setHedgeStatusData}
+        hedgeDisarmData={hedgeDisarmData}
+        setHedgeDisarmData={setHedgeDisarmData}
+      /> 
+      : 
+      <Navigate replace to={'/bancoInternacional/login'}/>},
+    { path: '/bancoInternacional/login', 
+      element: isUserSignOut ? 
+      <Login
+        setAccount={setAccount}
+        setSignOut={setSignOut}
+      /> 
+      : 
+      <Navigate replace to={'/bancoInternacional/hedges'}/> },
+    { path: '/bancoInternacional/users', 
+      element: !isUserSignOut ? 
+      <Users
+        setTotalPages={setTotalPages}
+        users={users}
+        setUsers={setUsers}
+        page={page}
+        setPage={setPage}
+        totalPages={totalPages}
+      /> 
+      : 
+      <Navigate replace to={'/bancoInternacional/login'}/> },
+    { path: '/bancoInternacional/users-new', 
+      element: !isUserSignOut ? <NewUser/> : <Navigate replace to={'/bancoInternacional/login'}/> },
+    { path: '/bancoInternacional/users-edit', element: !isUserSignOut ? <EditUser/> : <Navigate replace to={'/bancoInternacional/login'}/>} 
   ])
   return routes;
 }
 
 const App = () => {
 
+  const {
+    setAccount,
+    signOut,
+    setSignOut,
+    userBoxOpen,
+    setUserBoxOpen,
+  } = useData();
+
   InitializeLocalStorage();
 
 
   return (
     <>
-      <GlobalContextProvider>
-        <BrowserRouter>
-          <MainNavbar/>
-          <AppRoutes/>          
-        </BrowserRouter>
-      </GlobalContextProvider>
+      <BrowserRouter>
+        <MainNavbar
+          signOut={signOut}
+          setSignOut={setSignOut}
+          setAccount={setAccount}
+          userBoxOpen={userBoxOpen}
+          setUserBoxOpen={setUserBoxOpen}
+          />
+        <AppRoutes/>          
+      </BrowserRouter>
     </>
   )
 }

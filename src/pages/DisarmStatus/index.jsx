@@ -1,14 +1,14 @@
-import { useEffect, useContext } from 'react';
+import { useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { GlobalContext } from '../../context';
+// import { GlobalContext } from '../../context';
 import Api from '../../services/api';
 import { TableHeader } from '../../components/UI/tables/TableHeaders';
 import { TableData, TableDataHeader, TableDataRow, TableCellMedium, TableCellShort, TableCellLong } from '../../components/UI/tables/TableDataElements';
 import { MainHeading, SubHeading } from '../../components/UI/headings';
 import { useSearchParams } from 'react-router-dom';
 
-function DisarmStatus(){
-  const context = useContext(GlobalContext);
+function DisarmStatus({ hedgeStatusData,setHedgeStatusData,hedgeStatus,setHedgeStatus }){
+  // const context = useContext(GlobalContext);
   const [searchParams] = useSearchParams();
 
   const accountInLocalStorage = localStorage.getItem('account');
@@ -26,9 +26,9 @@ function DisarmStatus(){
     const data = { 'hedge':id}
     Api.call.post('hedges/disarmStatus',data,{ headers:headers })
     .then(res => {
-      context.setHedgeStatusData(res.data);
-      context.setHedgeStatus(res.data.data);
-      console.log(res.data);
+      setHedgeStatusData(res.data);
+      setHedgeStatus(res.data.data);
+      //console.log(res.data);
     }).catch(err => {
       //setFormError(err);
       console.warn(err)})
@@ -63,19 +63,19 @@ function DisarmStatus(){
           <TableCellMedium>Fecha Desarme</TableCellMedium>
         </TableDataHeader>
         {
-          context.hedgeStatusData &&
+          hedgeStatusData &&
             <>
               <TableDataRow key={uuidv4()}>
                 <TableCellMedium
-                  className='bi-u-text-base-black'>{context.hedgeStatusData.hedge_ref}</TableCellMedium>
-                <TableCellMedium>{context.hedgeStatusData.hedge_item_ref}</TableCellMedium>
-                <TableCellMedium>{context.hedgeStatusData.hedge_instrument_ref}</TableCellMedium>
-                <TableCellMedium>{context.hedgeStatusData.hedge_type}</TableCellMedium>
-                <TableCellMedium>{context.hedgeStatusData.amount}</TableCellMedium>
-                <TableCellMedium>{context.hedgeStatusData.date_start}</TableCellMedium>
-                <TableCellMedium>{context.hedgeStatusData.date_expire}</TableCellMedium>
-                <TableCellMedium>{context.hedgeStatusData.disarm_reason}</TableCellMedium>
-                <TableCellMedium>{context.hedgeStatusData.date_request}</TableCellMedium>
+                  className='bi-u-text-base-black'>{hedgeStatusData.hedge_ref}</TableCellMedium>
+                <TableCellMedium>{hedgeStatusData.hedge_item_ref}</TableCellMedium>
+                <TableCellMedium>{hedgeStatusData.hedge_instrument_ref}</TableCellMedium>
+                <TableCellMedium>{hedgeStatusData.hedge_type}</TableCellMedium>
+                <TableCellMedium>{hedgeStatusData.amount}</TableCellMedium>
+                <TableCellMedium>{hedgeStatusData.date_start}</TableCellMedium>
+                <TableCellMedium>{hedgeStatusData.date_expire}</TableCellMedium>
+                <TableCellMedium>{hedgeStatusData.disarm_reason}</TableCellMedium>
+                <TableCellMedium>{hedgeStatusData.date_request}</TableCellMedium>
               </TableDataRow>
             </>
         }
@@ -95,7 +95,7 @@ function DisarmStatus(){
           <TableCellLong>Comentarios</TableCellLong>
         </TableDataHeader>
         {
-            context.hedgeStatus.map(hedge => {
+            hedgeStatus.map(hedge => {
               const renderStatus = () => {
                 if (hedge.status == 'Ok') {
                   return (<><span className='bi-u-success-text'>{hedge.status}</span></>);  

@@ -33,7 +33,7 @@ export const IconButSmSuccess = (props) => {
     <div 
       className={`bi-o-icon-button-small--success ${props.className}`}
       onClick={props.handleClick} >
-      {props.children}
+      {props.children}  
     </div>
   );
 }

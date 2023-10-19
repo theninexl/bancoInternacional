@@ -22,6 +22,7 @@ function EditUser(){
   //getUser
   const [userName, setUserName] = useState('');
   const [surName, setSurName] = useState('');
+  const [department, setDepartment] = useState('');
   const [email, setEmail] = useState('');
 
   const userID = searchParams.get('id');
@@ -35,6 +36,7 @@ function EditUser(){
     .then(response => {
       setUserName(response?.data?.name);
       setSurName(response?.data?.surname);
+      setDepartment(response?.data?.department);
       setEmail(response?.data?.email)
     }).catch(err => {
       setFormError(err);
@@ -59,6 +61,7 @@ function EditUser(){
     const data = {
       name: userName,
       surname: surName,
+      department: department,
       email: email,
       password: formData.get('UserPwd'),
       password2: formData.get('UserPwd2'),
@@ -69,6 +72,7 @@ function EditUser(){
         "id_user":userID,
         "name":data.name,
         "surname":data.surname,
+        "department":data.department,
         "email":data.email,
         "password":data.password,
         "cat_display":"",
@@ -121,6 +125,16 @@ function EditUser(){
                 value={surName}
                 handleOnChange={e => setSurName(e.target.value)}>
                   Apellidos
+              </LabelElement>
+            </SimpleFormRow>
+            <SimpleFormRow>
+              <LabelElement
+                htmlFor='UserDepartment'
+                type='text'
+                placeholder={department}
+                value={department}
+                handleOnChange={e => setDepartment(e.target.value)}>
+                  Departamento
               </LabelElement>
             </SimpleFormRow>
             <SimpleFormRow>

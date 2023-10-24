@@ -53,12 +53,12 @@ const MainNavbar = ({ signOut,setSignOut,setAccount,userBoxOpen,setUserBoxOpen }
         <>
           <Link
             to='/bancoInternacional/hedges'
-            className={isHedgeActive ? 'bi-u-text-link bi-u-text-link__active' : 'bi-u-text-link'}>
+            className={isHedgeActive ? 'bi-c-navbar-links__textbutt active' : 'bi-c-navbar-links__textbutt'}>
             Coberturas
           </Link>
           <Link
             to='/bancoInternacional/users'
-            className={isUsersActive ? 'bi-u-text-link bi-u-text-link__active' : 'bi-u-text-link'}>
+            className={isUsersActive ? 'bi-c-navbar-links__textbutt active' : 'bi-c-navbar-links__textbutt'}>
             Usuarios
           </Link>
         </>
@@ -76,10 +76,11 @@ const MainNavbar = ({ signOut,setSignOut,setAccount,userBoxOpen,setUserBoxOpen }
             <div className="bi-c-navbar__left">              
               <Logo/>
             </div>
-            <div className="bi-c-navbar__center bi-u-centerText"> 
-              {renderMainLinks()}
-            </div>
+            <div className="bi-c-navbar__center bi-u-centerText"></div>
             <div className="bi-c-navbar__right">
+              <div className='bi-c-navbar__navBtns'>
+                {renderMainLinks()}
+              </div>
               {renderLoginButton()}
             </div>
           </nav>

@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 // import { GlobalContext } from '../../context';
 import Api from '../../services/api';
 import { TableHeader } from '../../components/UI/tables/TableHeaders';
-import { TableData, TableDataHeader, TableDataRow, TableCellMedium, TableCellShort } from '../../components/UI/tables/TableDataElements';
+import { TableData, TableDataHeader, TableDataRow, TableCellMedium, TableCellShort, TableDataRowWrapper } from '../../components/UI/tables/TableDataElements';
 import TablePagination from '../../components/TablePagination';
 import { SortButton } from '../../components/UI/buttons/Buttons';
 import { IconButSm } from '../../components/UI/buttons/IconButtons';
@@ -203,34 +203,36 @@ function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPag
               } 
               return (
                 <TableDataRow key={uuidv4()}>
-                  <TableCellMedium
-                    className='bi-u-text-base-black'>{hedge.hedge_ref}</TableCellMedium>
-                  <TableCellMedium>{hedge.hedge_item_ref}</TableCellMedium>
-                  <TableCellMedium>{hedge.hedge_instrument_ref}</TableCellMedium>
-                  <TableCellMedium>{hedge.hedge_type}</TableCellMedium>
-                  <TableCellMedium>{hedge.rate}</TableCellMedium>
-                  <TableCellMedium>{hedge.mtm}</TableCellMedium>
-                  <TableCellMedium>{hedge.oci}</TableCellMedium>
-                  <TableCellMedium>{hedge.pyl}</TableCellMedium>
-                  <TableCellMedium>{hedge.amount}</TableCellMedium>
-                  <TableCellMedium>{hedge.date_expire}</TableCellMedium>
-                  <TableCellMedium>{hedge.user_create}</TableCellMedium>
-                  <TableCellShort>
-                    <IconButSm
-                      className="bi-o-icon-button-small--disabled">
-                      <DocumentArrowDownIcon/>
-                    </IconButSm>
-                  </TableCellShort>
-                  <TableCellShort>
-                    {renderStatus()}
-                  </TableCellShort>
-                  <TableCellShort>
-                    <IconButSm
-                      handleClick={() => requestDisarm(hedge.hedge_ref)}
-                      className="bi-o-icon-button-small--primary">
-                      <BoltIcon/>
-                    </IconButSm>
-                  </TableCellShort>
+                  <TableDataRowWrapper>
+                    <TableCellMedium
+                      className='bi-u-text-base-black'>{hedge.hedge_ref}</TableCellMedium>
+                    <TableCellMedium>{hedge.hedge_item_ref}</TableCellMedium>
+                    <TableCellMedium>{hedge.hedge_instrument_ref}</TableCellMedium>
+                    <TableCellMedium>{hedge.hedge_type}</TableCellMedium>
+                    <TableCellMedium>{hedge.rate}</TableCellMedium>
+                    <TableCellMedium>{hedge.mtm}</TableCellMedium>
+                    <TableCellMedium>{hedge.oci}</TableCellMedium>
+                    <TableCellMedium>{hedge.pyl}</TableCellMedium>
+                    <TableCellMedium>{hedge.amount}</TableCellMedium>
+                    <TableCellMedium>{hedge.date_expire}</TableCellMedium>
+                    <TableCellMedium>{hedge.user_create}</TableCellMedium>
+                    <TableCellShort>
+                      <IconButSm
+                        className="bi-o-icon-button-small--disabled">
+                        <DocumentArrowDownIcon/>
+                      </IconButSm>
+                    </TableCellShort>
+                    <TableCellShort>
+                      {renderStatus()}
+                    </TableCellShort>
+                    <TableCellShort>
+                      <IconButSm
+                        handleClick={() => requestDisarm(hedge.hedge_ref)}
+                        className="bi-o-icon-button-small--primary">
+                        <BoltIcon/>
+                      </IconButSm>
+                    </TableCellShort>
+                    </TableDataRowWrapper>
                 </TableDataRow>
               );
             })

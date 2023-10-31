@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import SecNavbar from '../SecondaryNavbar';
 import Logo from '../UI/Logo';
@@ -5,15 +6,15 @@ import UserBox from './UserBox';
 
 const MainNavbar = ({ signOut,setSignOut,setAccount,userBoxOpen,setUserBoxOpen }) => {
   const path = useLocation().pathname;
-
   
   //evaluar account
   const account = localStorage.getItem('account');
   const parsedAccount = JSON.parse(account);
-  //evaluar signout
-  const signOUt = localStorage.getItem('sign-out');
-  const parsedSignOut = JSON.parse(signOUt);
-  const isUserSignOut = signOut || parsedSignOut;
+ //evaluar signout
+  const signOUT = localStorage.getItem('sign-out');
+  const parsedSignOut = JSON.parse(signOUT);
+  const isUserSignOut = parsedSignOut;
+
   
   //manejar signout
   const handleSignOut = (e) => {
@@ -30,7 +31,7 @@ const MainNavbar = ({ signOut,setSignOut,setAccount,userBoxOpen,setUserBoxOpen }
   //overlay boton signout
   const handleUserOverlay = () => {  
     setUserBoxOpen(!userBoxOpen);
-  }  
+  }
 
   const renderLoginButton = () => {
     if (!isUserSignOut) {
@@ -47,6 +48,7 @@ const MainNavbar = ({ signOut,setSignOut,setAccount,userBoxOpen,setUserBoxOpen }
   const renderMainLinks = () => {
     const isUsersActive = path.includes('/bancoInternacional/users');
     const isHedgeActive = path.includes('/bancoInternacional/hedges');
+    const isBalanceMangementActive = path.includes('/bancoInternacional/mgmt');
 
     if (!isUserSignOut) {
       return (
@@ -57,6 +59,11 @@ const MainNavbar = ({ signOut,setSignOut,setAccount,userBoxOpen,setUserBoxOpen }
             Coberturas
           </Link>
           <Link
+            to='/bancoInternacional/mgmt-balance-view'
+            className={isBalanceMangementActive ? 'bi-c-navbar-links__textbutt active' : 'bi-c-navbar-links__textbutt'}>
+            Gestión de balance
+          </Link>
+          <Link
             to='/bancoInternacional/users'
             className={isUsersActive ? 'bi-c-navbar-links__textbutt active' : 'bi-c-navbar-links__textbutt'}>
             Usuarios
@@ -64,8 +71,7 @@ const MainNavbar = ({ signOut,setSignOut,setAccount,userBoxOpen,setUserBoxOpen }
         </>
       )
     } 
-  }
-  
+  }  
 
   return (
     <>

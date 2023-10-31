@@ -3,7 +3,7 @@ import { useNavigate, createSearchParams } from 'react-router-dom';
 // import { GlobalContext } from '../../context';
 import Api from '../../services/api';
 import { TableHeader } from "../../components/UI/tables/TableHeaders";
-import { TableData, TableDataHeader, TableDataRow, TableCellMedium, TableCellShort } from '../../components/UI/tables/TableDataElements';
+import { TableData, TableDataHeader, TableDataRow, TableCellMedium, TableCellShort, TableDataRowWrapper } from '../../components/UI/tables/TableDataElements';
 import { IconButSmPrimary, IconButSmSecondary } from '../../components/UI/buttons/IconButtons';
 import TablePagination from '../../components/TablePagination';
 import { ButtonLPrimary, ButtonLSecondary } from '../../components/UI/buttons/Buttons';
@@ -136,23 +136,25 @@ const Users = ({ totalPages,setTotalPages,users,setUsers,page,setPage }) => {
             users.map(user => {
               return (
                 <TableDataRow key={user.id_user}>
-                  <TableCellMedium
-                    className='bi-u-text-base-black'>{user.name}</TableCellMedium>
-                  <TableCellMedium>{user.surname}</TableCellMedium>
-                  <TableCellMedium>{user.department}</TableCellMedium>
-                  <TableCellMedium>{user.email}</TableCellMedium>
-                  <TableCellShort>
-                    <IconButSmPrimary
-                      handleClick={() => sendToEdit(user.id_user)}>
-                      <PencilSquareIcon/>
-                    </IconButSmPrimary>
-                  </TableCellShort>
-                  <TableCellShort>
-                    <IconButSmSecondary
-                      handleClick={() => openDeleteModal(user.id_user)}>
-                      <TrashIcon/>
-                    </IconButSmSecondary>
-                  </TableCellShort>
+                  <TableDataRowWrapper>
+                    <TableCellMedium
+                      className='bi-u-text-base-black'>{user.name}</TableCellMedium>
+                    <TableCellMedium>{user.surname}</TableCellMedium>
+                    <TableCellMedium>{user.department}</TableCellMedium>
+                    <TableCellMedium>{user.email}</TableCellMedium>
+                    <TableCellShort>
+                      <IconButSmPrimary
+                        handleClick={() => sendToEdit(user.id_user)}>
+                        <PencilSquareIcon/>
+                      </IconButSmPrimary>
+                    </TableCellShort>
+                    <TableCellShort>
+                      <IconButSmSecondary
+                        handleClick={() => openDeleteModal(user.id_user)}>
+                        <TrashIcon/>
+                      </IconButSmSecondary>
+                    </TableCellShort>
+                  </TableDataRowWrapper>
                 </TableDataRow>
               );
             })

@@ -440,6 +440,7 @@ strong {
   padding: 16px 32px;
 }
 .bi-l-tabledata__row {
+  flex-direction: column;
   flex-grow: 1;
 }
 .bi-l-tabledata__row:last-child {
@@ -448,7 +449,17 @@ strong {
 .bi-l-tabledata__row--noRead {
   background-color: #F4F4F4;
 }
+.bi-l-tabledata .tablerow-wrapper {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  gap: 8px;
+}
 .bi-l-tabledata .tablecell-long, .bi-l-tabledata .tablecell-medium, .bi-l-tabledata .tablecell-short {
+  display: flex;
+  align-items: center;
+}
+.bi-l-tabledata .tablecell-long a, .bi-l-tabledata .tablecell-medium a, .bi-l-tabledata .tablecell-short a {
   display: flex;
   align-items: center;
 }
@@ -1235,6 +1246,11 @@ strong {
   color: _error("scarpaFlow does not exist in getColor");
 }
 
+.bi-o-inlineIcon--big {
+  height: 16px;
+  width: 16px;
+}
+
 .bi-o-header-sub-section {
   background-color: #F4F4F4;
   border-radius: 8px;
@@ -1893,4 +1909,14 @@ strong {
 }
 .bi-u-border-bb-gm {
   border-bottom: 1px solid #CECECE;
+}
+
+.bi-u-noRotate {
+  transform: rotate(0deg);
+  transition: transform 0.25s;
+}
+
+.bi-u-rotateRight {
+  transform: rotate(90deg);
+  transition: transform 0.25s;
 }/*# sourceMappingURL=styles.css.map */

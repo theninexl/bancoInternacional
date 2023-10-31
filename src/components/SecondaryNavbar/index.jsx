@@ -36,6 +36,20 @@ const SecNavbar = () => {
         2: { url:'/bancoInternacional/hedges-new', title:'Nueva Alta'},
       }
     },
+    { currentPath: '/bancoInternacional/mgmt-balance-view',
+      pageTitle: 'Gestión de balance',
+      secNavLinks: {
+        1: { url:'/bancoInternacional/mgmt-balance-view', title:'Vista balance'},
+        2: { url:'/bancoInternacional/mgmt-bonus-view', title:'Vista bono'},
+      }
+    },
+    { currentPath: '/bancoInternacional/mgmt-bonus-view',
+      pageTitle: 'Gestión de balance',
+      secNavLinks: {
+        1: { url:'/bancoInternacional/mgmt-balance-view', title:'Vista balance'},
+        2: { url:'/bancoInternacional/mgmt-bonus-view', title:'Vista bono'},
+      }
+    },
     { currentPath: '/bancoInternacional/users',
       pageTitle: 'Usuarios',
       secNavLinks: {

@@ -6,6 +6,8 @@ import DisarmStatus from '../DisarmStatus';
 import DisarmHedge from '../DisarmHedge';
 import Login from '../Login';
 import Users from '../Users';
+import BalanceView from '../BalanceView';
+import BonusView from '../BonusView';
 import NewUser from '../NewUser';
 import EditUser from '../EditUser';
 import MainNavbar from '../../components/MainNavbar';
@@ -89,6 +91,16 @@ const AppRoutes = () => {
       /> 
       : 
       <Navigate replace to={'/bancoInternacional/hedges'}/> },
+    { path: '/bancoInternacional/mgmt-balance-view', 
+      element: !isUserSignOut ? 
+      <BalanceView/> 
+      : 
+      <Navigate replace to={'/bancoInternacional/login'}/> },
+    { path: '/bancoInternacional/mgmt-bonus-view', 
+      element: !isUserSignOut ? 
+      <BonusView/> 
+      : 
+      <Navigate replace to={'/bancoInternacional/login'}/> },
     { path: '/bancoInternacional/users', 
       element: !isUserSignOut ? 
       <Users

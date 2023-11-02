@@ -237,7 +237,7 @@ const NewHedge = ({ fileInstrument, setFileInstrument }) => {
     Api.call.post("hedges/create",data,{ headers:headers })
       .then(res => {
         console.log(res);
-        navigate('/bancoInternacional/hedges');
+        navigate('/hedges');
       })
       .catch(err => {
         console.log('err',err);
@@ -246,7 +246,7 @@ const NewHedge = ({ fileInstrument, setFileInstrument }) => {
   }
 
   const HandleCancel = () => {
-    navigate('/bancoInternacional/hedges');
+    navigate('/hedges');
   }
 
   return (
@@ -957,7 +957,7 @@ const NewHedge = ({ fileInstrument, setFileInstrument }) => {
                   className='bi-o-button--short'
                   handleClick={HandleCancel}
                   >
-                    Cancel
+                    Cancelar
                 </ButtonLGhost>
                 <ButtonLPrimary
                   className='bi-o-button--short'

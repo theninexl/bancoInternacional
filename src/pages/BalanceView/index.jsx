@@ -96,7 +96,7 @@ function BalanceView(){
     <main className="bi-u-h-screen--wSubNav">      
        <TableHeader>
           <MainHeading>
-            Vista Balance
+            Gestión de balance
           </MainHeading>
         </TableHeader>
         <TableData>

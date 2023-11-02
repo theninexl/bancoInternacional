@@ -82,7 +82,7 @@ const Users = ({ totalPages,setTotalPages,users,setUsers,page,setPage }) => {
   //editar usuario
   const sendToEdit = (id) => {
     navigate({
-      pathname: '/bancoInternacional/users-edit',
+      pathname: '/users-edit',
       search: createSearchParams({
         id:id
       }).toString()
@@ -120,17 +120,17 @@ const Users = ({ totalPages,setTotalPages,users,setUsers,page,setPage }) => {
         {renderView()}
         <TableHeader>
           <MainHeading>
-            Listado usuarios registrados en el sistema
+            Listado de usuarios
           </MainHeading>
         </TableHeader>
         <TableData>
           <TableDataHeader>
-            <TableCellMedium>Usuario</TableCellMedium>
+            <TableCellMedium>Nombre</TableCellMedium>
             <TableCellMedium>Apellidos</TableCellMedium>
             <TableCellMedium>Departamento</TableCellMedium>
             <TableCellMedium>Email</TableCellMedium>
-            <TableCellShort>Editar</TableCellShort>
-            <TableCellShort>Eliminar</TableCellShort>
+            <TableCellShort></TableCellShort>
+            <TableCellShort></TableCellShort>
           </TableDataHeader>
           {
             users.map(user => {

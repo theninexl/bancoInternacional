@@ -46,25 +46,25 @@ const MainNavbar = ({ signOut,setSignOut,setAccount,userBoxOpen,setUserBoxOpen }
   }
 
   const renderMainLinks = () => {
-    const isUsersActive = path.includes('/bancoInternacional/users');
-    const isHedgeActive = path.includes('/bancoInternacional/hedges');
-    const isBalanceMangementActive = path.includes('/bancoInternacional/mgmt');
+    const isUsersActive = path.includes('/users');
+    const isHedgeActive = path.includes('/hedges');
+    const isBalanceMangementActive = path.includes('/mgmt');
 
     if (!isUserSignOut) {
       return (
         <>
           <Link
-            to='/bancoInternacional/hedges'
+            to='/hedges'
             className={isHedgeActive ? 'bi-c-navbar-links__textbutt active' : 'bi-c-navbar-links__textbutt'}>
             Coberturas
           </Link>
           <Link
-            to='/bancoInternacional/mgmt-balance-view'
+            to='/mgmt-balance-view'
             className={isBalanceMangementActive ? 'bi-c-navbar-links__textbutt active' : 'bi-c-navbar-links__textbutt'}>
             Gestión de balance
           </Link>
           <Link
-            to='/bancoInternacional/users'
+            to='/users'
             className={isUsersActive ? 'bi-c-navbar-links__textbutt active' : 'bi-c-navbar-links__textbutt'}>
             Usuarios
           </Link>
@@ -99,7 +99,7 @@ const MainNavbar = ({ signOut,setSignOut,setAccount,userBoxOpen,setUserBoxOpen }
           </div>
         </div>
       </div>
-      {['/bancoInternacional/login','/'].includes(path) ? null : <SecNavbar/>}
+      {['/login','/'].includes(path) ? null : <SecNavbar/>}
     </header>
     </>
   );

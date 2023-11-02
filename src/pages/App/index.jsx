@@ -43,8 +43,8 @@ const AppRoutes = () => {
   const isUserSignOut = signOut || parsedSignOut;
 
   let routes = useRoutes([
-    { path: '/bancoInternacional/', element: !isUserSignOut ? <Navigate replace to={'/bancoInternacional/hedges'}/> : <Navigate replace to={'/bancoInternacional/login'}/> },
-    { path: '/bancoInternacional/hedges', 
+    { path: '/', element: !isUserSignOut ? <Navigate replace to={'/hedges'}/> : <Navigate replace to={'/login'}/> },
+    { path: '/hedges', 
       element: !isUserSignOut ? 
       <HedgeAccounting
         hedges={hedges}
@@ -55,15 +55,15 @@ const AppRoutes = () => {
         setTotalPages={setTotalPages}
         /> 
       : 
-      <Navigate replace to={'/bancoInternacional/login'}/> },
-    { path: '/bancoInternacional/hedges-new', 
+      <Navigate replace to={'/login'}/> },
+    { path: '/hedges-new', 
       element: !isUserSignOut ? 
       <NewHedge
         fileInstrument={fileInstrument}
         setFileInstrument={setFileInstrument}/> 
       : 
-      <Navigate replace to={'/bancoInternacional/login'}/>},
-    { path: '/bancoInternacional/hedges-status', 
+      <Navigate replace to={'/login'}/>},
+    { path: '/hedges-status', 
       element: !isUserSignOut ? 
       <DisarmStatus
         hedgeStatusData={hedgeStatusData}
@@ -72,8 +72,8 @@ const AppRoutes = () => {
         setHedgeStatus={setHedgeStatus}
       /> 
       : 
-      <Navigate replace to={'/bancoInternacional/login'}/>},
-    { path: '/bancoInternacional/hedges-disarm', 
+      <Navigate replace to={'/login'}/>},
+    { path: '/hedges-disarm', 
       element: !isUserSignOut ?
       <DisarmHedge
         hedgeStatusData={hedgeStatusData}
@@ -82,26 +82,26 @@ const AppRoutes = () => {
         setHedgeDisarmData={setHedgeDisarmData}
       /> 
       : 
-      <Navigate replace to={'/bancoInternacional/login'}/>},
-    { path: '/bancoInternacional/login', 
+      <Navigate replace to={'/login'}/>},
+    { path: '/login', 
       element: isUserSignOut ? 
       <Login
         setAccount={setAccount}
         setSignOut={setSignOut}
       /> 
       : 
-      <Navigate replace to={'/bancoInternacional/hedges'}/> },
-    { path: '/bancoInternacional/mgmt-balance-view', 
+      <Navigate replace to={'/hedges'}/> },
+    { path: '/mgmt-balance-view', 
       element: !isUserSignOut ? 
       <BalanceView/> 
       : 
-      <Navigate replace to={'/bancoInternacional/login'}/> },
-    { path: '/bancoInternacional/mgmt-bonus-view', 
+      <Navigate replace to={'/login'}/> },
+    { path: '/mgmt-bonus-view', 
       element: !isUserSignOut ? 
       <BonusView/> 
       : 
-      <Navigate replace to={'/bancoInternacional/login'}/> },
-    { path: '/bancoInternacional/users', 
+      <Navigate replace to={'/login'}/> },
+    { path: '/users', 
       element: !isUserSignOut ? 
       <Users
         setTotalPages={setTotalPages}
@@ -112,10 +112,10 @@ const AppRoutes = () => {
         totalPages={totalPages}
       /> 
       : 
-      <Navigate replace to={'/bancoInternacional/login'}/> },
-    { path: '/bancoInternacional/users-new', 
-      element: !isUserSignOut ? <NewUser/> : <Navigate replace to={'/bancoInternacional/login'}/> },
-    { path: '/bancoInternacional/users-edit', element: !isUserSignOut ? <EditUser/> : <Navigate replace to={'/bancoInternacional/login'}/>} 
+      <Navigate replace to={'/login'}/> },
+    { path: '/users-new', 
+      element: !isUserSignOut ? <NewUser/> : <Navigate replace to={'/login'}/> },
+    { path: '/users-edit', element: !isUserSignOut ? <EditUser/> : <Navigate replace to={'/login'}/>} 
   ])
   return routes;
 }

@@ -59,7 +59,7 @@ export const SortButton = (props) => {
   return (
     <button
       data-column={props.orderCol}
-      className={`bi-o-sortButton`}
+      className={`bi-o-sortButton ${props.className}`}
       onClick={props.handleClick}
       >
       {props.children}

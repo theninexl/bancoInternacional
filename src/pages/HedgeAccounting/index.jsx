@@ -61,7 +61,7 @@ function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPag
   //editar usuario
   const seeStatus = (id) => {
     navigate({      
-      pathname:'/bancoInternacional/hedges-status',
+      pathname:'/hedges-status',
       search: createSearchParams({
         id:id
       }).toString()
@@ -70,7 +70,7 @@ function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPag
   //desarmar cobertura
   const requestDisarm = (id) => {
     navigate({      
-      pathname:'/bancoInternacional/hedges-disarm',
+      pathname:'/hedges-disarm',
       search: createSearchParams({
         id:id
       }).toString()
@@ -117,7 +117,7 @@ function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPag
     <main className="bi-u-h-screen--wSubNav">
        <TableHeader>
           <MainHeading>
-            Listado coberturas
+            Listado de coberturas
           </MainHeading>
           <div className='bi-c-form-simple'>
             <LabelElement
@@ -132,41 +132,35 @@ function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPag
         </TableHeader>
         <TableData>
           <TableDataHeader>
-            <TableCellMedium>
+            <TableCellMedium className='bi-u-centerText'>
               <SortButton orderCol={1} handleClick={() => sortItems()}>Ref.</SortButton>
             </TableCellMedium>
-            <TableCellMedium>
-              <SortButton orderCol={2} handleClick={() => sortItems()}>Ref. Part. Cubierta</SortButton>
+            <TableCellMedium className='bi-u-centerText'>
+              <SortButton orderCol={2} handleClick={() => sortItems()}>Partida cubierta</SortButton>
+            </TableCellMedium>
+            <TableCellMedium className='bi-u-centerText'>
+              <SortButton orderCol={3} handleClick={() => sortItems()}>Instrumento</SortButton>
+            </TableCellMedium>
+            <TableCellMedium className='bi-u-centerText'>
+              <SortButton orderCol={4} handleClick={() => sortItems()}>Tipo</SortButton>
+            </TableCellMedium>
+            <TableCellMedium className='bi-u-centerText'>
+              <SortButton orderCol={5} handleClick={() => sortItems()}>Ratio eficacia</SortButton>
             </TableCellMedium>
             <TableCellMedium>
-              <SortButton orderCol={3} handleClick={() => sortItems()}>Ref. Instr.</SortButton>
+              <SortButton orderCol={6} handleClick={() => sortItems()}>Monto subyacente</SortButton>
             </TableCellMedium>
             <TableCellMedium>
-              <SortButton orderCol={4} handleClick={() => sortItems()}>Tipo Cobertura</SortButton>
+              <SortButton orderCol={7} handleClick={() => sortItems()}>Fecha inicio</SortButton>
             </TableCellMedium>
             <TableCellMedium>
-              <SortButton orderCol={5} handleClick={() => sortItems()}>Ratio Eficacia</SortButton>
+              <SortButton orderCol={8} handleClick={() => sortItems()}>Fecha vencimiento</SortButton>
             </TableCellMedium>
             <TableCellMedium>
-              <SortButton orderCol={6} handleClick={() => sortItems()}>MtM Derivado</SortButton>
-            </TableCellMedium>
-            <TableCellMedium>
-              <SortButton orderCol={7} handleClick={() => sortItems()}>Impacto OCI</SortButton>
-            </TableCellMedium>
-            <TableCellMedium>
-              <SortButton orderCol={8} handleClick={() => sortItems()}>Impacto P&L</SortButton>
-            </TableCellMedium>
-            <TableCellMedium>
-              <SortButton orderCol={9} handleClick={() => sortItems()}>Monto Subyacente</SortButton>
-            </TableCellMedium>
-            <TableCellMedium>
-              <SortButton orderCol={10} handleClick={() => sortItems()}>Fecha Final</SortButton>
-            </TableCellMedium>
-            <TableCellMedium>
-              <SortButton orderCol={11} handleClick={() => sortItems()}>Usuario</SortButton>
+              <SortButton orderCol={9} handleClick={() => sortItems()}>Usuario</SortButton>
             </TableCellMedium>
             <TableCellShort>Ficha</TableCellShort>
-            <TableCellShort>Status</TableCellShort>
+            <TableCellShort>Estado</TableCellShort>
             <TableCellShort>Desarmar</TableCellShort>
           </TableDataHeader>
           {
@@ -176,16 +170,16 @@ function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPag
                   return (
                     <>
                     <IconButSm
-                      handleClick={() => seeStatus(hedge.hedge_ref)}
+                      handleClick={() => seeStatus(hedge.id_hedge_relationship)}
                       className="bi-o-icon-button-small--success">
                       <InformationCircleIcon/>
                     </IconButSm>
                     </>);  
-                } else if (hedge.status == 'Pending') {
+                } else if (hedge.status == 'Pendiente') {
                   return (
                     <>
                     <IconButSm
-                      handleClick={() => seeStatus(hedge.hedge_ref)}
+                      handleClick={() => seeStatus(hedge.id_hedge_relationship)}
                       className="bi-o-icon-button-small--warning">
                       <InformationCircleIcon/>
                     </IconButSm>
@@ -194,7 +188,7 @@ function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPag
                   return (
                     <>
                     <IconButSm
-                      handleClick={() => seeStatus(hedge.hedge_ref)}
+                      handleClick={() => seeStatus(hedge.id_hedge_relationship)}
                       className="bi-o-icon-button-small--error">
                       <InformationCircleIcon/>
                     </IconButSm>
@@ -205,17 +199,15 @@ function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPag
                 <TableDataRow key={uuidv4()}>
                   <TableDataRowWrapper>
                     <TableCellMedium
-                      className='bi-u-text-base-black'>{hedge.hedge_ref}</TableCellMedium>
-                    <TableCellMedium>{hedge.hedge_item_ref}</TableCellMedium>
-                    <TableCellMedium>{hedge.hedge_instrument_ref}</TableCellMedium>
-                    <TableCellMedium>{hedge.hedge_type}</TableCellMedium>
-                    <TableCellMedium>{hedge.rate}</TableCellMedium>
-                    <TableCellMedium>{hedge.mtm}</TableCellMedium>
-                    <TableCellMedium>{hedge.oci}</TableCellMedium>
-                    <TableCellMedium>{hedge.pyl}</TableCellMedium>
-                    <TableCellMedium>{hedge.amount}</TableCellMedium>
-                    <TableCellMedium>{hedge.date_expire}</TableCellMedium>
-                    <TableCellMedium>{hedge.user_create}</TableCellMedium>
+                      className='bi-u-text-base-black bi-u-centerText'>{hedge.id_hedge_relationship}</TableCellMedium>
+                    <TableCellMedium className='bi-u-centerText'>{hedge.id_hedge_item}</TableCellMedium>
+                    <TableCellMedium className='bi-u-centerText'>{hedge.id_hedge_instrument}</TableCellMedium>
+                    <TableCellMedium className='bi-u-centerText'>{hedge.cat_hedge_type}</TableCellMedium>
+                    <TableCellMedium className='bi-u-centerText'>{hedge.pct_effectiveness}</TableCellMedium>
+                    <TableCellMedium>{hedge.num_underlying_amount}</TableCellMedium>
+                    <TableCellMedium>{hedge.dt_start_date}</TableCellMedium>
+                    <TableCellMedium>{hedge.dt_maturity_date}</TableCellMedium>
+                    <TableCellMedium>{hedge.user_insert}</TableCellMedium>
                     <TableCellShort>
                       <IconButSm
                         className="bi-o-icon-button-small--disabled">
@@ -227,7 +219,7 @@ function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPag
                     </TableCellShort>
                     <TableCellShort>
                       <IconButSm
-                        handleClick={() => requestDisarm(hedge.hedge_ref)}
+                        handleClick={() => requestDisarm(hedge.id_hedge_relationship)}
                         className="bi-o-icon-button-small--primary">
                         <BoltIcon/>
                       </IconButSm>

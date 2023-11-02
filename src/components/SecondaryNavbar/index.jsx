@@ -4,71 +4,71 @@ import { v4 as uuidv4 } from 'uuid';
 const SecNavbar = () => {
   const path = useLocation().pathname;
   const secNavInfo = [
-    { currentPath: '/bancoInternacional/',
+    { currentPath: '/',
       pageTitle: 'Inicio',
       secNavLinks: {}
     },
-    { currentPath: '/bancoInternacional/hedges',
+    { currentPath: '/hedges',
       pageTitle: 'Coberturas',
       secNavLinks: {
-        1: { url:'/bancoInternacional/hedges', title:'Listado coberturas'},
-        2: { url:'/bancoInternacional/hedges-new', title:'Nueva Alta'},
+        1: { url:'/hedges', title:'Listar coberturas'},
+        2: { url:'/hedges-new', title:'Crear cobertura'},
       }
     },
-    { currentPath: '/bancoInternacional/hedges-new',
+    { currentPath: '/hedges-new',
       pageTitle: 'Coberturas',
       secNavLinks: {
-        1: { url:'/bancoInternacional/hedges', title:'Listado coberturas'},
-        2: { url:'/bancoInternacional/hedges-new', title:'Nueva Alta'},
+        1: { url:'/hedges', title:'Listar coberturas'},
+        2: { url:'/hedges-new', title:'Crear cobertura'},
       }
     },
-    { currentPath: '/bancoInternacional/hedges-status',
-      pageTitle: 'Status coberturas',
+    { currentPath: '/hedges-status',
+      pageTitle: 'Coberturas',
       secNavLinks: {
-        1: { url:'/bancoInternacional/hedges', title:'Listado coberturas'},
-        2: { url:'/bancoInternacional/hedges-new', title:'Nueva Alta'},
+        1: { url:'/hedges', title:'Listar coberturas'},
+        2: { url:'/hedges-new', title:'Crear cobertura'},
       }
     },
-    { currentPath: '/bancoInternacional/hedges-disarm',
-      pageTitle: 'Desarme coberturas',
+    { currentPath: '/hedges-disarm',
+      pageTitle: 'Coberturas',
       secNavLinks: {
-        1: { url:'/bancoInternacional/hedges', title:'Listado coberturas'},
-        2: { url:'/bancoInternacional/hedges-new', title:'Nueva Alta'},
+        1: { url:'/hedges', title:'Listar coberturas'},
+        2: { url:'/hedges-new', title:'Crear cobertura'},
       }
     },
-    { currentPath: '/bancoInternacional/mgmt-balance-view',
+    { currentPath: '/mgmt-balance-view',
       pageTitle: 'Gestión de balance',
       secNavLinks: {
-        1: { url:'/bancoInternacional/mgmt-balance-view', title:'Vista balance'},
-        2: { url:'/bancoInternacional/mgmt-bonus-view', title:'Vista bono'},
+        1: { url:'/mgmt-balance-view', title:'Vista balance'},
+        2: { url:'/mgmt-bonus-view', title:'Vista bono'},
       }
     },
-    { currentPath: '/bancoInternacional/mgmt-bonus-view',
+    { currentPath: '/mgmt-bonus-view',
       pageTitle: 'Gestión de balance',
       secNavLinks: {
-        1: { url:'/bancoInternacional/mgmt-balance-view', title:'Vista balance'},
-        2: { url:'/bancoInternacional/mgmt-bonus-view', title:'Vista bono'},
+        1: { url:'/mgmt-balance-view', title:'Vista balance'},
+        2: { url:'/mgmt-bonus-view', title:'Vista bono'},
       }
     },
-    { currentPath: '/bancoInternacional/users',
+    { currentPath: '/users',
       pageTitle: 'Usuarios',
       secNavLinks: {
-        1: { url:'/bancoInternacional/users',title:'Usuarios registrados'},
-        2: { url:'/bancoInternacional/users-new',title:'Alta nuevo usuario'},
+        1: { url:'/users',title:'Listar usuarios'},
+        2: { url:'/users-new',title:'Crear usuario'},
       }
     },
-    { currentPath: '/bancoInternacional/users-new',
-      pageTitle: 'Alta nuevo usuario',
+    { currentPath: '/users-new',
+      pageTitle: 'Usuarios',
       secNavLinks: {
-        1: { url:'/bancoInternacional/users',title:'Usuarios registrados'},
-        2: { url:'/bancoInternacional/users-new',title:'Alta nuevo usuario'},
+        1: { url:'/users',title:'Listar usuarios'},
+        2: { url:'/users-new',title:'Crear usuario'},
       }
     },
-    { currentPath: '/bancoInternacional/users-edit',
-      pageTitle: 'Editar',
+    { currentPath: '/users-edit',
+      pageTitle: 'Usuarios',
       secNavLinks: {
-        1: { url:'/bancoInternacional/users',title:'Usuarios registrados'},
-        2: { url:'/bancoInternacional/users-new',title:'Alta nuevo usuario'},
+        1: { url:'/users',title:'Listar usuarios'},
+        2: { url:'/users-new',title:'Crear usuario'},
       }
     },
   ]

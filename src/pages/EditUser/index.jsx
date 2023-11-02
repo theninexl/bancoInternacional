@@ -81,7 +81,7 @@ function EditUser(){
 
       Api.call.post("users/edit",dataSent,{ headers:headers })
       .then(res => {
-        navigate('/bancoInternacional/users');
+        navigate('/users');
       })
       .catch(err => {
         console.log('err',err);
@@ -94,7 +94,7 @@ function EditUser(){
 
   //cancelar
   const HandleCancel = () => {
-    navigate('/bancoInternacional/users');
+    navigate('/users');
   }
 
   return(
@@ -173,14 +173,14 @@ function EditUser(){
                 className='bi-o-button--short'
                 handleClick={HandleCancel}
                 >
-                  Volver atrás
+                  Cancelar
               </ButtonLGhost>
               <ButtonLPrimary
                 className='bi-o-button--short'
                 type='submit'
                 handleClick={UpdateUser}
                 >
-                  Actualizar información
+                  Guardar
               </ButtonLPrimary>
             </SimpleFormRow>            
           </SimpleFormHrz>

@@ -48,7 +48,7 @@ function NewUser(){
     if (data.password === data.password2) {
       Api.call.post("users/create",dataSent,{ headers:headers })
       .then(res => {
-        navigate('/bancoInternacional/users');
+        navigate('/users');
       })
       .catch(err => {
         //console.log('err',err);
@@ -60,7 +60,7 @@ function NewUser(){
   }
 
   const HandleCancel = () => {
-    navigate('/bancoInternacional/users');
+    navigate('/users');
   }
 
   return(
@@ -68,7 +68,7 @@ function NewUser(){
        <main className="bi-u-h-screen--wSubNav">
        <TableHeader>
           <MainHeading>
-            Alta nuevo usuario
+            Crear usuario
           </MainHeading>
         </TableHeader>
         <SectionHalf>
@@ -131,14 +131,14 @@ function NewUser(){
                 className='bi-o-button--short'
                 handleClick={HandleCancel}
                 >
-                  Cancel
+                  Cancelar
               </ButtonLGhost>
               <ButtonLPrimary
                 className='bi-o-button--short'
                 type='submit'
                 handleClick={HandleSignIn}
                 >
-                  Enviar
+                  Guardar
               </ButtonLPrimary>
             </SimpleFormRow>            
           </SimpleFormHrz>

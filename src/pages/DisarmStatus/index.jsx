@@ -1,127 +1,216 @@
-import { useEffect } from 'react';
+import { useEffect,useState } from 'react';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 // import { GlobalContext } from '../../context';
 import Api from '../../services/api';
 import { TableHeader } from '../../components/UI/tables/TableHeaders';
-import { TableData, TableDataHeader, TableDataRow, TableCellMedium, TableCellShort, TableCellLong, TableDataRowWrapper } from '../../components/UI/tables/TableDataElements';
-import { MainHeading, SubHeading } from '../../components/UI/headings';
-import { useSearchParams } from 'react-router-dom';
+import { TableData, TableDataHeader, TableDataRow, TableCellMedium, TableCellShort, TableDataRowWrapper } from '../../components/UI/tables/TableDataElements';
+import TablePagination from '../../components/TablePagination';
+import { SortButton } from '../../components/UI/buttons/Buttons';
+import { IconButSm } from '../../components/UI/buttons/IconButtons';
+import { InformationCircleIcon } from '@heroicons/react/24/solid';
+import { MainHeading } from '../../components/UI/headings';
+import { LabelElement } from '../../components/UI/forms/SimpleForms';
 
-function DisarmStatus({ hedgeStatusData,setHedgeStatusData,hedgeStatus,setHedgeStatus }){
-  // const context = useContext(GlobalContext);
-  const [searchParams] = useSearchParams();
+
+
+function DisarmStatus({ totalPages,setTotalPages,hedges,setHedges,page,setPage }){
+  const navigate = useNavigate();
+  const rowspage = 10;
+  const [searchValue, setSearchValue] = useState('');
+  const [order, setOrder] = useState(1);
+  const sortBtns = document.querySelectorAll('.bi-o-sortButton');
 
   const accountInLocalStorage = localStorage.getItem('account');
   const parsedAccount = JSON.parse(accountInLocalStorage);
   const token = parsedAccount.token;
 
-  
-  //get Cobertura
-  const hedgeID = searchParams.get('id');
-  const getHedge = (token, id) => {
+  //calcular paginacion
+  const calcTotalPages = (totalResults,totalRows) => setTotalPages(Math.ceil(totalResults/totalRows));
+
+  //listar usuarios
+  const getHedges = (busqueda, orden) => {
     const headers = {
       'Content-Type': 'application/json',
       'x-access-token': token,
     }
-    const data = { 'hedge':id}
-    Api.call.post('hedges/disarmStatus',data,{ headers:headers })
+    const data = {
+      'search':busqueda,
+      'pagenumber':page,
+      'rowspage':rowspage,
+      'orderby':orden
+    }
+    Api.call.post('hedges/getAll',data,{ headers:headers })
     .then(res => {
-      setHedgeStatusData(res.data);
-      setHedgeStatus(res.data.data);
-      //console.log(res.data);
-    }).catch(err => {
-      //setFormError(err);
-      console.warn(err)})
+      calcTotalPages(res.data.rowscount[0].count, rowspage);
+      setHedges(res.data.data)
+    }).catch(err => console.warn(err))
   }
 
-  useEffect(()=>{      
-    const execGetHedge = async () => await getHedge(token, hedgeID);
-    execGetHedge();
-  },[]);
+  const execGetHedges = async (search,order) => await getHedges(search = search, order = order);
 
+  //resetear pagina a 1
+  useEffect(()=>{
+    setPage(1);
+  },[setPage])
+
+  useEffect(()=>{
+    execGetHedges(searchValue,order);
+  },[page, order, searchValue]);
+
+  //estado desarme
+  const seeStatus = (id) => {
+    navigate({      
+      pathname:'/hedges-status-det',
+      search: createSearchParams({
+        id:id
+      }).toString()
+    });
+  }
+
+  //reordenar resultados
+  const sortItems = () => {
+    const sortCol = event.target.getAttribute('data-column');
+    const descIcon = event.target.querySelector(':scope > span.sortIcon--desc');
+    const ascIcon = event.target.querySelector(':scope > span.sortIcon--asc');
+
+    sortBtns.forEach(btn =>{
+      const descIcon = btn.querySelector(':scope > span.sortIcon--desc');
+      const ascIcon = btn.querySelector(':scope > span.sortIcon--asc');
+      descIcon.classList.add('bi-u-inactive');
+      ascIcon.classList.add('bi-u-inactive');
+    })
+    
+    if (Math.abs(order) === Math.abs(sortCol)) {
+      if (order < 0) {
+        setOrder(Math.abs(order));
+        descIcon.classList.remove('bi-u-inactive');
+        ascIcon.classList.add('bi-u-inactive');
+      } else {
+        setOrder(-Math.abs(order));
+        descIcon.classList.add('bi-u-inactive');
+        ascIcon.classList.remove('bi-u-inactive');
+      }
+    } else {
+      if (sortCol < 0) {
+        setOrder(Math.abs(sortCol));
+        descIcon.classList.remove('bi-u-inactive');
+        ascIcon.classList.add('bi-u-inactive');
+      } else {
+        setOrder(-Math.abs(sortCol));
+        descIcon.classList.add('bi-u-inactive');
+        ascIcon.classList.remove('bi-u-inactive');
+      }
+    }
+  }
 
   return (
     <main className="bi-u-h-screen--wSubNav">
-      <TableHeader>
-        <MainHeading className='bi-u-border-bb-gm'>
-          Estado del desarme
-        </MainHeading>
-      </TableHeader>
-      <TableData>
-        <TableDataHeader>
-          <TableCellMedium>Ref.</TableCellMedium>
-          <TableCellMedium>Partida cubierta</TableCellMedium>
-          <TableCellMedium>Instrumento</TableCellMedium>
-          <TableCellMedium>Tipo</TableCellMedium>
-          <TableCellMedium>Monto subyacente</TableCellMedium>
-          <TableCellMedium>Fecha inicio</TableCellMedium>
-          <TableCellMedium>Fecha vencimiento</TableCellMedium>
-          <TableCellMedium>Motivo desarme</TableCellMedium>
-          <TableCellMedium>Fecha desarme</TableCellMedium>
-        </TableDataHeader>
-        {
-          hedgeStatusData &&
-            <>
-              <TableDataRow key={uuidv4()}>
-                <TableDataRowWrapper>
-                  <TableCellMedium
-                    className='bi-u-text-base-black'>{hedgeStatusData.id_hedge_relationship}</TableCellMedium>
-                  <TableCellMedium>{hedgeStatusData.id_hedge_item}</TableCellMedium>
-                  <TableCellMedium>{hedgeStatusData.id_hedge_instrument}</TableCellMedium>
-                  <TableCellMedium>{hedgeStatusData.cat_hedge_type}</TableCellMedium>
-                  <TableCellMedium>{hedgeStatusData.num_underlying_amount}</TableCellMedium>
-                  <TableCellMedium>{hedgeStatusData.dt_start_date}</TableCellMedium>
-                  <TableCellMedium>{hedgeStatusData.dt_maturity_date}</TableCellMedium>
-                  <TableCellMedium>{hedgeStatusData.disarm_reason}</TableCellMedium>
-                  <TableCellMedium>{hedgeStatusData.date_request}</TableCellMedium>
-                </TableDataRowWrapper>
-              </TableDataRow>
-            </>
-        }
-      </TableData>
-      <TableHeader>
-        <SubHeading  className='bi-u-border-bb-gm bi-u-spacer-mt-huge'>
-          Histórico de acciones
-        </SubHeading>
-      </TableHeader>
-      <TableData>
-        <TableDataHeader>
-          <TableCellMedium>Area</TableCellMedium>
-          <TableCellMedium>Responsable</TableCellMedium>
-          <TableCellMedium>Email</TableCellMedium>
-          <TableCellMedium>Fecha solicitud</TableCellMedium>
-          <TableCellMedium>Status</TableCellMedium>
-          <TableCellLong>Comentarios</TableCellLong>
-        </TableDataHeader>
-        {
-            hedgeStatus.map(hedge => {
+       <TableHeader>
+          <MainHeading>
+            Desarmes
+          </MainHeading>
+          <div className='bi-c-form-simple'>
+            <LabelElement
+              htmlFor='searchHedges'
+              type='text'
+              placeholder='Busca coberturas'
+              handleOnChange={(event)=>{
+                console.log(event.target.value);
+                setSearchValue(event.target.value)
+              }} />
+          </div>
+        </TableHeader>
+        <TableData>
+          <TableDataHeader>
+            <TableCellMedium className='bi-u-centerText'>
+              <SortButton orderCol={1} handleClick={() => sortItems()}>Ref.</SortButton>
+            </TableCellMedium>
+            <TableCellMedium className='bi-u-centerText'>
+              <SortButton orderCol={2} handleClick={() => sortItems()}>Partida cubierta</SortButton>
+            </TableCellMedium>
+            <TableCellMedium className='bi-u-centerText'>
+              <SortButton orderCol={3} handleClick={() => sortItems()}>Instrumento</SortButton>
+            </TableCellMedium>
+            <TableCellMedium className='bi-u-centerText'>
+              <SortButton orderCol={4} handleClick={() => sortItems()}>Tipo</SortButton>
+            </TableCellMedium>
+            <TableCellMedium className='bi-u-centerText'>
+              <SortButton orderCol={5} handleClick={() => sortItems()}>Ratio eficacia</SortButton>
+            </TableCellMedium>
+            <TableCellMedium>
+              <SortButton orderCol={6} handleClick={() => sortItems()}>Monto subyacente</SortButton>
+            </TableCellMedium>
+            <TableCellMedium>
+              <SortButton orderCol={7} handleClick={() => sortItems()}>Fecha inicio</SortButton>
+            </TableCellMedium>
+            <TableCellMedium>
+              <SortButton orderCol={8} handleClick={() => sortItems()}>Fecha vencimiento</SortButton>
+            </TableCellMedium>
+            <TableCellMedium>
+              <SortButton orderCol={9} handleClick={() => sortItems()}>Usuario</SortButton>
+            </TableCellMedium>
+            <TableCellShort>Estado</TableCellShort>
+          </TableDataHeader>
+          {
+            hedges?.map(hedge => {
               const renderStatus = () => {
                 if (hedge.status == 'Ok') {
-                  return (<><span className='bi-u-success-text'>{hedge.status}</span></>);  
-                } else if (hedge.status == 'Pending') {
-                  return (<><span className='bi-u-warning-text'>{hedge.status}</span></>);  
+                  return (
+                    <>
+                    <IconButSm
+                      handleClick={() => seeStatus(hedge.id_hedge_relationship)}
+                      className="bi-o-icon-button-small--success">
+                      <InformationCircleIcon/>
+                    </IconButSm>
+                    </>);  
+                } else if (hedge.status == 'Pendiente') {
+                  return (
+                    <>
+                    <IconButSm
+                      handleClick={() => seeStatus(hedge.id_hedge_relationship)}
+                      className="bi-o-icon-button-small--warning">
+                      <InformationCircleIcon/>
+                    </IconButSm>
+                    </>);  
                 } else if (hedge.status == 'Denegada') {
-                  return (<><span className='bi-u-danger-text'>{hedge.status}</span></>);  
+                  return (
+                    <>
+                    <IconButSm
+                      handleClick={() => seeStatus(hedge.id_hedge_relationship)}
+                      className="bi-o-icon-button-small--error">
+                      <InformationCircleIcon/>
+                    </IconButSm>
+                    </>);    
                 }        
               } 
               return (
                 <TableDataRow key={uuidv4()}>
                   <TableDataRowWrapper>
-                    <TableCellMedium>{hedge.area}</TableCellMedium>
-                    <TableCellMedium>{hedge.responsible}</TableCellMedium>
-                    <TableCellMedium>{hedge.email}</TableCellMedium>
-                    <TableCellMedium>{hedge.date_accept}</TableCellMedium>
                     <TableCellMedium
-                      className='bi-u-text-base-black'
-                      >{renderStatus()}
-                    </TableCellMedium>
-                    <TableCellLong>{hedge.responsible}</TableCellLong>
-                  </TableDataRowWrapper>
+                      className='bi-u-text-base-black bi-u-centerText'>{hedge.id_hedge_relationship}</TableCellMedium>
+                    <TableCellMedium className='bi-u-centerText'>{hedge.id_hedge_item}</TableCellMedium>
+                    <TableCellMedium className='bi-u-centerText'>{hedge.id_hedge_instrument}</TableCellMedium>
+                    <TableCellMedium className='bi-u-centerText'>{hedge.cat_hedge_type}</TableCellMedium>
+                    <TableCellMedium className='bi-u-centerText'>{hedge.pct_effectiveness}</TableCellMedium>
+                    <TableCellMedium>{hedge.num_underlying_amount}</TableCellMedium>
+                    <TableCellMedium>{hedge.dt_start_date}</TableCellMedium>
+                    <TableCellMedium>{hedge.dt_maturity_date}</TableCellMedium>
+                    <TableCellMedium>{hedge.user_insert}</TableCellMedium>
+                    <TableCellShort>
+                      {renderStatus()}
+                    </TableCellShort>
+                    </TableDataRowWrapper>
                 </TableDataRow>
               );
             })
           }
-      </TableData>
+        </TableData>
+        <TablePagination
+          page={page}
+          setPage={setPage}
+          totalPages={totalPages}
+          />    
     </main>
   );
 }

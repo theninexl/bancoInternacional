@@ -29,13 +29,13 @@ function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData,setHed
 
   useEffect(() => {
     if (disarmType) {          
-      disarmType.value === '1' ? setPartialDisarm(true) : setPartialDisarm (false);
+      disarmType.value === '0' ? setPartialDisarm(true) : setPartialDisarm (false);
     }
   },[partialDisarm])
 
   const handleDisarmType = () => {
     if (disarmType) {          
-      disarmType.value === '1' ? setPartialDisarm(true) : setPartialDisarm (false);
+      disarmType.value === '0' ? setPartialDisarm(true) : setPartialDisarm (false);
     }
   }
 
@@ -48,7 +48,7 @@ function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData,setHed
   //get Cobertura  
   const getHedge = (id) => {
     const data = {'hedge':id}
-    Api.call.post('hedges/disarmStatus',data,{ headers:headers })
+    Api.call.post('hedges/disarmGet',data,{ headers:headers })
     .then(res => {
       setHedgeStatusData(res.data);
     }).catch(err => {
@@ -58,7 +58,7 @@ function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData,setHed
   //get disarm Data
   const getDisarm = (id) => {
     const data = {'hedge':id}
-    Api.call.post('hedges/disarmGetOne',data,{ headers:headers })
+    Api.call.post('hedges/disarm',data,{ headers:headers })
     .then(res => {
       // console.log(res.data);
       setHedgeDisarmData(res.data);
@@ -86,19 +86,19 @@ function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData,setHed
     if (modalOpen) {
       return (
         <ModalSmall
-          message={`¿Desea solicitar un desarme ${MsgDisarmType} sobre la relación de cobertura ${hedgeStatusData.hedge_ref}?`} 
+          message={`¿Quiere realizar el desarme de la cobertura ${hedgeStatusData.id_hedge_relationship}?`} 
           buttons={
             <>
+            <ButtonLPrimary
+                className='bi-o-button--short'
+                handleClick={handleDisarmeRequest}>
+                  Aceptar
+              </ButtonLPrimary>
               <ButtonLSecondary
                 className='bi-o-button--short'
                 handleClick={() => setModalOpen(false)}>
-                  No, cancelar
+                  Cancelar
               </ButtonLSecondary>
-              <ButtonLPrimary
-                className='bi-o-button--short'
-                handleClick={handleDisarmeRequest}>
-                  Si, seguro
-              </ButtonLPrimary>
             </>
           }
         />
@@ -110,7 +110,7 @@ function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData,setHed
     const formData = new FormData(disarmForm.current);
 
     const data = {
-      hedge:hedgeStatusData.hedge_ref,
+      hedge:hedgeStatusData.id_hedge_relationship,
       disarm_type: parseInt(formData.get('disarm_type')),
       disarm_reason: formData.get('disarm_reason'),
       object_new_notional: formData.get('object_new_notional'),
@@ -154,8 +154,6 @@ function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData,setHed
           <TableCellMedium>Monto subyacente</TableCellMedium>
           <TableCellMedium>Fecha inicio</TableCellMedium>
           <TableCellMedium>Fecha vencimiento</TableCellMedium>
-          <TableCellMedium>Motivo desarme</TableCellMedium>
-          <TableCellMedium>Fecha desarme</TableCellMedium>
         </TableDataHeader>
         {
           hedgeStatusData &&
@@ -163,15 +161,13 @@ function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData,setHed
               <TableDataRow key={uuidv4()}>
                 <TableDataRowWrapper>
                   <TableCellMedium
-                    className='bi-u-text-base-black'>{hedgeStatusData.hedge_ref}</TableCellMedium>
+                    className='bi-u-text-base-black'>{hedgeStatusData.id_hedge_relationship}</TableCellMedium>
                   <TableCellMedium>{hedgeStatusData.id_hedge_item}</TableCellMedium>
                   <TableCellMedium>{hedgeStatusData.id_hedge_instrument}</TableCellMedium>
                   <TableCellMedium>{hedgeStatusData.cat_hedge_type}</TableCellMedium>
                   <TableCellMedium>{hedgeStatusData.num_underlying_amount}</TableCellMedium>
                   <TableCellMedium>{hedgeStatusData.dt_start_date}</TableCellMedium>
                   <TableCellMedium>{hedgeStatusData.dt_maturity_date}</TableCellMedium>
-                  <TableCellMedium>{hedgeStatusData.disarm_reason}</TableCellMedium>
-                  <TableCellMedium>{hedgeStatusData.date_request}</TableCellMedium>
                 </TableDataRowWrapper>
               </TableDataRow>
             </>
@@ -179,7 +175,7 @@ function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData,setHed
       </TableData>
       <TableHeader>
         <SubHeading  className='bi-u-border-bb-gm bi-u-spacer-mt-huge'>
-          Modificación o desarme
+          Desarme de la cobertura
         </SubHeading>
       </TableHeader>
       <SimpleFormHrz innerRef={disarmForm}>
@@ -190,19 +186,17 @@ function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData,setHed
                 htmlFor='disarm_type'
                 title='Tipo de desarme'
                 handleOnChange={handleDisarmType}>
-                  <option value=''>Seleccionar tipo</option>
-                  <option value='0'>Total</option>
-                 <option value='1'>Parcial</option>
+                  <option value='0'>Parcial</option>
+                 <option value='1'>Total</option>
               </SelectElement>
             </SimpleFormRow>
             <SimpleFormRow>
             <SelectElement
                 htmlFor='disarm_reason'
                 title='Motivo de desarme'>
-                  <option value=''>Seleccionar motivo</option>
-                  <option value='1'>Motivo1</option>
-                  <option value='2'>Motivo2</option>
-                  <option value='3'>Motivo3</option>
+                  <option value=''>Seleccionar</option>
+                  <option value='1'>No existe objeto de cobertura</option>
+                  <option value='2'>Estrategia de negocio</option>
               </SelectElement>
             </SimpleFormRow>
           </SimpleCol>
@@ -211,7 +205,7 @@ function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData,setHed
               <TableDataHeader>
                 <TableCellMedium></TableCellMedium>
                 <TableCellMedium>Nocional actual</TableCellMedium>
-                <TableCellMedium>Nuevo nocional</TableCellMedium>
+                <TableCellMedium>Nuevo</TableCellMedium>
               </TableDataHeader>
               <TableDataRow>
                 <TableDataRowWrapper>
@@ -293,12 +287,6 @@ function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData,setHed
             <SimpleFormRow
               style={{'flexGrow':1}}   
               className='bi-u-centerText'>
-                <ButtonLGhost
-                  className='bi-o-button--short'
-                  handleClick={HandleCancel}
-                  >
-                    Cancelar
-                </ButtonLGhost>
                 <ButtonLPrimary
                   className='bi-o-button--short'
                   type='submit'
@@ -306,6 +294,12 @@ function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData,setHed
                   >
                     Confirmar
                 </ButtonLPrimary>
+                <ButtonLGhost
+                  className='bi-o-button--short'
+                  handleClick={HandleCancel}
+                  >
+                    Cancelar
+                </ButtonLGhost>
             </SimpleFormRow>     
         </ColsContainer>
       </SimpleFormHrz>      

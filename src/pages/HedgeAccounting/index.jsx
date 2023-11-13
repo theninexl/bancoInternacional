@@ -8,7 +8,7 @@ import { TableData, TableDataHeader, TableDataRow, TableCellMedium, TableCellSho
 import TablePagination from '../../components/TablePagination';
 import { SortButton } from '../../components/UI/buttons/Buttons';
 import { IconButSm } from '../../components/UI/buttons/IconButtons';
-import { DocumentArrowDownIcon, InformationCircleIcon, BoltIcon } from '@heroicons/react/24/solid';
+import { DocumentArrowDownIcon, BoltIcon } from '@heroicons/react/24/solid';
 import { MainHeading } from '../../components/UI/headings';
 import { LabelElement } from '../../components/UI/forms/SimpleForms';
 
@@ -58,15 +58,6 @@ function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPag
     execGetHedges(searchValue,order);
   },[page, order, searchValue]);
 
-  //editar usuario
-  const seeStatus = (id) => {
-    navigate({      
-      pathname:'/hedges-status',
-      search: createSearchParams({
-        id:id
-      }).toString()
-    });
-  }
   //desarmar cobertura
   const requestDisarm = (id) => {
     navigate({      
@@ -160,41 +151,10 @@ function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPag
               <SortButton orderCol={9} handleClick={() => sortItems()}>Usuario</SortButton>
             </TableCellMedium>
             <TableCellShort>Ficha</TableCellShort>
-            <TableCellShort>Estado</TableCellShort>
             <TableCellShort>Desarmar</TableCellShort>
           </TableDataHeader>
           {
             hedges?.map(hedge => {
-              const renderStatus = () => {
-                if (hedge.status == 'Ok') {
-                  return (
-                    <>
-                    <IconButSm
-                      handleClick={() => seeStatus(hedge.id_hedge_relationship)}
-                      className="bi-o-icon-button-small--success">
-                      <InformationCircleIcon/>
-                    </IconButSm>
-                    </>);  
-                } else if (hedge.status == 'Pendiente') {
-                  return (
-                    <>
-                    <IconButSm
-                      handleClick={() => seeStatus(hedge.id_hedge_relationship)}
-                      className="bi-o-icon-button-small--warning">
-                      <InformationCircleIcon/>
-                    </IconButSm>
-                    </>);  
-                } else if (hedge.status == 'Denegada') {
-                  return (
-                    <>
-                    <IconButSm
-                      handleClick={() => seeStatus(hedge.id_hedge_relationship)}
-                      className="bi-o-icon-button-small--error">
-                      <InformationCircleIcon/>
-                    </IconButSm>
-                    </>);    
-                }        
-              } 
               return (
                 <TableDataRow key={uuidv4()}>
                   <TableDataRowWrapper>
@@ -213,9 +173,6 @@ function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPag
                         className="bi-o-icon-button-small--disabled">
                         <DocumentArrowDownIcon/>
                       </IconButSm>
-                    </TableCellShort>
-                    <TableCellShort>
-                      {renderStatus()}
                     </TableCellShort>
                     <TableCellShort>
                       <IconButSm

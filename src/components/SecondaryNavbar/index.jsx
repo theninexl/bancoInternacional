@@ -13,6 +13,7 @@ const SecNavbar = () => {
       secNavLinks: {
         1: { url:'/hedges', title:'Listar coberturas'},
         2: { url:'/hedges-new', title:'Crear cobertura'},
+        3: { url:'/hedges-status', title:'Status desarmes'},
       }
     },
     { currentPath: '/hedges-new',
@@ -20,6 +21,7 @@ const SecNavbar = () => {
       secNavLinks: {
         1: { url:'/hedges', title:'Listar coberturas'},
         2: { url:'/hedges-new', title:'Crear cobertura'},
+        3: { url:'/hedges-status', title:'Status desarmes'},
       }
     },
     { currentPath: '/hedges-status',
@@ -27,6 +29,15 @@ const SecNavbar = () => {
       secNavLinks: {
         1: { url:'/hedges', title:'Listar coberturas'},
         2: { url:'/hedges-new', title:'Crear cobertura'},
+        3: { url:'/hedges-status', title:'Status desarmes'},
+      }
+    },
+    { currentPath: '/hedges-status-det',
+      pageTitle: 'Coberturas',
+      secNavLinks: {
+        1: { url:'/hedges', title:'Listar coberturas'},
+        2: { url:'/hedges-new', title:'Crear cobertura'},
+        3: { url:'/hedges-status', title:'Status desarmes'},
       }
     },
     { currentPath: '/hedges-disarm',
@@ -34,6 +45,7 @@ const SecNavbar = () => {
       secNavLinks: {
         1: { url:'/hedges', title:'Listar coberturas'},
         2: { url:'/hedges-new', title:'Crear cobertura'},
+        3: { url:'/hedges-status', title:'Status desarmes'},
       }
     },
     { currentPath: '/mgmt-balance-view',

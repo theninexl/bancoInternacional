@@ -253,7 +253,7 @@ const NewHedge = ({ fileInstrument, setFileInstrument }) => {
     <main className="bi-u-h-screen--wSubNav">
       <TableHeader className='bi-u-border-bb-gm'>
         <MainHeading>
-          Alta instrumento cobertura
+          Crear cobertura
         </MainHeading>
       </TableHeader>
       <ColsContainer className='bi-u-border-bb-gm'>

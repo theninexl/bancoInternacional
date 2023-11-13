@@ -3,6 +3,7 @@ import { useData, InitializeLocalStorage } from './useData';
 import HedgeAccounting from '../HedgeAccounting';
 import NewHedge from '../NewHedge';
 import DisarmStatus from '../DisarmStatus';
+import DisarmStatusDet from '../DisarmStatusDet';
 import DisarmHedge from '../DisarmHedge';
 import Login from '../Login';
 import Users from '../Users';
@@ -63,9 +64,21 @@ const AppRoutes = () => {
         setFileInstrument={setFileInstrument}/> 
       : 
       <Navigate replace to={'/login'}/>},
-    { path: '/hedges-status', 
+     { path: '/hedges-status', 
       element: !isUserSignOut ? 
       <DisarmStatus
+        hedges={hedges}
+        setHedges={setHedges}
+        page={page}
+        setPage={setPage}
+        totalPages={totalPages}
+        setTotalPages={setTotalPages}
+        /> 
+      : 
+      <Navigate replace to={'/login'}/> },
+    { path: '/hedges-status-det', 
+      element: !isUserSignOut ? 
+      <DisarmStatusDet
         hedgeStatusData={hedgeStatusData}
         setHedgeStatusData={setHedgeStatusData}
         hedgeStatus={hedgeStatus}

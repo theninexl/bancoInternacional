@@ -6,19 +6,21 @@ import Api from '../../services/api';
 import { TableHeader } from '../../components/UI/tables/TableHeaders';
 import { TableData, TableDataHeader, TableDataRow, TableCellMedium, TableCellShort, TableDataRowWrapper } from '../../components/UI/tables/TableDataElements';
 import TablePagination from '../../components/TablePagination';
-import { SortButton } from '../../components/UI/buttons/Buttons';
+import { ButtonLTransparent, SortButton } from '../../components/UI/buttons/Buttons';
 import { IconButSm } from '../../components/UI/buttons/IconButtons';
 import { DocumentArrowDownIcon, BoltIcon } from '@heroicons/react/24/solid';
 import { MainHeading } from '../../components/UI/headings';
 import { LabelElement } from '../../components/UI/forms/SimpleForms';
+import { CSVDownload, CSVLink } from 'react-csv';
 
 
 
-function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPage }){
+function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPage,totalrowscount,setTotalrowscount }){
   const navigate = useNavigate();
   const rowspage = 10;
   const [searchValue, setSearchValue] = useState('');
   const [order, setOrder] = useState(1);
+  const [allHedges, setAllHedges] = useState([]);
   const sortBtns = document.querySelectorAll('.bi-o-sortButton');
 
   const accountInLocalStorage = localStorage.getItem('account');
@@ -28,36 +30,59 @@ function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPag
   //calcular paginacion
   const calcTotalPages = (totalResults,totalRows) => setTotalPages(Math.ceil(totalResults/totalRows));
 
-  //listar usuarios
-  const getHedges = (busqueda, orden) => {
+  //getData
+  const getData = async (endpoint, search, pagenumber, rowspage, orderby) => {
     const headers = {
       'Content-Type': 'application/json',
       'x-access-token': token,
     }
-    const data = {
-      'search':busqueda,
-      'pagenumber':page,
-      'rowspage':rowspage,
-      'orderby':orden
-    }
-    Api.call.post('hedges/getAll',data,{ headers:headers })
-    .then(res => {
-      calcTotalPages(res.data.rowscount[0].count, rowspage);
-      setHedges(res.data.data)
-    }).catch(err => console.warn(err))
+    const { data } = await Api.call.post(endpoint, {'search':search, 'pagenumber':pagenumber, 'rowspage':rowspage, 'orderby':orderby},{ headers:headers })
+    return data;
   }
 
-  const execGetHedges = async (search,order) => await getHedges(search = search, order = order);
+  //listar 10 usuarios
+  const getHedges = async (busqueda, orden) => {
+    const results = await getData('hedges/getAll',busqueda,page,rowspage,orden)
+    .then(res => {
+      setTotalrowscount(res.rowscount[0].count);
+      calcTotalPages(res.rowscount[0].count, rowspage);
+      setHedges(res.data);
+    })
+    .catch(err => console.warn(err));
+  }
+
+  //guardar todas las coberturas para descargar
+  const getAllHedges = async () => {
+    const results = await getData('hedges/getAll',searchValue,page,totalrowscount, order)
+    .then(res => {
+      setAllHedges(res.data)})
+    .catch(err => console.warn(err));
+  }
+
+  const execGetHedges = (search,order) => getHedges(search = search, order = order);
+  const execGetAllHedges = () => getAllHedges();
 
   //resetear pagina a 1
   useEffect(()=>{
     setPage(1);
   },[setPage])
 
+  //volver a pedir listar usuarios cuando cambia la página, el orden o el termino de busqueda
   useEffect(()=>{
     execGetHedges(searchValue,order);
   },[page, order, searchValue]);
 
+  //pedir todos los usuarios cuando sabemos el número de filas totales
+  useEffect(()=>{
+    execGetAllHedges();
+  },[totalrowscount])
+
+
+  const downloadCSVData = () => {
+    console.log(totalrowscount);
+    console.log(allHedges);
+  }
+  
   //desarmar cobertura
   const requestDisarm = (id) => {
     navigate({      
@@ -116,9 +141,12 @@ function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPag
               type='text'
               placeholder='Busca coberturas'
               handleOnChange={(event)=>{
-                console.log(event.target.value);
                 setSearchValue(event.target.value)
-              }} />
+              }} />                
+            <CSVLink
+              className='bi-c-navbar-links__textbutt'
+              filename={"coberturas.csv"}
+              data={allHedges}>Descargar CSV</CSVLink>
           </div>
         </TableHeader>
         <TableData>

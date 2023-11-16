@@ -26,6 +26,10 @@ const AppRoutes = () => {
     setTotalPages,
     hedges,
     setHedges,
+    allHedges,
+    totalrowscount,
+    setTotalrowscount,
+    setAllHedges,
     page,
     setPage,
     fileInstrument,
@@ -50,6 +54,10 @@ const AppRoutes = () => {
       <HedgeAccounting
         hedges={hedges}
         setHedges={setHedges}
+        totalrowscount={totalrowscount}
+        setTotalrowscount={setTotalrowscount}
+        allHedges={allHedges}
+        setAllHedges={setAllHedges}
         page={page}
         setPage={setPage}
         totalPages={totalPages}
@@ -60,8 +68,14 @@ const AppRoutes = () => {
     { path: '/hedges-new', 
       element: !isUserSignOut ? 
       <NewHedge
-        fileInstrument={fileInstrument}
-        setFileInstrument={setFileInstrument}/> 
+        hedges={hedges}
+        totalrowscount={totalrowscount}
+        setTotalrowscount={setTotalrowscount}
+        setHedges={setHedges}
+        allHedges={allHedges}
+        setAllHedges={setAllHedges}
+        page={page}
+        /> 
       : 
       <Navigate replace to={'/login'}/>},
      { path: '/hedges-status', 

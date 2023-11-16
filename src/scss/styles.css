@@ -1341,6 +1341,11 @@ strong {
   width: 24px;
 }
 
+.bi-c-form-simple {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 .bi-c-form-simple label {
   color: #434656;
 }

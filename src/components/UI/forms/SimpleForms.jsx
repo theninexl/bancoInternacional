@@ -21,9 +21,13 @@ export const SimpleFormRow = (props) => {
 
 export const LabelElement = (props) => {
   return (
-    <label htmlFor={props.htmlFor}>
+    <label 
+      htmlFor={props.htmlFor}
+      className={props.classNameLabel}
+      >
       <span>{props.children}</span>
       <input 
+        className={props.classNameInput}
         type={props.type}
         name={props.htmlFor}
         id={props.htmlFor}

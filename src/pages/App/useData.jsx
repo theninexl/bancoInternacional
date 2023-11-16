@@ -35,6 +35,8 @@ export const useData = () => {
 
   //getHedges
   const [hedges, setHedges] = useState([]);
+  const [totalrowscount, setTotalrowscount] = useState(0);
+  const [allHedges, setAllHedges] = useState([]);
   const [newHedgeData, setNewHedgeData] = useState([]);
   const [fileInstrument, setFileInstrument] = useState([]);
 
@@ -66,6 +68,10 @@ export const useData = () => {
       setUserBoxOpen,
       hedges,
       setHedges,
+      totalrowscount,
+      setTotalrowscount,
+      allHedges,
+      setAllHedges,
       fileInstrument,
       setFileInstrument,
       newHedgeData,

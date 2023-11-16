@@ -40,7 +40,7 @@ function DisarmStatus({ totalPages,setTotalPages,hedges,setHedges,page,setPage }
       'rowspage':rowspage,
       'orderby':orden
     }
-    Api.call.post('hedges/getAll',data,{ headers:headers })
+    Api.call.post('hedges/disarmStatusGetAll',data,{ headers:headers })
     .then(res => {
       calcTotalPages(res.data.rowscount[0].count, rowspage);
       setHedges(res.data.data)

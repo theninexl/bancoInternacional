@@ -58,6 +58,7 @@ export const SelectElement = (props) => {
   return (
     <label 
       htmlFor={props.htmlFor}
+      defaultValue={props.value}
       style={{display:'flex'}}>
         <span>{props.title}</span>
       <div 

@@ -39,7 +39,7 @@ const AppRoutes = () => {
     hedgeStatusData,
     setHedgeStatusData,
     hedgeDisarmData,
-    setHedgeDisarmData
+    setHedgeDisarmData,
   } = useData();
 
   //evaluar signout

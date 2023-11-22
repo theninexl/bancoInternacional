@@ -51,7 +51,7 @@ function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData,setHed
     const data = {'hedge':id}
     Api.call.post('hedges/disarmGet',data,{ headers:headers })
     .then(res => {
-      console.log(res)
+      console.log(res.data)
       setHedgeStatusData(res.data);
     }).catch(err => {
       console.warn(err)})
@@ -109,10 +109,10 @@ function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData,setHed
       data[newNotional.id] = newNotional.value;
     })
 
-    Api.call.post("hedges/disarm",data,{ headers:headers })
+    Api.call.post("hedges/disarmExecute",data,{ headers:headers })
       .then(res => {
         console.log(res);
-        //navigate('/hedges');
+        navigate('/hedges');
       })
       .catch(err => {
         // console.log(data);
@@ -201,40 +201,30 @@ function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData,setHed
                   </TableDataHeader>
                   <TableDataRow>
                     <TableDataRowWrapper>
-                      <TableCellMedium className='bi-u-text-base-black'>Objeto cubierto</TableCellMedium>
-                      <TableCellMedium>{hedgeStatusData.object_notional}</TableCellMedium>
+                      <TableCellMedium className='bi-u-text-base-black'>{hedgeStatusData.id_hedge_item}</TableCellMedium>
+                      <TableCellMedium>{hedgeStatusData.notional_item}</TableCellMedium>
                       <TableCellMedium>                        
                           <LabelElement
                           htmlFor='object_new_notional'
-                          type='number'>
+                          type='number'
+                          placeholder='introduce nocional'>
                         </LabelElement>                          
                       </TableCellMedium>
                     </TableDataRowWrapper>
                   </TableDataRow>
-                  {
-                    hedgeStatusData.instruments?.map(instrument => {
-                      notional_instrument++;
-                      return (
-                        <TableDataRow key={instrument.id_hedge_instrument}>
-                          <TableDataRowWrapper>
-                            <TableCellMedium>Instrumento cobertura {notional_instrument}</TableCellMedium>
-                            <TableCellMedium>{instrument.num_notional}</TableCellMedium>
-                            <TableCellMedium>
-                              {partialDisarm ? 
-                                <LabelElement
-                                  classNameInput='newNotionalValue'
-                                  htmlFor={`instrument_new_notional_${notional_instrument}`}
-                                  type='number'>
-                                </LabelElement>
-                                : 
-                                '---'
-                              }
-                            </TableCellMedium>
-                          </TableDataRowWrapper>
-                        </TableDataRow>
-                      );
-                    })
-                  }   
+                  <TableDataRow>
+                    <TableDataRowWrapper>
+                      <TableCellMedium className='bi-u-text-base-black'>{hedgeStatusData.id_hedge_instrument}</TableCellMedium>
+                      <TableCellMedium>{hedgeStatusData.notional_instrument}</TableCellMedium>
+                      <TableCellMedium>                        
+                          <LabelElement
+                          htmlFor='object_new_notional'
+                          type='number'
+                          placeholder='introduce nocional'>
+                        </LabelElement>                          
+                      </TableCellMedium>
+                    </TableDataRowWrapper>
+                  </TableDataRow>
                 </TableData>
               </>
               :

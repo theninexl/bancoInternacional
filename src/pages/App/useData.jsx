@@ -45,6 +45,7 @@ export const useData = () => {
   const [hedgeStatus,setHedgeStatus] = useState([]);
   const [hedgeDisarmData, setHedgeDisarmData] = useState([]);
 
+
   //list pagination
   const [page, setPage] = useState(1); 
   const [totalPages, setTotalPages] = useState(null);
@@ -81,6 +82,6 @@ export const useData = () => {
       hedgeStatus,
       setHedgeStatus,
       hedgeDisarmData,
-      setHedgeDisarmData
+      setHedgeDisarmData,
     };
 }

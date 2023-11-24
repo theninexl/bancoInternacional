@@ -1,9 +1,9 @@
-import { useEffect, useContext, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { GlobalContext } from '../../context';
+// import { GlobalContext } from '../../context';
 import Api from '../../services/api';
 import { TableHeader } from '../../components/UI/tables/TableHeaders';
-import { TableData, TableDataHeader, TableDataRow, TableCellMedium } from '../../components/UI/tables/TableDataElements';
+import { TableData, TableDataHeader, TableDataRow, TableCellMedium, TableDataRowWrapper } from '../../components/UI/tables/TableDataElements';
 import { MainHeading, SubHeading } from '../../components/UI/headings';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ColsContainer, SimpleCol } from '../../components/UI/layout/LayoutSections';
@@ -11,14 +11,15 @@ import { LabelElement, SelectElement, SimpleFormHrz, SimpleFormRow } from '../..
 import { ButtonLGhost, ButtonLPrimary, ButtonLSecondary } from '../../components/UI/buttons/Buttons';
 import ModalSmall from '../../components/ModalSmall';
 
-function DisarmHedge(){
+function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData,setHedgeDisarmData }){
   const navigate = useNavigate();
-  const context = useContext(GlobalContext);
-  const [partialDisarm, setPartialDisarm] = useState(false);
+  // const context = useContext(GlobalContext);
+  const [partialDisarm, setPartialDisarm] = useState(true);
   const [formError, setFormError] = useState(null);
   const [searchParams] = useSearchParams();
   const hedgeID = searchParams.get('id');
   const disarmForm = useRef(null); 
+  let notional_instrument = 0;
 
   const accountInLocalStorage = localStorage.getItem('account');
   const parsedAccount = JSON.parse(accountInLocalStorage);
@@ -29,13 +30,13 @@ function DisarmHedge(){
 
   useEffect(() => {
     if (disarmType) {          
-      disarmType.value === '1' ? setPartialDisarm(true) : setPartialDisarm (false);
+      disarmType.value === '0' ? setPartialDisarm(true) : setPartialDisarm (false);
     }
   },[partialDisarm])
 
   const handleDisarmType = () => {
     if (disarmType) {          
-      disarmType.value === '1' ? setPartialDisarm(true) : setPartialDisarm (false);
+      disarmType.value === '0' ? setPartialDisarm(true) : setPartialDisarm (false);
     }
   }
 
@@ -48,30 +49,17 @@ function DisarmHedge(){
   //get Cobertura  
   const getHedge = (id) => {
     const data = {'hedge':id}
-    Api.call.post('hedges/disarmStatus',data,{ headers:headers })
+    Api.call.post('hedges/disarmGet',data,{ headers:headers })
     .then(res => {
-      context.setHedgeStatusData(res.data);
+      console.log(res.data)
+      setHedgeStatusData(res.data);
     }).catch(err => {
-      console.warn(err)})
-  }
-
-  //get disarm Data
-  const getDisarm = (id) => {
-    const data = {'hedge':id}
-    Api.call.post('hedges/disarmGetOne',data,{ headers:headers })
-    .then(res => {
-      // console.log(res.data);
-      context.setHedgeDisarmData(res.data);
-    }).catch(err => {
-      //setFormError(err);
       console.warn(err)})
   }
 
   useEffect(()=>{      
     const execGetHedge = async () => await getHedge(hedgeID);
     execGetHedge();
-    const execGetDisarm = async () => await getDisarm(hedgeID);
-    execGetDisarm();
   },[]);
 
   //mostrar modal disarm
@@ -86,19 +74,19 @@ function DisarmHedge(){
     if (modalOpen) {
       return (
         <ModalSmall
-          message={`Estas seguro que deseas solicitar un desarme ${MsgDisarmType} sobre la relación de cobertura ${context.hedgeStatusData.hedge_ref}`} 
+          message={`¿Quiere realizar el desarme de la cobertura ${hedgeStatusData.id_hedge_relationship}?`} 
           buttons={
             <>
+            <ButtonLPrimary
+                className='bi-o-button--short'
+                handleClick={handleDisarmeRequest}>
+                  Aceptar
+              </ButtonLPrimary>
               <ButtonLSecondary
                 className='bi-o-button--short'
                 handleClick={() => setModalOpen(false)}>
-                  No, cancelar
+                  Cancelar
               </ButtonLSecondary>
-              <ButtonLPrimary
-                className='bi-o-button--short'
-                handleClick={handleDisarmeRequest}>
-                  Si, seguro
-              </ButtonLPrimary>
             </>
           }
         />
@@ -108,20 +96,22 @@ function DisarmHedge(){
 
   const handleDisarmeRequest = () => {
     const formData = new FormData(disarmForm.current);
+    const newNotionals = document.querySelectorAll('.newNotionalValue');
 
     const data = {
-      hedge:context.hedgeStatusData.hedge_ref,
+      hedge:hedgeStatusData.id_hedge_relationship,
       disarm_type: parseInt(formData.get('disarm_type')),
       disarm_reason: formData.get('disarm_reason'),
       object_new_notional: formData.get('object_new_notional'),
-      instrument_new_notional_1: formData.get('instrument_new_notional_1'),
-      instrument_new_notional_2: formData.get('instrument_new_notional_2'),
-      instrument_new_notional_3: formData.get('instrument_new_notional_3')
     }
 
-    Api.call.post("hedges/disarm",data,{ headers:headers })
+    newNotionals.forEach(newNotional => {
+      data[newNotional.id] = newNotional.value;
+    })
+
+    Api.call.post("hedges/disarmExecute",data,{ headers:headers })
       .then(res => {
-        //console.log(res);
+        console.log(res);
         navigate('/hedges');
       })
       .catch(err => {
@@ -129,12 +119,12 @@ function DisarmHedge(){
         // console.log('err',err);
         // console.log(err.response)
         setModalOpen(false);
-        setFormError('Error ',err,' al realizar la solicitud')})
-  
+        setFormError('Error ',err,' al realizar la solicitud')
+      })  
   }
 
   const HandleCancel = () => {
-    navigate('/');
+    navigate('/hedges');
   }
 
   return (
@@ -142,45 +132,40 @@ function DisarmHedge(){
       {renderView()}
       <TableHeader>
         <MainHeading className='bi-u-border-bb-gm'>
-          Desarme coberturas
+          Desarmar cobertura
         </MainHeading>
-        <SubHeading  className='bi-u-border-bb-gm'>
-          Descripción cobertura seleccionada
-        </SubHeading>
       </TableHeader>
       <TableData>
         <TableDataHeader>
           <TableCellMedium>Ref.</TableCellMedium>
-          <TableCellMedium>Ref. Part. Cubierta</TableCellMedium>
-          <TableCellMedium>Ref. Instrumento</TableCellMedium>
-          <TableCellMedium>Tipo Cobertura</TableCellMedium>
-          <TableCellMedium>Monto Subyacente</TableCellMedium>
-          <TableCellMedium>Fecha Inicio</TableCellMedium>
-          <TableCellMedium>Fecha Final</TableCellMedium>
-          <TableCellMedium>Motivo desarme</TableCellMedium>
-          <TableCellMedium>Fecha Desarme</TableCellMedium>
+          <TableCellMedium>Partida cubierta</TableCellMedium>
+          <TableCellMedium>Instrumento</TableCellMedium>
+          <TableCellMedium>Tipo</TableCellMedium>
+          <TableCellMedium>Monto subyacente</TableCellMedium>
+          <TableCellMedium>Fecha inicio</TableCellMedium>
+          <TableCellMedium>Fecha vencimiento</TableCellMedium>
         </TableDataHeader>
         {
-          context.hedgeStatusData &&
+          hedgeStatusData &&
             <>
               <TableDataRow key={uuidv4()}>
-                <TableCellMedium
-                  className='bi-u-text-base-black'>{context.hedgeStatusData.hedge_ref}</TableCellMedium>
-                <TableCellMedium>{context.hedgeStatusData.hedge_item_ref}</TableCellMedium>
-                <TableCellMedium>{context.hedgeStatusData.hedge_instrument_ref}</TableCellMedium>
-                <TableCellMedium>{context.hedgeStatusData.hedge_type}</TableCellMedium>
-                <TableCellMedium>{context.hedgeStatusData.amount}</TableCellMedium>
-                <TableCellMedium>{context.hedgeStatusData.date_start}</TableCellMedium>
-                <TableCellMedium>{context.hedgeStatusData.date_expire}</TableCellMedium>
-                <TableCellMedium>{context.hedgeStatusData.disarm_reason}</TableCellMedium>
-                <TableCellMedium>{context.hedgeStatusData.date_request}</TableCellMedium>
+                <TableDataRowWrapper>
+                  <TableCellMedium
+                    className='bi-u-text-base-black'>{hedgeStatusData.id_hedge_relationship}</TableCellMedium>
+                  <TableCellMedium>{hedgeStatusData.id_hedge_item}</TableCellMedium>
+                  <TableCellMedium>{hedgeStatusData.id_hedge_instrument}</TableCellMedium>
+                  <TableCellMedium>{hedgeStatusData.cat_hedge_type}</TableCellMedium>
+                  <TableCellMedium>{hedgeStatusData.num_underlying_amount}</TableCellMedium>
+                  <TableCellMedium>{hedgeStatusData.dt_start_date}</TableCellMedium>
+                  <TableCellMedium>{hedgeStatusData.dt_maturity_date}</TableCellMedium>
+                </TableDataRowWrapper>
               </TableDataRow>
             </>
         }
       </TableData>
       <TableHeader>
         <SubHeading  className='bi-u-border-bb-gm bi-u-spacer-mt-huge'>
-          Modificación o desarme
+          Desarme de la cobertura
         </SubHeading>
       </TableHeader>
       <SimpleFormHrz innerRef={disarmForm}>
@@ -191,86 +176,60 @@ function DisarmHedge(){
                 htmlFor='disarm_type'
                 title='Tipo de desarme'
                 handleOnChange={handleDisarmType}>
-                  <option value=''>Selecciona tipo</option>
-                  <option value='0'>Total</option>
-                 <option value='1'>Parcial</option>
+                  <option value='0'>Parcial</option>
+                 <option value='1'>Total</option>
               </SelectElement>
             </SimpleFormRow>
             <SimpleFormRow>
             <SelectElement
                 htmlFor='disarm_reason'
                 title='Motivo de desarme'>
-                  <option value=''>Selecciona motivo</option>
-                  <option value='1'>Motivo1</option>
-                  <option value='2'>Motivo2</option>
-                  <option value='3'>Motivo3</option>
+                  <option value=''>Seleccionar</option>
+                  <option value='1'>No existe objeto de cobertura</option>
+                  <option value='2'>Estrategia de negocio</option>
               </SelectElement>
             </SimpleFormRow>
           </SimpleCol>
           <SimpleCol>
-            <TableData>
-              <TableDataHeader>
-                <TableCellMedium></TableCellMedium>
-                <TableCellMedium>Nocional actual</TableCellMedium>
-                <TableCellMedium>Nuevo nocional</TableCellMedium>
-              </TableDataHeader>
-              <TableDataRow>
-                <TableCellMedium className='bi-u-text-base-black'>Objeto cubierto</TableCellMedium>
-                <TableCellMedium>{context.hedgeDisarmData.object_notional}</TableCellMedium>
-                <TableCellMedium>
-                  {partialDisarm ? 
-                    <LabelElement
-                    htmlFor='object_new_notional'
-                    type='number'>
-                  </LabelElement>
-                  : 
-                  '---'
-                    }
-                </TableCellMedium>
-              </TableDataRow>
-              <TableDataRow>
-                <TableCellMedium>Instrumento cobertura 1</TableCellMedium>
-                <TableCellMedium>{context.hedgeDisarmData.instrument_notional_1}</TableCellMedium>
-                <TableCellMedium>
-                  {partialDisarm ? 
-                    <LabelElement
-                    htmlFor='instrument_new_notional_1'
-                    type='number'>
-                  </LabelElement>
-                  : 
-                  '---'
-                    }
-                </TableCellMedium>
-              </TableDataRow>
-              <TableDataRow>
-                <TableCellMedium>Instrumento cobertura 2</TableCellMedium>
-                <TableCellMedium>{context.hedgeDisarmData.instrument_notional_2}</TableCellMedium>
-                <TableCellMedium>
-                  {partialDisarm ? 
-                    <LabelElement
-                    htmlFor='instrument_new_notional_2'
-                    type='number'>
-                  </LabelElement>
-                  : 
-                  '---'
-                    }
-                </TableCellMedium>
-              </TableDataRow>
-              <TableDataRow>
-                <TableCellMedium>Instrumento cobertura 3</TableCellMedium>
-                <TableCellMedium>{context.hedgeDisarmData.instrument_notional_3}</TableCellMedium>
-                <TableCellMedium>
-                  {partialDisarm ? 
-                    <LabelElement
-                    htmlFor='instrument_new_notional_3'
-                    type='number'>
-                  </LabelElement>
-                  : 
-                  '---'
-                    }
-                </TableCellMedium>
-              </TableDataRow>
-            </TableData>
+            {partialDisarm ? 
+              <>
+                <TableData>
+                  <TableDataHeader>
+                    <TableCellMedium></TableCellMedium>
+                    <TableCellMedium>Nocional actual</TableCellMedium>
+                    <TableCellMedium>Nuevo</TableCellMedium>
+                  </TableDataHeader>
+                  <TableDataRow>
+                    <TableDataRowWrapper>
+                      <TableCellMedium className='bi-u-text-base-black'>{hedgeStatusData.id_hedge_item}</TableCellMedium>
+                      <TableCellMedium>{hedgeStatusData.notional_item}</TableCellMedium>
+                      <TableCellMedium>                        
+                          <LabelElement
+                          htmlFor='object_new_notional'
+                          type='number'
+                          placeholder='introduce nocional'>
+                        </LabelElement>                          
+                      </TableCellMedium>
+                    </TableDataRowWrapper>
+                  </TableDataRow>
+                  <TableDataRow>
+                    <TableDataRowWrapper>
+                      <TableCellMedium className='bi-u-text-base-black'>{hedgeStatusData.id_hedge_instrument}</TableCellMedium>
+                      <TableCellMedium>{hedgeStatusData.notional_instrument}</TableCellMedium>
+                      <TableCellMedium>                        
+                          <LabelElement
+                          htmlFor='object_new_notional'
+                          type='number'
+                          placeholder='introduce nocional'>
+                        </LabelElement>                          
+                      </TableCellMedium>
+                    </TableDataRowWrapper>
+                  </TableDataRow>
+                </TableData>
+              </>
+              :
+              ''
+            }
           </SimpleCol>
         </ColsContainer>
         {formError &&

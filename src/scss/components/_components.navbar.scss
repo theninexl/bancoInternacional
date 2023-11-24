@@ -22,6 +22,11 @@
         flex-grow: 1;
     }
 
+    &__navBtns {
+        display: flex;
+        gap:getSize($small);
+    }
+
     &--secondary {
         gap:0;
 

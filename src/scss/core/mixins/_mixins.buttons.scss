@@ -22,7 +22,7 @@
 @mixin button-transparent {
     color:getColor(primary);
     background-color: getColor(white);
-    box-shadow:0px 0px 0px 2px getColor(primary) inset;
+    box-shadow:0px 0px 0px 1px getColor(gray-medium) inset;
 }
 
 @mixin button-ghost {

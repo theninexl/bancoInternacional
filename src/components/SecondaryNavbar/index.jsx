@@ -3,61 +3,90 @@ import { v4 as uuidv4 } from 'uuid';
 
 const SecNavbar = () => {
   const path = useLocation().pathname;
-
   const secNavInfo = [
+    { currentPath: '/',
+      pageTitle: 'Inicio',
+      secNavLinks: {}
+    },
     { currentPath: '/hedges',
       pageTitle: 'Coberturas',
       secNavLinks: {
-        1: { url:'/hedges', title:'Listado coberturas'},
-        2: { url:'/hedges-new', title:'Nueva Alta'},
+        1: { url:'/hedges', title:'Listar coberturas'},
+        2: { url:'/hedges-new', title:'Crear cobertura'},
+        3: { url:'/hedges-status', title:'Status desarmes'},
       }
     },
     { currentPath: '/hedges-new',
       pageTitle: 'Coberturas',
       secNavLinks: {
-        1: { url:'/hedges', title:'Listado coberturas'},
-        2: { url:'/hedges-new', title:'Nueva Alta'},
+        1: { url:'/hedges', title:'Listar coberturas'},
+        2: { url:'/hedges-new', title:'Crear cobertura'},
+        3: { url:'/hedges-status', title:'Status desarmes'},
       }
     },
     { currentPath: '/hedges-status',
-      pageTitle: 'Status coberturas',
+      pageTitle: 'Coberturas',
       secNavLinks: {
-        1: { url:'/hedges', title:'Listado coberturas'},
-        2: { url:'/hedges-new', title:'Nueva Alta'},
+        1: { url:'/hedges', title:'Listar coberturas'},
+        2: { url:'/hedges-new', title:'Crear cobertura'},
+        3: { url:'/hedges-status', title:'Status desarmes'},
+      }
+    },
+    { currentPath: '/hedges-status-det',
+      pageTitle: 'Coberturas',
+      secNavLinks: {
+        1: { url:'/hedges', title:'Listar coberturas'},
+        2: { url:'/hedges-new', title:'Crear cobertura'},
+        3: { url:'/hedges-status', title:'Status desarmes'},
       }
     },
     { currentPath: '/hedges-disarm',
-      pageTitle: 'Desarme coberturas',
+      pageTitle: 'Coberturas',
       secNavLinks: {
-        1: { url:'/hedges', title:'Listado coberturas'},
-        2: { url:'/hedges-new', title:'Nueva Alta'},
+        1: { url:'/hedges', title:'Listar coberturas'},
+        2: { url:'/hedges-new', title:'Crear cobertura'},
+        3: { url:'/hedges-status', title:'Status desarmes'},
+      }
+    },
+    { currentPath: '/mgmt-balance-view',
+      pageTitle: 'Gestión de balance',
+      secNavLinks: {
+        1: { url:'/mgmt-balance-view', title:'Vista balance'},
+        2: { url:'/mgmt-bonus-view', title:'Vista bono'},
+      }
+    },
+    { currentPath: '/mgmt-bonus-view',
+      pageTitle: 'Gestión de balance',
+      secNavLinks: {
+        1: { url:'/mgmt-balance-view', title:'Vista balance'},
+        2: { url:'/mgmt-bonus-view', title:'Vista bono'},
       }
     },
     { currentPath: '/users',
       pageTitle: 'Usuarios',
       secNavLinks: {
-        1: { url:'/users',title:'Usuarios registrados'},
-        2: { url:'/users-new',title:'Alta nuevo usuario'},
+        1: { url:'/users',title:'Listar usuarios'},
+        2: { url:'/users-new',title:'Crear usuario'},
       }
     },
     { currentPath: '/users-new',
-      pageTitle: 'Alta nuevo usuario',
+      pageTitle: 'Usuarios',
       secNavLinks: {
-        1: { url:'/users',title:'Usuarios registrados'},
-        2: { url:'/users-new',title:'Alta nuevo usuario'},
+        1: { url:'/users',title:'Listar usuarios'},
+        2: { url:'/users-new',title:'Crear usuario'},
       }
     },
     { currentPath: '/users-edit',
-      pageTitle: 'Editar',
+      pageTitle: 'Usuarios',
       secNavLinks: {
-        1: { url:'/users',title:'Usuarios registrados'},
-        2: { url:'/users-new',title:'Alta nuevo usuario'},
+        1: { url:'/users',title:'Listar usuarios'},
+        2: { url:'/users-new',title:'Crear usuario'},
       }
     },
   ]
 
-  const currentInfo = secNavInfo?.find(item => item.currentPath === path);
-  let secNavLinks = Object.values(currentInfo?.secNavLinks);
+  const currentInfo = secNavInfo.find(item => item.currentPath === path);
+  let secNavLinks = Object.values(currentInfo.secNavLinks);
   
 
   return(
@@ -70,7 +99,7 @@ const SecNavbar = () => {
             </div>
             <div className="bi-c-navbar__center"> 
               {
-                secNavLinks?.map(item => {
+                secNavLinks.map(item => {
                   return (
                     <NavLink
                       key={uuidv4()}

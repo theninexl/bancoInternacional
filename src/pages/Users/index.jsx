@@ -1,9 +1,9 @@
-import { useEffect, useContext, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, createSearchParams } from 'react-router-dom';
-import { GlobalContext } from '../../context';
+// import { GlobalContext } from '../../context';
 import Api from '../../services/api';
 import { TableHeader } from "../../components/UI/tables/TableHeaders";
-import { TableData, TableDataHeader, TableDataRow, TableCellMedium, TableCellShort } from '../../components/UI/tables/TableDataElements';
+import { TableData, TableDataHeader, TableDataRow, TableCellMedium, TableCellShort, TableDataRowWrapper } from '../../components/UI/tables/TableDataElements';
 import { IconButSmPrimary, IconButSmSecondary } from '../../components/UI/buttons/IconButtons';
 import TablePagination from '../../components/TablePagination';
 import { ButtonLPrimary, ButtonLSecondary } from '../../components/UI/buttons/Buttons';
@@ -12,9 +12,9 @@ import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/solid';
 import { MainHeading } from '../../components/UI/headings';
 
 
-const Users = () => {   
+const Users = ({ totalPages,setTotalPages,users,setUsers,page,setPage }) => {   
   const navigate = useNavigate();  
-  const context = useContext(GlobalContext);
+  // const context = useContext(GlobalContext);
   const rowspage = 10;
 
   const accountInLocalStorage = localStorage.getItem('account');
@@ -22,7 +22,7 @@ const Users = () => {
   const token = parsedAccount.token;
 
   //calcular paginacion
-  const calcTotalPages = (totalResults,totalRows) => context.setTotalPages(Math.ceil(totalResults/totalRows));
+  const calcTotalPages = (totalResults,totalRows) => setTotalPages(Math.ceil(totalResults/totalRows));
 
   //listar usuarios
   const getUsers = (token, page) => {
@@ -37,19 +37,20 @@ const Users = () => {
     }
     Api.call.post('users/getAll',data,{ headers:headers })
     .then(response => {
+      console.log(response);
       calcTotalPages(response?.data?.rowscount[0]?.count, rowspage)
-      context.setUsers(response?.data?.data)
+      setUsers(response?.data?.data)
     }).catch(err => console.warn(err))
   }
   //resetear pagina a 1
   useEffect(()=>{
-    context.setPage(1);
-  },[context.setPage])
+    setPage(1);
+  },[setPage])
 
   useEffect(()=>{  
-    const execGetUsers = async () => await getUsers(token, context.page);
+    const execGetUsers = async () => await getUsers(token, page);
     execGetUsers();
-  },[context.page]);
+  },[page]);
 
   //mostrar modal delete
   const [modalOpen, setModalOpen] = useState(false);
@@ -72,8 +73,8 @@ const Users = () => {
     Api.call.post('users/remove',data,{ headers:headers })
     .then(response => { 
       setModalOpen(false);
-      context.setPage(1);
-      const execGetUsers = async () => await getUsers(token, context.page);
+      setPage(1);
+      const execGetUsers = async () => await getUsers(token, page);
       execGetUsers();
     }).catch(err => console.warn(err))
   }
@@ -119,43 +120,51 @@ const Users = () => {
         {renderView()}
         <TableHeader>
           <MainHeading>
-            Listado usuarios registrados en el sistema
+            Listado de usuarios
           </MainHeading>
         </TableHeader>
         <TableData>
           <TableDataHeader>
-            <TableCellMedium>Usuario</TableCellMedium>
+            <TableCellMedium>Nombre</TableCellMedium>
             <TableCellMedium>Apellidos</TableCellMedium>
+            <TableCellMedium>Departamento</TableCellMedium>
             <TableCellMedium>Email</TableCellMedium>
-            <TableCellShort>Editar</TableCellShort>
-            <TableCellShort>Eliminar</TableCellShort>
+            <TableCellShort></TableCellShort>
+            <TableCellShort></TableCellShort>
           </TableDataHeader>
           {
-            context.users.map(user => {
+            users.map(user => {
               return (
                 <TableDataRow key={user.id_user}>
-                  <TableCellMedium
-                    className='bi-u-text-base-black'>{user.name}</TableCellMedium>
-                  <TableCellMedium>{user.surname}</TableCellMedium>
-                  <TableCellMedium>{user.email}</TableCellMedium>
-                  <TableCellShort>
-                    <IconButSmPrimary
-                      handleClick={() => sendToEdit(user.id_user)}>
-                      <PencilSquareIcon/>
-                    </IconButSmPrimary>
-                  </TableCellShort>
-                  <TableCellShort>
-                    <IconButSmSecondary
-                      handleClick={() => openDeleteModal(user.id_user)}>
-                      <TrashIcon/>
-                    </IconButSmSecondary>
-                  </TableCellShort>
+                  <TableDataRowWrapper>
+                    <TableCellMedium
+                      className='bi-u-text-base-black'>{user.name}</TableCellMedium>
+                    <TableCellMedium>{user.surname}</TableCellMedium>
+                    <TableCellMedium>{user.department}</TableCellMedium>
+                    <TableCellMedium>{user.email}</TableCellMedium>
+                    <TableCellShort>
+                      <IconButSmPrimary
+                        handleClick={() => sendToEdit(user.id_user)}>
+                        <PencilSquareIcon/>
+                      </IconButSmPrimary>
+                    </TableCellShort>
+                    <TableCellShort>
+                      <IconButSmSecondary
+                        handleClick={() => openDeleteModal(user.id_user)}>
+                        <TrashIcon/>
+                      </IconButSmSecondary>
+                    </TableCellShort>
+                  </TableDataRowWrapper>
                 </TableDataRow>
               );
             })
           }
         </TableData>
-        <TablePagination/>       
+        <TablePagination
+          page={page}
+          setPage={setPage}
+          totalPages={totalPages}
+          />        
       </main>
     </>
     

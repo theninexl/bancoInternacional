@@ -24,7 +24,7 @@ export const InitializeLocalStorage = () => {
   }
 }
 
-export const GlobalContextProvider = ({ children }) => {
+export const useData = () => {
   //account
   const [account, setAccount] = useState({});
   //signout
@@ -35,6 +35,8 @@ export const GlobalContextProvider = ({ children }) => {
 
   //getHedges
   const [hedges, setHedges] = useState([]);
+  const [totalrowscount, setTotalrowscount] = useState(0);
+  const [allHedges, setAllHedges] = useState([]);
   const [newHedgeData, setNewHedgeData] = useState([]);
   const [fileInstrument, setFileInstrument] = useState([]);
 
@@ -42,6 +44,7 @@ export const GlobalContextProvider = ({ children }) => {
   const [hedgeStatusData, setHedgeStatusData] = useState([]);
   const [hedgeStatus,setHedgeStatus] = useState([]);
   const [hedgeDisarmData, setHedgeDisarmData] = useState([]);
+
 
   //list pagination
   const [page, setPage] = useState(1); 
@@ -51,8 +54,7 @@ export const GlobalContextProvider = ({ children }) => {
   //UserBox component
   const [userBoxOpen, setUserBoxOpen] = useState(false);
 
-  return (
-    <GlobalContext.Provider value={{
+  return {
       account,
       setAccount,
       signOut,
@@ -67,6 +69,10 @@ export const GlobalContextProvider = ({ children }) => {
       setUserBoxOpen,
       hedges,
       setHedges,
+      totalrowscount,
+      setTotalrowscount,
+      allHedges,
+      setAllHedges,
       fileInstrument,
       setFileInstrument,
       newHedgeData,
@@ -76,9 +82,6 @@ export const GlobalContextProvider = ({ children }) => {
       hedgeStatus,
       setHedgeStatus,
       hedgeDisarmData,
-      setHedgeDisarmData
-    }}>
-      { children }
-    </GlobalContext.Provider>
-  );
+      setHedgeDisarmData,
+    };
 }

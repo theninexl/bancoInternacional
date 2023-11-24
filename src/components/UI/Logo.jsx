@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { GlobeAltIcon } from '@heroicons/react/24/solid';
+import logo from '/images/logo.png'
 
 const Logo = () => {
   return (
@@ -7,7 +7,7 @@ const Logo = () => {
     <Link
       to='/'
       className='bi-o-logo'>
-        <GlobeAltIcon className='icon'/>Banco Internacional
+        <img src={logo} alt='logo' className='icon'/> Gestión de coberturas
     </Link>
     </>
   );

@@ -1,0 +1,8 @@
+.bi-u-noRotate {
+  transform: rotate(0deg);
+  transition: transform 0.25s;
+}
+.bi-u-rotateRight {
+  transform: rotate(90deg);
+  transition: transform 0.25s;
+}

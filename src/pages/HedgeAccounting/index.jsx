@@ -1,65 +1,89 @@
-import { useEffect, useContext } from 'react';
+import { useEffect,useState } from 'react';
 import { createSearchParams, useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
-import { GlobalContext } from '../../context';
+// import { GlobalContext } from '../../context';
 import Api from '../../services/api';
 import { TableHeader } from '../../components/UI/tables/TableHeaders';
-import { TableData, TableDataHeader, TableDataRow, TableCellMedium, TableCellShort } from '../../components/UI/tables/TableDataElements';
+import { TableData, TableDataHeader, TableDataRow, TableCellMedium, TableCellShort, TableDataRowWrapper } from '../../components/UI/tables/TableDataElements';
 import TablePagination from '../../components/TablePagination';
+import { ButtonLTransparent, SortButton } from '../../components/UI/buttons/Buttons';
 import { IconButSm } from '../../components/UI/buttons/IconButtons';
-import { DocumentArrowDownIcon, InformationCircleIcon, BoltIcon } from '@heroicons/react/24/solid';
+import { DocumentArrowDownIcon, BoltIcon } from '@heroicons/react/24/solid';
 import { MainHeading } from '../../components/UI/headings';
+import { LabelElement } from '../../components/UI/forms/SimpleForms';
+import { CSVDownload, CSVLink } from 'react-csv';
 
 
-function HedgeAccounting(){
+
+function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPage,totalrowscount,setTotalrowscount }){
   const navigate = useNavigate();
-  const context = useContext(GlobalContext);
   const rowspage = 10;
+  const [searchValue, setSearchValue] = useState('');
+  const [order, setOrder] = useState(1);
+  const [allHedges, setAllHedges] = useState([]);
+  const sortBtns = document.querySelectorAll('.bi-o-sortButton');
 
   const accountInLocalStorage = localStorage.getItem('account');
   const parsedAccount = JSON.parse(accountInLocalStorage);
   const token = parsedAccount.token;
 
   //calcular paginacion
-  const calcTotalPages = (totalResults,totalRows) => context.setTotalPages(Math.ceil(totalResults/totalRows));
+  const calcTotalPages = (totalResults,totalRows) => setTotalPages(Math.ceil(totalResults/totalRows));
 
-  //listar usuarios
-  const getHedges = (token, page) => {
+  //getData
+  const getData = async (endpoint, search, pagenumber, rowspage, orderby) => {
     const headers = {
       'Content-Type': 'application/json',
       'x-access-token': token,
     }
-    const data = {
-      'search':'',
-      'pagenumber':page,
-      'rowspage':rowspage
-    }
-    Api.call.post('hedges/getAll',data,{ headers:headers })
-    .then(res => {
-      calcTotalPages(res.data.rowscount[0].count, rowspage);
-      context.setHedges(res.data.data)
-    }).catch(err => console.warn(err))
+    const { data } = await Api.call.post(endpoint, {'search':search, 'pagenumber':pagenumber, 'rowspage':rowspage, 'orderby':orderby},{ headers:headers })
+    return data;
   }
+
+  //listar 10 usuarios
+  const getHedges = async (busqueda, orden) => {
+    const results = await getData('hedges/getAll',busqueda,page,rowspage,orden)
+    .then(res => {
+      setTotalrowscount(res.rowscount[0].count);
+      calcTotalPages(res.rowscount[0].count, rowspage);
+      setHedges(res.data);
+    })
+    .catch(err => console.warn(err));
+  }
+
+  //guardar todas las coberturas para descargar
+  const getAllHedges = async () => {
+    const results = await getData('hedges/getAll',searchValue,page,totalrowscount, order)
+    .then(res => {
+      setAllHedges(res.data)})
+    .catch(err => console.warn(err));
+  }
+
+  const execGetHedges = (search,order) => getHedges(search = search, order = order);
+  const execGetAllHedges = () => getAllHedges();
+
   //resetear pagina a 1
   useEffect(()=>{
-    context.setPage(1);
-  },[context.setPage])
+    setPage(1);
+  },[setPage])
 
+  //volver a pedir listar usuarios cuando cambia la página, el orden o el termino de busqueda
   useEffect(()=>{
-    const execGetHedges = async () => await getHedges(token, context.page);
-    execGetHedges();
-  },[context.page]);
+    execGetHedges(searchValue,order);
+  },[page, order, searchValue]);
 
-  //editar usuario
-  const seeStatus = (id) => {
-    navigate({      
-      pathname:'/hedges-status',
-      search: createSearchParams({
-        id:id
-      }).toString()
-    });
+  //pedir todos los usuarios cuando sabemos el número de filas totales
+  useEffect(()=>{
+    execGetAllHedges();
+  },[totalrowscount])
+
+
+  const downloadCSVData = () => {
+    console.log(totalrowscount);
+    console.log(allHedges);
   }
-
+  
+  //desarmar cobertura
   const requestDisarm = (id) => {
     navigate({      
       pathname:'/hedges-disarm',
@@ -69,98 +93,133 @@ function HedgeAccounting(){
     });
   }
 
+  //reordenar resultados
+  const sortItems = () => {
+    const sortCol = event.target.getAttribute('data-column');
+    const descIcon = event.target.querySelector(':scope > span.sortIcon--desc');
+    const ascIcon = event.target.querySelector(':scope > span.sortIcon--asc');
+
+    sortBtns.forEach(btn =>{
+      const descIcon = btn.querySelector(':scope > span.sortIcon--desc');
+      const ascIcon = btn.querySelector(':scope > span.sortIcon--asc');
+      descIcon.classList.add('bi-u-inactive');
+      ascIcon.classList.add('bi-u-inactive');
+    })
+    
+    if (Math.abs(order) === Math.abs(sortCol)) {
+      if (order < 0) {
+        setOrder(Math.abs(order));
+        descIcon.classList.remove('bi-u-inactive');
+        ascIcon.classList.add('bi-u-inactive');
+      } else {
+        setOrder(-Math.abs(order));
+        descIcon.classList.add('bi-u-inactive');
+        ascIcon.classList.remove('bi-u-inactive');
+      }
+    } else {
+      if (sortCol < 0) {
+        setOrder(Math.abs(sortCol));
+        descIcon.classList.remove('bi-u-inactive');
+        ascIcon.classList.add('bi-u-inactive');
+      } else {
+        setOrder(-Math.abs(sortCol));
+        descIcon.classList.add('bi-u-inactive');
+        ascIcon.classList.remove('bi-u-inactive');
+      }
+    }
+  }
+
   return (
     <main className="bi-u-h-screen--wSubNav">
        <TableHeader>
           <MainHeading>
-            Listado coberturas
-          </MainHeading>          
+            Listado de coberturas
+          </MainHeading>
+          <div className='bi-c-form-simple'>
+            <LabelElement
+              htmlFor='searchHedges'
+              type='text'
+              placeholder='Busca coberturas'
+              handleOnChange={(event)=>{
+                setSearchValue(event.target.value)
+              }} />                
+            <CSVLink
+              className='bi-c-navbar-links__textbutt'
+              filename={"coberturas.csv"}
+              data={allHedges}>Descargar CSV</CSVLink>
+          </div>
         </TableHeader>
         <TableData>
           <TableDataHeader>
-            <TableCellMedium>Ref.</TableCellMedium>
-            <TableCellMedium>Ref. Part. Cubierta</TableCellMedium>
-            <TableCellMedium>Ref. Instrumento</TableCellMedium>
-            <TableCellMedium>Tipo Cobertura</TableCellMedium>
-            <TableCellMedium>Ratio Eficacia</TableCellMedium>
-            <TableCellMedium>MtM Derivado</TableCellMedium>
-            <TableCellMedium>Impacto OCI</TableCellMedium>
-            <TableCellMedium>Impacto P&L</TableCellMedium>
-            <TableCellMedium>Monto Subyacente</TableCellMedium>
-            <TableCellMedium>Fecha Final</TableCellMedium>
-            <TableCellMedium>Usuario</TableCellMedium>
+            <TableCellMedium className='bi-u-centerText'>
+              <SortButton orderCol={1} handleClick={() => sortItems()}>Ref.</SortButton>
+            </TableCellMedium>
+            <TableCellMedium className='bi-u-centerText'>
+              <SortButton orderCol={2} handleClick={() => sortItems()}>Partida cubierta</SortButton>
+            </TableCellMedium>
+            <TableCellMedium className='bi-u-centerText'>
+              <SortButton orderCol={3} handleClick={() => sortItems()}>Instrumento</SortButton>
+            </TableCellMedium>
+            <TableCellMedium className='bi-u-centerText'>
+              <SortButton orderCol={4} handleClick={() => sortItems()}>Tipo</SortButton>
+            </TableCellMedium>
+            <TableCellMedium className='bi-u-centerText'>
+              <SortButton orderCol={5} handleClick={() => sortItems()}>Ratio eficacia</SortButton>
+            </TableCellMedium>
+            <TableCellMedium>
+              <SortButton orderCol={6} handleClick={() => sortItems()}>Monto subyacente</SortButton>
+            </TableCellMedium>
+            <TableCellMedium>
+              <SortButton orderCol={7} handleClick={() => sortItems()}>Fecha inicio</SortButton>
+            </TableCellMedium>
+            <TableCellMedium>
+              <SortButton orderCol={8} handleClick={() => sortItems()}>Fecha vencimiento</SortButton>
+            </TableCellMedium>
+            <TableCellMedium>
+              <SortButton orderCol={9} handleClick={() => sortItems()}>Usuario</SortButton>
+            </TableCellMedium>
             <TableCellShort>Ficha</TableCellShort>
-            <TableCellShort>Status</TableCellShort>
             <TableCellShort>Desarmar</TableCellShort>
           </TableDataHeader>
           {
-            context.hedges.map(hedge => {
-              const renderStatus = () => {
-                if (hedge.status == 'Ok') {
-                  return (
-                    <>
-                    <IconButSm
-                      handleClick={() => seeStatus(hedge.hedge_ref)}
-                      className="bi-o-icon-button-small--success">
-                      <InformationCircleIcon/>
-                    </IconButSm>
-                    </>);  
-                } else if (hedge.status == 'Pending') {
-                  return (
-                    <>
-                    <IconButSm
-                      handleClick={() => seeStatus(hedge.hedge_ref)}
-                      className="bi-o-icon-button-small--warning">
-                      <InformationCircleIcon/>
-                    </IconButSm>
-                    </>);  
-                } else if (hedge.status == 'Denegada') {
-                  return (
-                    <>
-                    <IconButSm
-                      handleClick={() => seeStatus(hedge.hedge_ref)}
-                      className="bi-o-icon-button-small--error">
-                      <InformationCircleIcon/>
-                    </IconButSm>
-                    </>);    
-                }        
-              } 
+            hedges?.map(hedge => {
               return (
                 <TableDataRow key={uuidv4()}>
-                  <TableCellMedium
-                    className='bi-u-text-base-black'>{hedge.hedge_ref}</TableCellMedium>
-                  <TableCellMedium>{hedge.hedge_item_ref}</TableCellMedium>
-                  <TableCellMedium>{hedge.hedge_instrument_ref}</TableCellMedium>
-                  <TableCellMedium>{hedge.hedge_type}</TableCellMedium>
-                  <TableCellMedium>{hedge.rate}</TableCellMedium>
-                  <TableCellMedium>{hedge.mtm}</TableCellMedium>
-                  <TableCellMedium>{hedge.oci}</TableCellMedium>
-                  <TableCellMedium>{hedge.pyl}</TableCellMedium>
-                  <TableCellMedium>{hedge.amount}</TableCellMedium>
-                  <TableCellMedium>{hedge.date_expire}</TableCellMedium>
-                  <TableCellMedium>{hedge.user_create}</TableCellMedium>
-                  <TableCellShort>
-                    <IconButSm
-                      className="bi-o-icon-button-small--disabled">
-                      <DocumentArrowDownIcon/>
-                    </IconButSm>
-                  </TableCellShort>
-                  <TableCellShort>
-                    {renderStatus()}
-                  </TableCellShort>
-                  <TableCellShort>
-                    <IconButSm
-                      handleClick={() => requestDisarm(hedge.hedge_ref)}
-                      className="bi-o-icon-button-small--primary">
-                      <BoltIcon/>
-                    </IconButSm>
-                  </TableCellShort>
+                  <TableDataRowWrapper>
+                    <TableCellMedium
+                      className='bi-u-text-base-black bi-u-centerText'>{hedge.id_hedge_relationship}</TableCellMedium>
+                    <TableCellMedium className='bi-u-centerText'>{hedge.id_hedge_item}</TableCellMedium>
+                    <TableCellMedium className='bi-u-centerText'>{hedge.id_hedge_instrument}</TableCellMedium>
+                    <TableCellMedium className='bi-u-centerText'>{hedge.cat_hedge_type}</TableCellMedium>
+                    <TableCellMedium className='bi-u-centerText'>{hedge.pct_effectiveness}</TableCellMedium>
+                    <TableCellMedium>{hedge.num_underlying_amount}</TableCellMedium>
+                    <TableCellMedium>{hedge.dt_start_date}</TableCellMedium>
+                    <TableCellMedium>{hedge.dt_maturity_date}</TableCellMedium>
+                    <TableCellMedium>{hedge.user_insert}</TableCellMedium>
+                    <TableCellShort>
+                      <IconButSm
+                        className="bi-o-icon-button-small--disabled">
+                        <DocumentArrowDownIcon/>
+                      </IconButSm>
+                    </TableCellShort>
+                    <TableCellShort>
+                      <IconButSm
+                        handleClick={() => requestDisarm(hedge.id_hedge_relationship)}
+                        className="bi-o-icon-button-small--primary">
+                        <BoltIcon/>
+                      </IconButSm>
+                    </TableCellShort>
+                    </TableDataRowWrapper>
                 </TableDataRow>
               );
             })
           }
         </TableData>
-        <TablePagination/>    
+        <TablePagination
+          page={page}
+          setPage={setPage}
+          totalPages={totalPages}
+          />    
     </main>
   );
 }

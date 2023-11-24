@@ -29,6 +29,7 @@ function NewUser(){
     const data = {
       name: formData.get('newUserName'),
       surname: formData.get('newUserSurname'),
+      department: formData.get('newUserDepartment'),
       email: formData.get('newUserEmail'),
       password: formData.get('newUserPwd'),
       password2: formData.get('newUserPwd2'),
@@ -37,6 +38,7 @@ function NewUser(){
     const dataSent = {
       "name":`${data.name}`,
       "surname":data.surname,
+      "department":data.department,
       "email":data.email,
       "password":data.password,
       "cat_display":"",
@@ -66,7 +68,7 @@ function NewUser(){
        <main className="bi-u-h-screen--wSubNav">
        <TableHeader>
           <MainHeading>
-            Alta nuevo usuario
+            Crear usuario
           </MainHeading>
         </TableHeader>
         <SectionHalf>
@@ -85,6 +87,14 @@ function NewUser(){
                 type='text'
                 placeholder='Apellidos'>
                   Apellidos
+              </LabelElement>
+            </SimpleFormRow>
+            <SimpleFormRow>
+              <LabelElement
+                htmlFor='newUserDepartment'
+                type='text'
+                placeholder='Departamento'>
+                  Departamento
               </LabelElement>
             </SimpleFormRow>
             <SimpleFormRow>
@@ -121,14 +131,14 @@ function NewUser(){
                 className='bi-o-button--short'
                 handleClick={HandleCancel}
                 >
-                  Cancel
+                  Cancelar
               </ButtonLGhost>
               <ButtonLPrimary
                 className='bi-o-button--short'
                 type='submit'
                 handleClick={HandleSignIn}
                 >
-                  Enviar
+                  Guardar
               </ButtonLPrimary>
             </SimpleFormRow>            
           </SimpleFormHrz>

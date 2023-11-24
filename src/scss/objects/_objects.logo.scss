@@ -1,19 +1,20 @@
 .bi-o-logo {
     $block:&;
-    color:getColor(primary);
+    color:getColor(secondary);
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
     gap:getSize($small);
     @include bi-ps-bold;
+    @include font-size($fontSizeJumpDT1, $lineHeightDT);
 
     &:hover {
         text-decoration:none;
     }
 
     .icon {
-        height: getSize($bigger);
-        width: getSize($bigger);
+        height: getSize($huge);
+        width: getSize($huge);
     }
 }
 

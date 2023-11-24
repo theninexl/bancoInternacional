@@ -1,0 +1,1253 @@
+import { useEffect,useState } from 'react';
+import { createSearchParams, useNavigate } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
+import Api from '../../services/api';
+import { TableHeader } from '../../components/UI/tables/TableHeaders';
+import { TableData, TableDataHeader, TableDataRow, TableDataRowWrapper, TableCellMedium, TableCellShort } from '../../components/UI/tables/TableDataElements';
+import TablePagination from '../../components/TablePagination';
+import { SortButton } from '../../components/UI/buttons/Buttons';
+import { IconButSm } from '../../components/UI/buttons/IconButtons';
+import { DocumentArrowDownIcon, InformationCircleIcon, BoltIcon } from '@heroicons/react/24/solid';
+import { MainHeading } from '../../components/UI/headings';
+import { LabelElement } from '../../components/UI/forms/SimpleForms';
+
+import BalanceAccordion from '../../components/BalanceAccordion';
+
+function BalanceView(){
+
+  const assets = [{
+      "id":"1",
+      "heading":"Instrumentos financieros de deuda emitidos",
+      "amount":"4.822MM$",
+      "totalCoverage":"0,0000000757%",
+      "derivatives":"",
+      "subheadings": [{
+        'id':'1',
+        'heading':'2201',
+        'amount':'4822434412206200000$',
+        'coverage':'0,00000000007%',
+        'derivatives':'3668'
+      }]
+    },{
+      "id":"2",
+      "heading":"Depósitos y otras captaciones a plazo",
+      "amount":"69.761MM$",
+      "totalCoverage":"0,0000003329%",
+      "derivatives":"",
+      "subheadings": [{
+        'id':'1',
+        'heading':'9198155',
+        'amount':'4378337388$',
+        'coverage':'0,98210795992682%',
+        'derivatives':'4754'
+      },
+{
+        'id':'2',
+        'heading':'9198386',
+        'amount':'1226606855$',
+        'coverage':'0,978308571412639%',
+        'derivatives':'4753'
+      },
+{
+        'id':'3',
+        'heading':'9199025',
+        'amount':'2194907814$',
+        'coverage':'0,956759999944125%',
+        'derivatives':'4752'
+      },
+{
+        'id':'4',
+        'heading':'9200136',
+        'amount':'3956043956$',
+        'coverage':'0,985833333344287%',
+        'derivatives':'4751'
+      },
+{
+        'id':'5',
+        'heading':'9201835',
+        'amount':'996158672$',
+        'coverage':'0,993817579294235%',
+        'derivatives':'4979'
+      },
+{
+        'id':'6',
+        'heading':'9203582',
+        'amount':'2300000000$',
+        'coverage':'0,978260869565217%',
+        'derivatives':'4759'
+      },
+{
+        'id':'7',
+        'heading':'9203875',
+        'amount':'3324691081$',
+        'coverage':'0,902339473626422%',
+        'derivatives':'4758'
+      },
+{
+        'id':'8',
+        'heading':'9204441',
+        'amount':'2400000000$',
+        'coverage':'1%',
+        'derivatives':'4616'
+      },
+{
+        'id':'9',
+        'heading':'9204636',
+        'amount':'300000000$',
+        'coverage':'0,833333333333333%',
+        'derivatives':'4760'
+      },
+{
+        'id':'10',
+        'heading':'9204648',
+        'amount':'439077936$',
+        'coverage':'0,979325000744287%',
+        'derivatives':'4978'
+      },
+{
+        'id':'11',
+        'heading':'9205300',
+        'amount':'2500000000$',
+        'coverage':'1%',
+        'derivatives':'4615'
+      },
+{
+        'id':'12',
+        'heading':'9206040',
+        'amount':'880022177$',
+        'coverage':'0,999974799498718%',
+        'derivatives':'4977'
+      },
+{
+        'id':'13',
+        'heading':'9206353',
+        'amount':'2000000000$',
+        'coverage':'1%',
+        'derivatives':'4614'
+      },
+{
+        'id':'14',
+        'heading':'9207409',
+        'amount':'2400000000$',
+        'coverage':'1%',
+        'derivatives':'4973'
+      },
+{
+        'id':'15',
+        'heading':'9208696',
+        'amount':'1600000000$',
+        'coverage':'1%',
+        'derivatives':'4646'
+      },
+{
+        'id':'16',
+        'heading':'9220570',
+        'amount':'300000000$',
+        'coverage':'1%',
+        'derivatives':'4756'
+      },
+{
+        'id':'17',
+        'heading':'9220854',
+        'amount':'871221801$',
+        'coverage':'1,14781333393194%',
+        'derivatives':'4762'
+      },
+{
+        'id':'18',
+        'heading':'9224644',
+        'amount':'320418022$',
+        'coverage':'0,998695385492393%',
+        'derivatives':'4802'
+      },
+{
+        'id':'19',
+        'heading':'9224648',
+        'amount':'386144796$',
+        'coverage':'0,984086808721358%',
+        'derivatives':'4803'
+      },
+{
+        'id':'20',
+        'heading':'9225274',
+        'amount':'321051072$',
+        'coverage':'0,996726153276947%',
+        'derivatives':'4811'
+      },
+{
+        'id':'21',
+        'heading':'9225277',
+        'amount':'246962363$',
+        'coverage':'0,971807999747719%',
+        'derivatives':'4814'
+      },
+{
+        'id':'22',
+        'heading':'9226359',
+        'amount':'1379957450089820$',
+        'coverage':'1,27734373250804E-06%',
+        'derivatives':'4821'
+      },
+{
+        'id':'23',
+        'heading':'9226550',
+        'amount':'329293994$',
+        'coverage':'0,999107199021674%',
+        'derivatives':'4826'
+      },
+{
+        'id':'24',
+        'heading':'9228244',
+        'amount':'449912010$',
+        'coverage':'0,995750257922655%',
+        'derivatives':'4844'
+      },
+{
+        'id':'25',
+        'heading':'9228245',
+        'amount':'83839692$',
+        'coverage':'0,978057028167518%',
+        'derivatives':'4843'
+      },
+{
+        'id':'26',
+        'heading':'9240411',
+        'amount':'5499164079$',
+        'coverage':'0,999970162919738%',
+        'derivatives':'4933'
+      },
+{
+        'id':'27',
+        'heading':'9240412',
+        'amount':'4478146644$',
+        'coverage':'0,998180800083687%',
+        'derivatives':'4934'
+      },
+{
+        'id':'28',
+        'heading':'9240704',
+        'amount':'2950000000$',
+        'coverage':'1%',
+        'derivatives':'4935'
+      },
+{
+        'id':'29',
+        'heading':'9243842',
+        'amount':'1796192073$',
+        'coverage':'0,946446666564261%',
+        'derivatives':'4950'
+      },
+{
+        'id':'30',
+        'heading':'9243846',
+        'amount':'1796192073$',
+        'coverage':'0,946446666564261%',
+        'derivatives':'4949'
+      },
+{
+        'id':'31',
+        'heading':'9243847',
+        'amount':'1796192073$',
+        'coverage':'0,946446666564261%',
+        'derivatives':'4953'
+      },
+{
+        'id':'32',
+        'heading':'9243849',
+        'amount':'1796192073$',
+        'coverage':'0,946446666564261%',
+        'derivatives':'4952'
+      },
+{
+        'id':'33',
+        'heading':'9243851',
+        'amount':'1796192073$',
+        'coverage':'0,946446666564261%',
+        'derivatives':'4951'
+      },
+{
+        'id':'34',
+        'heading':'9244699',
+        'amount':'1961856313637940$',
+        'coverage':'1,27134295343726E-06%',
+        'derivatives':'4958'
+      },
+{
+        'id':'35',
+        'heading':'9244700',
+        'amount':'653952104804900$',
+        'coverage':'0,00000126011200812%',
+        'derivatives':'4960'
+      },
+{
+        'id':'36',
+        'heading':'9244702',
+        'amount':'653952104804900$',
+        'coverage':'0,00000126011200812%',
+        'derivatives':'4961'
+      },
+{
+        'id':'37',
+        'heading':'9245026',
+        'amount':'6094685289$',
+        'coverage':'0,995949702432617%',
+        'derivatives':'5013'
+      },
+{
+        'id':'38',
+        'heading':'9245358',
+        'amount':'4541903603$',
+        'coverage':'0,999580879920317%',
+        'derivatives':'4987'
+      },
+{
+        'id':'39',
+        'heading':'9245889',
+        'amount':'883735728$',
+        'coverage':'0,984457199630159%',
+        'derivatives':'5012'
+      },
+{
+        'id':'40',
+        'heading':'9251080',
+        'amount':'5718538959$',
+        'coverage':'0,998506793595143%',
+        'derivatives':'5005'
+      },
+{
+        'id':'41',
+        'heading':'9251081',
+        'amount':'5446227580$',
+        'coverage':'0,995184266611202%',
+        'derivatives':'5007'
+      },
+{
+        'id':'42',
+        'heading':'9251082',
+        'amount':'499237528$',
+        'coverage':'0,98149672754569%',
+        'derivatives':'5006'
+      },
+{
+        'id':'43',
+        'heading':'9251083',
+        'amount':'453852298$',
+        'coverage':'0,991512000672959%',
+        'derivatives':'5009'
+      },
+{
+        'id':'44',
+        'heading':'9251084',
+        'amount':'136155689$',
+        'coverage':'0,954789336786361%',
+        'derivatives':'5008'
+      },
+{
+        'id':'45',
+        'heading':'9253548',
+        'amount':'3352664009$',
+        'coverage':'0,996222702613204%',
+        'derivatives':'5201'
+      },
+{
+        'id':'46',
+        'heading':'9253549',
+        'amount':'724900326$',
+        'coverage':'0,979445000277183%',
+        'derivatives':'5202'
+      },
+{
+        'id':'47',
+        'heading':'9253551',
+        'amount':'453062704$',
+        'coverage':'0,993239999733017%',
+        'derivatives':'5203'
+      },
+{
+        'id':'48',
+        'heading':'9255246',
+        'amount':'2357243234$',
+        'coverage':'0,996927243699112%',
+        'derivatives':'5063'
+      },
+{
+        'id':'49',
+        'heading':'9255247',
+        'amount':'2266580033$',
+        'coverage':'0,997096933307362%',
+        'derivatives':'5208'
+      },
+{
+        'id':'50',
+        'heading':'9255248',
+        'amount':'725305611$',
+        'coverage':'0,992684999371941%',
+        'derivatives':'5207'
+      },
+{
+        'id':'51',
+        'heading':'9255250',
+        'amount':'271989604$',
+        'coverage':'0,955918888723409%',
+        'derivatives':'5206'
+      },
+{
+        'id':'52',
+        'heading':'9255252',
+        'amount':'271989604$',
+        'coverage':'0,955918888723409%',
+        'derivatives':'5205'
+      },
+{
+        'id':'53',
+        'heading':'9261953',
+        'amount':'1408873174$',
+        'coverage':'0,993701935586716%',
+        'derivatives':'5140'
+      },
+{
+        'id':'54',
+        'heading':'9261955',
+        'amount':'363580174$',
+        'coverage':'0,962648749928812%',
+        'derivatives':'5141'
+      },
+{
+        'id':'55',
+        'heading':'9261957',
+        'amount':'1090740522$',
+        'coverage':'0,990152999926778%',
+        'derivatives':'5142'
+      },
+{
+        'id':'56',
+        'heading':'9261964',
+        'amount':'363580174$',
+        'coverage':'0,962648749928812%',
+        'derivatives':'5143'
+      },
+{
+        'id':'57',
+        'heading':'9261967',
+        'amount':'272685130$',
+        'coverage':'0,990153001742339%',
+        'derivatives':'5145'
+      },
+{
+        'id':'58',
+        'heading':'9261968',
+        'amount':'590817783$',
+        'coverage':'0,930913076460327%',
+        'derivatives':'5146'
+      },
+{
+        'id':'59',
+        'heading':'9262411',
+        'amount':'1366286131$',
+        'coverage':'0,988079999766901%',
+        'derivatives':'5198'
+      },
+{
+        'id':'60',
+        'heading':'9263374',
+        'amount':'1818347122$',
+        'coverage':'0,998159250255629%',
+        'derivatives':'5119'
+      },
+{
+        'id':'61',
+        'heading':'9263375',
+        'amount':'1454677698$',
+        'coverage':'1,00022156248112%',
+        'derivatives':'5114'
+      },
+{
+        'id':'62',
+        'heading':'9263376',
+        'amount':'727338849$',
+        'coverage':'0,989909999981315%',
+        'derivatives':'5117'
+      },
+{
+        'id':'63',
+        'heading':'9263377',
+        'amount':'500045459$',
+        'coverage':'0,999909090265331%',
+        'derivatives':'5116'
+      },
+{
+        'id':'64',
+        'heading':'9263380',
+        'amount':'409128103$',
+        'coverage':'0,989909998922758%',
+        'derivatives':'5115'
+      },
+{
+        'id':'65',
+        'heading':'9263383',
+        'amount':'1454677698$',
+        'coverage':'1,00022156248112%',
+        'derivatives':'5118'
+      },
+{
+        'id':'66',
+        'heading':'9263384',
+        'amount':'7428694290324610000$',
+        'coverage':'7,37020771891362E-10%',
+        'derivatives':'5101'
+      },
+{
+        'id':'67',
+        'heading':'9264071',
+        'amount':'1817664059$',
+        'coverage':'0,990282000179%',
+        'derivatives':'5199'
+      },
+{
+        'id':'68',
+        'heading':'9264072',
+        'amount':'14164194319419900000$',
+        'coverage':'7,34435970405837E-10%',
+        'derivatives':'5120'
+      },
+{
+        'id':'69',
+        'heading':'9265171',
+        'amount':'2907725159$',
+        'coverage':'0,997343229302092%',
+        'derivatives':'5135'
+      },
+{
+        'id':'70',
+        'heading':'9265175',
+        'amount':'1181263346$',
+        'coverage':'0,990465000003479%',
+        'derivatives':'5129'
+      },
+{
+        'id':'71',
+        'heading':'9265180',
+        'amount':'363465645$',
+        'coverage':'0,962952083132919%',
+        'derivatives':'5130'
+      },
+{
+        'id':'72',
+        'heading':'9265183',
+        'amount':'454332056$',
+        'coverage':'0,990465000338871%',
+        'derivatives':'5131'
+      },
+{
+        'id':'73',
+        'heading':'9265185',
+        'amount':'545198467$',
+        'coverage':'0,972123056244764%',
+        'derivatives':'5132'
+      },
+{
+        'id':'74',
+        'heading':'9265914',
+        'amount':'2100000000$',
+        'coverage':'1%',
+        'derivatives':'5194'
+      },
+{
+        'id':'75',
+        'heading':'9267852',
+        'amount':'3271190804$',
+        'coverage':'0,993521990837683%',
+        'derivatives':'5173'
+      },
+{
+        'id':'76',
+        'heading':'9267854',
+        'amount':'454332056$',
+        'coverage':'0,990465000338871%',
+        'derivatives':'5174'
+      },
+{
+        'id':'77',
+        'heading':'9267856',
+        'amount':'363465645$',
+        'coverage':'0,825387499828216%',
+        'derivatives':'5175'
+      },
+{
+        'id':'78',
+        'heading':'9269344',
+        'amount':'9427435543291670000$',
+        'coverage':'5,8076260239148E-10%',
+        'derivatives':'5177'
+      },
+{
+        'id':'79',
+        'heading':'9269345',
+        'amount':'3631290833$',
+        'coverage':'0,991383000029731%',
+        'derivatives':'5195'
+      },
+{
+        'id':'80',
+        'heading':'9269347',
+        'amount':'907822708$',
+        'coverage':'0,991383000302742%',
+        'derivatives':'5196'
+      },
+{
+        'id':'81',
+        'heading':'9272581',
+        'amount':'3296808298845750000$',
+        'coverage':'7,19648819384086E-10%',
+        'derivatives':'5245'
+      },
+{
+        'id':'82',
+        'heading':'9272585',
+        'amount':'941945362423249000$',
+        'coverage':'6,97505679426852E-10%',
+        'derivatives':'5246'
+      },
+{
+        'id':'83',
+        'heading':'9273672',
+        'amount':'4693567176578120000$',
+        'coverage':'7,38790874732521E-10%',
+        'derivatives':'5238'
+      },
+{
+        'id':'84',
+        'heading':'9273674',
+        'amount':'4693567176578120000$',
+        'coverage':'7,38790874732521E-10%',
+        'derivatives':'5226'
+      },
+{
+        'id':'85',
+        'heading':'9273677',
+        'amount':'2346783346476680000$',
+        'coverage':'7,31014204006348E-10%',
+        'derivatives':'5223'
+      },
+{
+        'id':'86',
+        'heading':'9274774',
+        'amount':'2716735088$',
+        'coverage':'0,993840000052298%',
+        'derivatives':'5242'
+      },
+{
+        'id':'87',
+        'heading':'9274785',
+        'amount':'2345311190013760000$',
+        'coverage':'7,00346549743092E-10%',
+        'derivatives':'5230'
+      },
+{
+        'id':'88',
+        'heading':'9292319',
+        'amount':'13905151735091000000$',
+        'coverage':'7,34993087073504E-10%',
+        'derivatives':'5462'
+      },
+{
+        'id':'89',
+        'heading':'9296342',
+        'amount':'4612933969558190000$',
+        'coverage':'7,43792116393249E-10%',
+        'derivatives':'5469'
+      },
+{
+        'id':'90',
+        'heading':'9296787',
+        'amount':'6027192575486760$',
+        'coverage':'1,25755464174593E-06%',
+        'derivatives':'5473'
+      },
+{
+        'id':'91',
+        'heading':'9302643',
+        'amount':'1856530670057350000$',
+        'coverage':'7,47106343229522E-10%',
+        'derivatives':'5500'
+      },
+{
+        'id':'92',
+        'heading':'9303136',
+        'amount':'3361484265703610$',
+        'coverage':'1,25850120530447E-06%',
+        'derivatives':'5503'
+      },
+{
+        'id':'93',
+        'heading':'9303139',
+        'amount':'3361484265703610$',
+        'coverage':'1,25850120530447E-06%',
+        'derivatives':'5505'
+      },
+{
+        'id':'94',
+        'heading':'9303390',
+        'amount':'6738770143093780$',
+        'coverage':'1,26862881779124E-06%',
+        'derivatives':'5499'
+      },
+{
+        'id':'95',
+        'heading':'9303393',
+        'amount':'6738770143093780$',
+        'coverage':'1,26862881779124E-06%',
+        'derivatives':'5498'
+      },
+{
+        'id':'96',
+        'heading':'9303653',
+        'amount':'3355754870849460$',
+        'coverage':'1,26064988737665E-06%',
+        'derivatives':'5510'
+      },
+{
+        'id':'97',
+        'heading':'9303655',
+        'amount':'3355754870849460$',
+        'coverage':'1,26064988737665E-06%',
+        'derivatives':'5511'
+      },
+{
+        'id':'98',
+        'heading':'9319323',
+        'amount':'6710423918719370$',
+        'coverage':'1,2477199803493E-06%',
+        'derivatives':'5617'
+      },
+{
+        'id':'99',
+        'heading':'9319325',
+        'amount':'4226883213645510$',
+        'coverage':'1,27190029349386E-06%',
+        'derivatives':'5649'
+      }]
+    },{
+      "id":"3",
+      "heading":"Instrumentos financieros de deuda",
+      "amount":"103.391MM$",
+      "totalCoverage":"0,0000002528%",
+      "derivatives":"",
+      "subheadings": [{
+        'id':'1',
+        'heading':'29395293951',
+        'amount':'1378864020502720000$',
+        'coverage':'4,35262644521817E-09%',
+        'derivatives':'4029'
+      },
+{
+        'id':'2',
+        'heading':'29400294001',
+        'amount':'919242680779249000$',
+        'coverage':'6,52893966467302E-09%',
+        'derivatives':'4029'
+      },
+{
+        'id':'3',
+        'heading':'29401294011',
+        'amount':'459621339723475000$',
+        'coverage':'1,30578793482714E-08%',
+        'derivatives':'4029'
+      },
+{
+        'id':'4',
+        'heading':'29402294021',
+        'amount':'459621339723475000$',
+        'coverage':'1,30578793482714E-08%',
+        'derivatives':'4029'
+      },
+{
+        'id':'5',
+        'heading':'29403294031',
+        'amount':'459621339723475000$',
+        'coverage':'1,30578793482714E-08%',
+        'derivatives':'4029'
+      },
+{
+        'id':'6',
+        'heading':'29404294041',
+        'amount':'459621339723475000$',
+        'coverage':'1,30578793482714E-08%',
+        'derivatives':'4029'
+      },
+{
+        'id':'7',
+        'heading':'29405294051',
+        'amount':'3401197917950610000$',
+        'coverage':'1,76457828823331E-09%',
+        'derivatives':'4029'
+      },
+{
+        'id':'8',
+        'heading':'29415294151',
+        'amount':'919242680779249000$',
+        'coverage':'6,52893966467302E-09%',
+        'derivatives':'4029'
+      },
+{
+        'id':'9',
+        'heading':'29417294171',
+        'amount':'4596213402563950000$',
+        'coverage':'6,53154615998758E-10%',
+        'derivatives':'4033'
+      },
+{
+        'id':'10',
+        'heading':'29429294291',
+        'amount':'229810669861737000$',
+        'coverage':'2,61157586965428E-08%',
+        'derivatives':'4029'
+      },
+{
+        'id':'11',
+        'heading':'29430294301',
+        'amount':'229810669861737000$',
+        'coverage':'2,61157586965428E-08%',
+        'derivatives':'4029'
+      },
+{
+        'id':'12',
+        'heading':'29431294311',
+        'amount':'229810669861737000$',
+        'coverage':'2,61157586965428E-08%',
+        'derivatives':'4029'
+      },
+{
+        'id':'13',
+        'heading':'29433294331',
+        'amount':'45962133972347500$',
+        'coverage':'1,30578793482714E-07%',
+        'derivatives':'4029'
+      },
+{
+        'id':'14',
+        'heading':'34886348861',
+        'amount':'919242680779249000$',
+        'coverage':'1,9637039682163E-08%',
+        'derivatives':'5826'
+      },
+{
+        'id':'15',
+        'heading':'34890348901',
+        'amount':'1332901886530380000$',
+        'coverage':'1,35392973649218E-08%',
+        'derivatives':'5816'
+      },
+{
+        'id':'16',
+        'heading':'34893348931',
+        'amount':'16040784776333800000$',
+        'coverage':'1,12504190110608E-09%',
+        'derivatives':'5816'
+      },
+{
+        'id':'17',
+        'heading':'34894348941',
+        'amount':'6158925960288360000$',
+        'coverage':'2,93014644377298E-09%',
+        'derivatives':'5816'
+      },
+{
+        'id':'18',
+        'heading':'34900349001',
+        'amount':'3033500846171830000$',
+        'coverage':'2,97454260195347E-09%',
+        'derivatives':'5817'
+      },
+{
+        'id':'19',
+        'heading':'34901349011',
+        'amount':'9698010280156010000$',
+        'coverage':'9,30425648079932E-10%',
+        'derivatives':'5817'
+      },
+{
+        'id':'20',
+        'heading':'34904349041',
+        'amount':'17488591999127300000$',
+        'coverage':'1,03217028568685E-09%',
+        'derivatives':'5826'
+      },
+{
+        'id':'21',
+        'heading':'34912349121',
+        'amount':'137886401917042000$',
+        'coverage':'1,30913598070826E-07%',
+        'derivatives':'5826'
+      },
+{
+        'id':'22',
+        'heading':'34915349151',
+        'amount':'6434698764122440000$',
+        'coverage':'2,80529138374697E-09%',
+        'derivatives':'5826'
+      },
+{
+        'id':'23',
+        'heading':'35139351391',
+        'amount':'13788640209024100000$',
+        'coverage':'1,52249703246741E-09%',
+        'derivatives':'5890'
+      },
+{
+        'id':'24',
+        'heading':'35141351411',
+        'amount':'14569996487886400000$',
+        'coverage':'1,44084892659061E-09%',
+        'derivatives':'5890'
+      }
+]
+    },{
+      "id":"4",
+      "heading":"Préstamos comerciales",
+      "amount":"227.737MM$",
+      "totalCoverage":"0,0000000936%",
+      "derivatives":"",
+      "subheadings": [{
+        'id':'1',
+        'heading':'2305293',
+        'amount':'3292623884079160000$',
+        'coverage':'9,77836216449735E-10%',
+        'derivatives':'4994'
+      },
+{
+        'id':'2',
+        'heading':'2305310',
+        'amount':'3196737070559310000$',
+        'coverage':'9,77836222061606E-10%',
+        'derivatives':'4996'
+      },
+{
+        'id':'3',
+        'heading':'2305313',
+        'amount':'5316428351221100000$',
+        'coverage':'9,77836221155123E-10%',
+        'derivatives':'4997'
+      },
+{
+        'id':'4',
+        'heading':'2305424',
+        'amount':'5641494544$',
+        'coverage':'1%',
+        'derivatives':'5787'
+      },
+{
+        'id':'5',
+        'heading':'9011535',
+        'amount':'1782773421512860000$',
+        'coverage':'9,69070236381433E-10%',
+        'derivatives':'5010'
+      },
+{
+        'id':'6',
+        'heading':'9011545',
+        'amount':'1754586103240250000$',
+        'coverage':'9,69093785628354E-10%',
+        'derivatives':'4995'
+      },
+{
+        'id':'7',
+        'heading':'9014382',
+        'amount':'3125642905138750000$',
+        'coverage':'1,00408261449837E-09%',
+        'derivatives':'5704'
+      },
+{
+        'id':'8',
+        'heading':'9040003',
+        'amount':'11759923884850400000$',
+        'coverage':'9,23172192930497E-10%',
+        'derivatives':'5055'
+      },
+{
+        'id':'9',
+        'heading':'9047684',
+        'amount':'4167104098765020000$',
+        'coverage':'9,82391483718449E-10%',
+        'derivatives':'5689'
+      },
+{
+        'id':'10',
+        'heading':'9047696',
+        'amount':'3029969151645100000$',
+        'coverage':'9,81820826487558E-10%',
+        'derivatives':'5750'
+      },
+{
+        'id':'11',
+        'heading':'9050589',
+        'amount':'5876758908233740000$',
+        'coverage':'9,49051894166656E-10%',
+        'derivatives':'5017'
+      },
+{
+        'id':'12',
+        'heading':'9058181',
+        'amount':'7304909186283860000$',
+        'coverage':'9,48023801891094E-10%',
+        'derivatives':'5000'
+      },
+{
+        'id':'13',
+        'heading':'9058863',
+        'amount':'3904633006516500000$',
+        'coverage':'9,82263870509488E-10%',
+        'derivatives':'5699'
+      },
+{
+        'id':'14',
+        'heading':'9058876',
+        'amount':'2029302646596390000$',
+        'coverage':'9,81756587544653E-10%',
+        'derivatives':'5754'
+      },
+{
+        'id':'15',
+        'heading':'9058877',
+        'amount':'3053082005714810000$',
+        'coverage':'9,81819975529345E-10%',
+        'derivatives':'5751'
+      },
+{
+        'id':'16',
+        'heading':'9120780',
+        'amount':'3285953622009820000$',
+        'coverage':'9,4036273951123E-10%',
+        'derivatives':'5720'
+      },
+{
+        'id':'17',
+        'heading':'9121164',
+        'amount':'6370670556429050000$',
+        'coverage':'9,0703863365978E-10%',
+        'derivatives':'5040'
+      },
+{
+        'id':'18',
+        'heading':'9126695',
+        'amount':'3635368307897930000$',
+        'coverage':'9,30828017273625E-10%',
+        'derivatives':'5713'
+      },
+{
+        'id':'19',
+        'heading':'9127242',
+        'amount':'2633928143109490000$',
+        'coverage':'9,30587275287757E-10%',
+        'derivatives':'5747'
+      },
+{
+        'id':'20',
+        'heading':'9127431',
+        'amount':'2670448687871970000$',
+        'coverage':'9,30618914350228E-10%',
+        'derivatives':'5752'
+      },
+{
+        'id':'21',
+        'heading':'9127626',
+        'amount':'4618847787863780000$',
+        'coverage':'8,98825422848604E-10%',
+        'derivatives':'5039'
+      },
+{
+        'id':'22',
+        'heading':'9127782',
+        'amount':'6190736877781490000$',
+        'coverage':'8,987900910667E-10%',
+        'derivatives':'4999'
+      },
+{
+        'id':'23',
+        'heading':'9128217',
+        'amount':'3512580708588680000$',
+        'coverage':'8,98883735972179E-10%',
+        'derivatives':'5041'
+      },
+{
+        'id':'24',
+        'heading':'9128221',
+        'amount':'7737820023249490000$',
+        'coverage':'9,31309004294251E-10%',
+        'derivatives':'5692'
+      },
+{
+        'id':'25',
+        'heading':'9128546',
+        'amount':'7302210906468020000$',
+        'coverage':'8,98879760836437E-10%',
+        'derivatives':'5001'
+      },
+{
+        'id':'26',
+        'heading':'9128782',
+        'amount':'4925266830165190000$',
+        'coverage':'9,31368793037787E-10%',
+        'derivatives':'5714'
+      },
+{
+        'id':'27',
+        'heading':'9128817',
+        'amount':'3518047605647570000$',
+        'coverage':'9,30947942188845E-10%',
+        'derivatives':'5748'
+      },
+{
+        'id':'28',
+        'heading':'9136525',
+        'amount':'2645849868053560000$',
+        'coverage':'1,0257174081992E-09%',
+        'derivatives':'5755'
+      },
+{
+        'id':'29',
+        'heading':'9139362',
+        'amount':'3797946394915210000$',
+        'coverage':'9,21564844988851E-10%',
+        'derivatives':'5693'
+      },
+{
+        'id':'30',
+        'heading':'9154595',
+        'amount':'4245450626620040000$',
+        'coverage':'9,10033224300121E-10%',
+        'derivatives':'5586'
+      },
+{
+        'id':'31',
+        'heading':'9158424',
+        'amount':'3561378959433070000$',
+        'coverage':'9,09184247754259E-10%',
+        'derivatives':'5722'
+      },
+{
+        'id':'32',
+        'heading':'9160044',
+        'amount':'2996516823675030000$',
+        'coverage':'8,15099357495375E-10%',
+        'derivatives':'5756'
+      },
+{
+        'id':'33',
+        'heading':'9169458',
+        'amount':'3702885459287180000$',
+        'coverage':'8,92287786464785E-10%',
+        'derivatives':'5707'
+      },
+{
+        'id':'34',
+        'heading':'9178625',
+        'amount':'3718036077692600000$',
+        'coverage':'8,43801804351234E-10%',
+        'derivatives':'5021'
+      },
+{
+        'id':'35',
+        'heading':'9192551',
+        'amount':'7743947048134240000$',
+        'coverage':'8,5324561220908E-10%',
+        'derivatives':'5585'
+      },
+{
+        'id':'36',
+        'heading':'9192734',
+        'amount':'10213541771471800000$',
+        'coverage':'8,23093084005524E-10%',
+        'derivatives':'4992'
+      },
+{
+        'id':'37',
+        'heading':'9198966',
+        'amount':'14088564760880100000$',
+        'coverage':'8,39420164773495E-10%',
+        'derivatives':'5518'
+      },
+{
+        'id':'38',
+        'heading':'9200057',
+        'amount':'3071566302948300000$',
+        'coverage':'8,09341576310373E-10%',
+        'derivatives':'5011'
+      },
+{
+        'id':'39',
+        'heading':'9226530',
+        'amount':'14247853114972900000$',
+        'coverage':'7,74593564654458E-10%',
+        'derivatives':'5023'
+      },
+{
+        'id':'40',
+        'heading':'9242703',
+        'amount':'11279991815636300000$',
+        'coverage':'7,56578245428366E-10%',
+        'derivatives':'5044'
+      },
+{
+        'id':'41',
+        'heading':'9245259',
+        'amount':'10726758993029500000$',
+        'coverage':'7,53958719577402E-10%',
+        'derivatives':'5045'
+      },
+{
+        'id':'42',
+        'heading':'9258993',
+        'amount':'8876481926981140000$',
+        'coverage':'7,70087953348066E-10%',
+        'derivatives':'5517'
+      },
+{
+        'id':'43',
+        'heading':'9287894',
+        'amount':'7371922242$',
+        'coverage':'1%',
+        'derivatives':'5774'
+      },
+{
+        'id':'44',
+        'heading':'9319248',
+        'amount':'6824460164824690000$',
+        'coverage':'7,49945401744677E-10%',
+        'derivatives':'5781'
+      }
+]
+    }];
+
+  return (
+    <main className="bi-u-h-screen--wSubNav">      
+       <TableHeader>
+          <MainHeading>
+            Gestión de balance
+          </MainHeading>
+        </TableHeader>
+        <TableData>
+          <TableDataHeader>
+            <TableCellMedium>Epigrafe</TableCellMedium>
+            <TableCellMedium>Monto</TableCellMedium>
+            <TableCellMedium>% Cubierto</TableCellMedium>
+            <TableCellMedium>Derivados</TableCellMedium>
+          </TableDataHeader>
+          {            
+            assets.map((assetItem) => {
+              return (
+                <>
+                  <BalanceAccordion 
+                    key={uuidv4()} 
+                    content={assetItem} />
+                </>
+              );
+            })
+          }
+        </TableData>
+        
+    </main>
+  );
+}
+
+export default BalanceView;

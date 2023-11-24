@@ -1,13 +1,13 @@
-import { useRef, useContext, useState } from "react";
-import { GlobalContext } from '../../context';
+import { useRef, useState } from "react";
+// import { GlobalContext } from '../../context';
 import Api from '../../services/api';
 import { SectionHalf } from "../../components/UI/layout/LayoutSections";
 import { ButtonLPrimary } from "../../components/UI/buttons/Buttons.jsx";
 import { LabelElement, SimpleFormHrz, SimpleFormRow } from "../../components/UI/forms/SimpleForms";
 
 
-function Login(){
-  const context = useContext(GlobalContext)
+function Login({ setAccount,setSignOut }){
+  // const context = useContext(GlobalContext)
   const [loginError, setLoginError] = useState('');
   const form = useRef(null); 
 
@@ -25,10 +25,9 @@ function Login(){
       password:data.password
     })
     .then(res => {
-      //añadir los datos de la cuenta a localStorage y context
       const stringifiedAccount = JSON.stringify(res.data);
       localStorage.setItem('account', stringifiedAccount);
-      context.setAccount(res.data);
+      setAccount(res.data);
       handleSignIn()
     }).catch(err => {
       if (err.response.status === 409) setLoginError('Email o contraseña incorrectos')
@@ -40,7 +39,7 @@ function Login(){
   const handleSignIn = () => {
     const stringifiedSignOut = JSON.stringify(false)
     localStorage.setItem('sign-out', stringifiedSignOut)
-    context.setSignOut(false)
+    setSignOut(false)
   }
 
   return(
@@ -52,7 +51,8 @@ function Login(){
               <LabelElement
                 htmlFor='loginEmail'
                 type='Email'
-                placeholder='Email'>
+                placeholder='Email'
+                required>
                   Email
               </LabelElement>
             </SimpleFormRow>
@@ -60,12 +60,13 @@ function Login(){
               <LabelElement
                 htmlFor='loginPwd'
                 type='password'
-                placeholder='Password'>
+                placeholder='Password'
+                required>
                   Password
               </LabelElement>
             </SimpleFormRow>
             {loginError && 
-              <SimpleFormRow>
+              <SimpleFormRow className='bi-u-centerText'>
                 <span className='error'>{loginError}</span>
               </SimpleFormRow>}
             <SimpleFormRow

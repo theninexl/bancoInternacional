@@ -3,9 +3,12 @@
   padding: 0 getGutter(regular);
 
   &--table-head {
+    display:flex;
+    align-items: center;
     padding-top: getSize($bigger);
 
     .bi-u-text-headM,.bi-u-text-headS, .bi-u-text-headL {
+      flex-grow:1;
       padding: 0 getGutter(regular);
       padding-bottom: getSize($medium);
     }
@@ -13,6 +16,10 @@
     .bi-u-text-headM + .bi-u-text-headS {
       padding-bottom: getSize($medium);
       padding-top: getSize($medium);
+    }
+
+    .bi-c-form-simple {
+      padding: 0 getGutter(regular);
     }
   }
 }

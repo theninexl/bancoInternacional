@@ -21,15 +21,20 @@ export const SimpleFormRow = (props) => {
 
 export const LabelElement = (props) => {
   return (
-    <label htmlFor={props.htmlFor}>
+    <label 
+      htmlFor={props.htmlFor}
+      className={props.classNameLabel}
+      >
       <span>{props.children}</span>
       <input 
+        className={props.classNameInput}
         type={props.type}
         name={props.htmlFor}
         id={props.htmlFor}
         placeholder={props.placeholder}
         defaultValue={props.value}
-        onChange={props.handleOnChange}/>
+        onChange={props.handleOnChange}
+        required={props.required}/>
     </label>
   );
 }
@@ -53,6 +58,7 @@ export const SelectElement = (props) => {
   return (
     <label 
       htmlFor={props.htmlFor}
+      defaultValue={props.value}
       style={{display:'flex'}}>
         <span>{props.title}</span>
       <div 

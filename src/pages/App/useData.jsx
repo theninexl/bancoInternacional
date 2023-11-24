@@ -35,6 +35,8 @@ export const useData = () => {
 
   //getHedges
   const [hedges, setHedges] = useState([]);
+  const [totalrowscount, setTotalrowscount] = useState(0);
+  const [allHedges, setAllHedges] = useState([]);
   const [newHedgeData, setNewHedgeData] = useState([]);
   const [fileInstrument, setFileInstrument] = useState([]);
 
@@ -42,6 +44,7 @@ export const useData = () => {
   const [hedgeStatusData, setHedgeStatusData] = useState([]);
   const [hedgeStatus,setHedgeStatus] = useState([]);
   const [hedgeDisarmData, setHedgeDisarmData] = useState([]);
+
 
   //list pagination
   const [page, setPage] = useState(1); 
@@ -66,6 +69,10 @@ export const useData = () => {
       setUserBoxOpen,
       hedges,
       setHedges,
+      totalrowscount,
+      setTotalrowscount,
+      allHedges,
+      setAllHedges,
       fileInstrument,
       setFileInstrument,
       newHedgeData,
@@ -75,6 +82,6 @@ export const useData = () => {
       hedgeStatus,
       setHedgeStatus,
       hedgeDisarmData,
-      setHedgeDisarmData
+      setHedgeDisarmData,
     };
 }

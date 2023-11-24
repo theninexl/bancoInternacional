@@ -1,5 +1,8 @@
 .bi-c-form-simple {
     $block:&;
+    display: flex;
+    // align-items: center;
+    gap: getSize($small);
 
     label {
         color:getColor(secondary);
@@ -39,8 +42,9 @@
     input[type=text], input[type=number], input[type=email], input[type=password], input[type=date]{
         border:1px solid getColor(gray-medium);
         border-radius: getSize($small);
-        height:getSize($huge);
-        text-indent: getSize($medium);
+        height:calc(getSize($huge) - getSize($tiny));
+        text-indent: getSize($medium);   
+        padding: 0;     
         @include font-size($defFontSizeDT, $lineHeightDT);
         @include bi-ps-normal;
 
@@ -250,6 +254,7 @@
     overflow: hidden;
     flex-grow:1;
     position:relative;
+    min-width: 150px;
 
     &__select {
         -webkit-appearance: none;

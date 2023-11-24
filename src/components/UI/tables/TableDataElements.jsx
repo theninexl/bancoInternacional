@@ -31,6 +31,14 @@ export const TableDataRow = (props) => {
   );
 }
 
+export const TableDataRowWrapper = (props) => {
+  return (
+    <div className={`tablerow-wrapper ${props.className}`}>
+      {props.children}
+    </div>
+  );
+}
+
 export const TableCellLong = (props) => {
   return (
     <div className={`tablecell-long ${props.className}`}>

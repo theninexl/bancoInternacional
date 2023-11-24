@@ -22,6 +22,7 @@
     }
     
     &__row {
+        flex-direction: column;
         flex-grow: 1;      
     }  
     
@@ -34,11 +35,23 @@
         background-color: getColor(gray-light);
     }
 
+    .tablerow-wrapper {
+        display: flex;
+        flex-direction: row;
+        flex-grow: 1;
+        gap: 8px;  
+    }
+
     .tablecell {
         $block:&;
         &-long, &-medium, &-short {
             display: flex;
             align-items: center;
+
+            a {
+                display: flex;
+                align-items: center; 
+            }
         }
         &-long {
             flex:2;

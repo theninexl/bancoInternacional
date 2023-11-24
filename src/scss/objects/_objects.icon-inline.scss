@@ -1,0 +1,8 @@
+.bi-o-inlineIcon {
+  $block:&;
+
+  &--big {
+    height: getSize($big);
+    width: getSize($big);
+  }
+}

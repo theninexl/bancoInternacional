@@ -22,6 +22,17 @@ export const ButtonLSecondary = (props) => {
   );
 }
 
+export const ButtonLTransparent = (props) => {
+  return (
+    <button
+      type={props.type}
+      className={`bi-o-button-large--transparent ${props.className}`}
+      onClick={props.handleClick}>
+        {props.children}
+    </button>
+  );
+}
+
 export const ButtonLGhost = (props) => {
   return (
     <button
@@ -59,7 +70,7 @@ export const SortButton = (props) => {
   return (
     <button
       data-column={props.orderCol}
-      className={`bi-o-sortButton`}
+      className={`bi-o-sortButton ${props.className}`}
       onClick={props.handleClick}
       >
       {props.children}

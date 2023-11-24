@@ -245,6 +245,12 @@ function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData,setHed
             <SimpleFormRow
               style={{'flexGrow':1}}   
               className='bi-u-centerText'>
+                <ButtonLGhost
+                  className='bi-o-button--short'
+                  handleClick={HandleCancel}
+                  >
+                    Cancelar
+                </ButtonLGhost>
                 <ButtonLPrimary
                   className='bi-o-button--short'
                   type='submit'
@@ -252,12 +258,6 @@ function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData,setHed
                   >
                     Confirmar
                 </ButtonLPrimary>
-                <ButtonLGhost
-                  className='bi-o-button--short'
-                  handleClick={HandleCancel}
-                  >
-                    Cancelar
-                </ButtonLGhost>
             </SimpleFormRow>     
         </ColsContainer>
       </SimpleFormHrz>      

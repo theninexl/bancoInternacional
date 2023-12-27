@@ -6,7 +6,7 @@ import Api from '../../services/api';
 import { TableHeader } from '../../components/UI/tables/TableHeaders';
 import { TableData, TableDataHeader, TableDataRow, TableCellMedium, TableCellShort, TableDataRowWrapper } from '../../components/UI/tables/TableDataElements';
 import TablePagination from '../../components/TablePagination';
-import { SortButton } from '../../components/UI/buttons/Buttons';
+import { ButtonLPrimary, SortButton } from '../../components/UI/buttons/Buttons';
 import { IconButSm } from '../../components/UI/buttons/IconButtons';
 import { InformationCircleIcon } from '@heroicons/react/24/solid';
 import { MainHeading } from '../../components/UI/headings';
@@ -108,7 +108,7 @@ function DisarmStatus({ totalPages,setTotalPages,hedges,setHedges,page,setPage }
     <main className="bi-u-h-screen--wSubNav">
        <TableHeader>
           <MainHeading>
-            Desarmes
+            Validación de desarmes
           </MainHeading>
           <div className='bi-c-form-simple'>
             <LabelElement
@@ -130,7 +130,7 @@ function DisarmStatus({ totalPages,setTotalPages,hedges,setHedges,page,setPage }
               <SortButton orderCol={2} handleClick={() => sortItems()}>Partida cubierta</SortButton>
             </TableCellMedium>
             <TableCellMedium className='bi-u-centerText'>
-              <SortButton orderCol={3} handleClick={() => sortItems()}>Instrumento</SortButton>
+              <SortButton orderCol={3} handleClick={() => sortItems()}>Derivado</SortButton>
             </TableCellMedium>
             <TableCellMedium className='bi-u-centerText'>
               <SortButton orderCol={4} handleClick={() => sortItems()}>Tipo</SortButton>
@@ -150,39 +150,45 @@ function DisarmStatus({ totalPages,setTotalPages,hedges,setHedges,page,setPage }
             <TableCellMedium>
               <SortButton orderCol={9} handleClick={() => sortItems()}>Usuario</SortButton>
             </TableCellMedium>
-            <TableCellShort>Estado</TableCellShort>
+            <TableCellShort>Validar</TableCellShort>
           </TableDataHeader>
           {
             hedges?.map(hedge => {
               const renderStatus = () => {
-                if (hedge.status == 'Ok') {
-                  return (
-                    <>
-                    <IconButSm
-                      handleClick={() => seeStatus(hedge.id_hedge_relationship)}
-                      className="bi-o-icon-button-small--success">
-                      <InformationCircleIcon/>
-                    </IconButSm>
-                    </>);  
-                } else if (hedge.status == 'Pendiente') {
-                  return (
-                    <>
-                    <IconButSm
-                      handleClick={() => seeStatus(hedge.id_hedge_relationship)}
-                      className="bi-o-icon-button-small--warning">
-                      <InformationCircleIcon/>
-                    </IconButSm>
-                    </>);  
-                } else if (hedge.status == 'Denegada') {
-                  return (
-                    <>
-                    <IconButSm
-                      handleClick={() => seeStatus(hedge.id_hedge_relationship)}
-                      className="bi-o-icon-button-small--error">
-                      <InformationCircleIcon/>
-                    </IconButSm>
-                    </>);    
-                }        
+                return (
+                  <ButtonLPrimary
+                  handleClick={() => seeStatus(hedge.id_hedge_relationship)} >
+                    Validar
+                  </ButtonLPrimary>
+                );
+                // if (hedge.status == 'Ok') {
+                //   return (
+                //     <>
+                //     <IconButSm
+                //       handleClick={() => seeStatus(hedge.id_hedge_relationship)}
+                //       className="bi-o-icon-button-small--success">
+                //       <InformationCircleIcon/>
+                //     </IconButSm>
+                //     </>);  
+                // } else if (hedge.status == 'Pendiente') {
+                //   return (
+                //     <>
+                //     <IconButSm
+                //       handleClick={() => seeStatus(hedge.id_hedge_relationship)}
+                //       className="bi-o-icon-button-small--warning">
+                //       <InformationCircleIcon/>
+                //     </IconButSm>
+                //     </>);  
+                // } else if (hedge.status == 'Denegada') {
+                //   return (
+                //     <>
+                //     <IconButSm
+                //       handleClick={() => seeStatus(hedge.id_hedge_relationship)}
+                //       className="bi-o-icon-button-small--error">
+                //       <InformationCircleIcon/>
+                //     </IconButSm>
+                //     </>);    
+                // }        
               } 
               return (
                 <TableDataRow key={uuidv4()}>

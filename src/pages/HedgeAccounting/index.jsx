@@ -6,7 +6,7 @@ import Api from '../../services/api';
 import { TableHeader } from '../../components/UI/tables/TableHeaders';
 import { TableData, TableDataHeader, TableDataRow, TableCellMedium, TableCellShort, TableDataRowWrapper } from '../../components/UI/tables/TableDataElements';
 import TablePagination from '../../components/TablePagination';
-import { ButtonLTransparent, SortButton } from '../../components/UI/buttons/Buttons';
+import { ButtonLPrimary, ButtonLTransparent, SortButton } from '../../components/UI/buttons/Buttons';
 import { IconButSm } from '../../components/UI/buttons/IconButtons';
 import { DocumentArrowDownIcon, BoltIcon } from '@heroicons/react/24/solid';
 import { MainHeading } from '../../components/UI/headings';
@@ -133,7 +133,7 @@ function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPag
     <main className="bi-u-h-screen--wSubNav">
        <TableHeader>
           <MainHeading>
-            Listado de coberturas
+            Validación de coberturas
           </MainHeading>
           <div className='bi-c-form-simple'>
             <LabelElement
@@ -158,7 +158,7 @@ function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPag
               <SortButton orderCol={2} handleClick={() => sortItems()}>Partida cubierta</SortButton>
             </TableCellMedium>
             <TableCellMedium className='bi-u-centerText'>
-              <SortButton orderCol={3} handleClick={() => sortItems()}>Instrumento</SortButton>
+              <SortButton orderCol={3} handleClick={() => sortItems()}>Derivado</SortButton>
             </TableCellMedium>
             <TableCellMedium className='bi-u-centerText'>
               <SortButton orderCol={4} handleClick={() => sortItems()}>Tipo</SortButton>
@@ -179,7 +179,7 @@ function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPag
               <SortButton orderCol={9} handleClick={() => sortItems()}>Usuario</SortButton>
             </TableCellMedium>
             <TableCellShort>Ficha</TableCellShort>
-            <TableCellShort>Desarmar</TableCellShort>
+            <TableCellShort>Validar</TableCellShort>
           </TableDataHeader>
           {
             hedges?.map(hedge => {
@@ -203,11 +203,16 @@ function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPag
                       </IconButSm>
                     </TableCellShort>
                     <TableCellShort>
-                      <IconButSm
+                      {/* <IconButSm
                         handleClick={() => requestDisarm(hedge.id_hedge_relationship)}
                         className="bi-o-icon-button-small--primary">
                         <BoltIcon/>
-                      </IconButSm>
+                      </IconButSm> */}
+                      
+                      <ButtonLPrimary
+                        handleClick={() => requestDisarm(hedge.id_hedge_relationship)} >
+                        Validar
+                      </ButtonLPrimary>
                     </TableCellShort>
                     </TableDataRowWrapper>
                 </TableDataRow>

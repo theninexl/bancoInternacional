@@ -15,6 +15,7 @@ function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData,setHed
   const navigate = useNavigate();
   // const context = useContext(GlobalContext);
   const [partialDisarm, setPartialDisarm] = useState(true);
+  const [freeTextDisarmReason, setFreeTextDisarmReason] = useState(false);
   const [formError, setFormError] = useState(null);
   const [searchParams] = useSearchParams();
   const hedgeID = searchParams.get('id');
@@ -37,6 +38,12 @@ function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData,setHed
   const handleDisarmType = () => {
     if (disarmType) {          
       disarmType.value === '0' ? setPartialDisarm(true) : setPartialDisarm (false);
+    }
+  }
+
+  const handleDisarmReason = () => {
+    if (disarm_reason) {
+      disarm_reason.value === '4' ? setFreeTextDisarmReason(true): setFreeTextDisarmReason(false);
     }
   }
 
@@ -123,6 +130,8 @@ function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData,setHed
       })  
   }
 
+  
+
   const HandleCancel = () => {
     navigate('/hedges');
   }
@@ -139,7 +148,7 @@ function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData,setHed
         <TableDataHeader>
           <TableCellMedium>Ref.</TableCellMedium>
           <TableCellMedium>Partida cubierta</TableCellMedium>
-          <TableCellMedium>Instrumento</TableCellMedium>
+          <TableCellMedium>Derivado</TableCellMedium>
           <TableCellMedium>Tipo</TableCellMedium>
           <TableCellMedium>Monto subyacente</TableCellMedium>
           <TableCellMedium>Fecha inicio</TableCellMedium>
@@ -183,11 +192,27 @@ function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData,setHed
             <SimpleFormRow>
             <SelectElement
                 htmlFor='disarm_reason'
-                title='Motivo de desarme'>
+                title='Motivo de desarme'
+                handleOnChange={handleDisarmReason}>
                   <option value=''>Seleccionar</option>
                   <option value='1'>No existe objeto de cobertura</option>
                   <option value='2'>Estrategia de negocio</option>
+                  <option value='3'>Estándar</option>
+                  <option value='4'>Texto libre</option>
               </SelectElement>
+            </SimpleFormRow>
+            <SimpleFormRow>
+              {freeTextDisarmReason ? 
+                <>
+                  <LabelElement
+                    htmlFor='disarm_reason_freeText'
+                    type='number'
+                    placeholder='Escribir razón'>
+                      Especificar
+                  </LabelElement>    
+                </>
+                :
+                '' }
             </SimpleFormRow>
           </SimpleCol>
           <SimpleCol>

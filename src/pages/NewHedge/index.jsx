@@ -128,16 +128,14 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
         <MainHeading>
           Crear cobertura
         </MainHeading>
-      </TableHeader>
-
-      
-      
+      </TableHeader>      
       <SimpleFormHrz>
         <TableData>
           <TableDataHeader>
             <TableCellMedium>Partida cubierta</TableCellMedium>
             <TableCellMedium>Fecha vencimiento</TableCellMedium>
             <TableCellMedium>Nocional</TableCellMedium>
+            <TableCellMedium></TableCellMedium>
           </TableDataHeader>          
           {
             createHedgeItems && 
@@ -171,23 +169,20 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
                       placeholder='introduce nocional'>
                     </LabelElement>
                   </TableCellMedium>
+                  <TableCellMedium></TableCellMedium>
                 </TableDataRowWrapper>            
               </TableDataRow>
             </>
           }
-          
-          
-
-
-        </TableData>
-        
+        </TableData>        
         
         {/* NUEVO INSTRUMENTO */}
         <TableData>
           <TableDataHeader>
-            <TableCellMedium>Instrumento</TableCellMedium>
+            <TableCellMedium>Derivado</TableCellMedium>
             <TableCellMedium>Fecha vencimiento</TableCellMedium>
             <TableCellMedium>Nocional</TableCellMedium>
+            <TableCellMedium>% Derivado</TableCellMedium>
           </TableDataHeader>
           {
             createHedgeItems && 
@@ -221,6 +216,55 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
                       placeholder='introduce nocional'>
                     </LabelElement>
                   </TableCellMedium>
+                  <TableCellMedium>
+                    <LabelElement
+                      htmlFor='hedge_instrument_coverage'
+                      type='number'
+                      placeholder='introduce %'>
+                    </LabelElement>
+                  </TableCellMedium>
+                </TableDataRowWrapper>            
+              </TableDataRow>
+            </>
+          }
+        </TableData>
+
+
+        {/* NUEVO INSTRUMENTO */}
+        <TableData>
+          <TableDataHeader>
+            <TableCellMedium>Tipo de ficha</TableCellMedium>
+            <TableCellMedium>Ficha</TableCellMedium>
+            <TableCellMedium></TableCellMedium>
+            <TableCellMedium></TableCellMedium>
+          </TableDataHeader>
+          {
+            createHedgeItems && 
+            <>
+              <TableDataRow>
+                <TableDataRowWrapper>
+                  <TableCellMedium>
+                    <SelectElement
+                      htmlFor='tipo_de_ficha'
+                      >
+                      <option value=''>Selecciona</option>
+                      <option value='VR'>VR</option>
+                      <option value='FC'>FC</option>
+                    </SelectElement>
+                  </TableCellMedium>
+                  <TableCellMedium>
+                    <SelectElement
+                      htmlFor='ficha'
+                      >
+                      <option value=''>Selecciona</option>
+                      <option value='VR'>F1</option>
+                      <option value='FC'>F2</option>
+                      <option value='FC'>F3</option>
+                      <option value='FC'>F4</option>
+                    </SelectElement>
+                  </TableCellMedium>
+                  <TableCellMedium></TableCellMedium>
+                  <TableCellMedium></TableCellMedium>
                 </TableDataRowWrapper>            
               </TableDataRow>
             </>

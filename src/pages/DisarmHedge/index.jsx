@@ -206,7 +206,7 @@ function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData,setHed
                 <>
                   <LabelElement
                     htmlFor='disarm_reason_freeText'
-                    type='number'
+                    type='text'
                     placeholder='Escribir razón'>
                       Especificar
                   </LabelElement>    

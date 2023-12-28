@@ -178,8 +178,9 @@ function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPag
             <TableCellMedium>
               <SortButton orderCol={9} handleClick={() => sortItems()}>Usuario</SortButton>
             </TableCellMedium>
-            <TableCellShort>Ficha</TableCellShort>
-            <TableCellShort>Validar</TableCellShort>
+            <TableCellShort className='bi-u-centerText'>Ficha</TableCellShort>
+            <TableCellShort className='bi-u-centerText'>Desarmar</TableCellShort>
+            <TableCellShort className='bi-u-centerText'>Validar</TableCellShort>
           </TableDataHeader>
           {
             hedges?.map(hedge => {
@@ -196,23 +197,32 @@ function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPag
                     <TableCellMedium>{hedge.dt_start_date}</TableCellMedium>
                     <TableCellMedium>{hedge.dt_maturity_date}</TableCellMedium>
                     <TableCellMedium>{hedge.user_insert}</TableCellMedium>
-                    <TableCellShort>
+                    <TableCellShort className='bi-u-centerText'>
                       <IconButSm
                         className="bi-o-icon-button-small--disabled">
                         <DocumentArrowDownIcon/>
                       </IconButSm>
                     </TableCellShort>
-                    <TableCellShort>
-                      {/* <IconButSm
-                        handleClick={() => requestDisarm(hedge.id_hedge_relationship)}
-                        className="bi-o-icon-button-small--primary">
-                        <BoltIcon/>
-                      </IconButSm> */}
+                    <TableCellShort className='bi-u-centerText'>
+                      { hedge.disarmVisible ? 
+                        <IconButSm
+                          handleClick={() => requestDisarm(hedge.id_hedge_relationship)}
+                          className="bi-o-icon-button-small--primary">
+                          <BoltIcon/>
+                        </IconButSm>
+                        :
+                        ''
+                      }
                       
-                      <ButtonLPrimary
-                        handleClick={() => requestDisarm(hedge.id_hedge_relationship)} >
-                        Validar
-                      </ButtonLPrimary>
+                    </TableCellShort>
+                    <TableCellShort className='bi-u-centerText'> 
+                      { hedge.validateVisible ? 
+                        <ButtonLPrimary>
+                          Validar
+                        </ButtonLPrimary>
+                        : 
+                        ''
+                      }                     
                     </TableCellShort>
                     </TableDataRowWrapper>
                 </TableDataRow>

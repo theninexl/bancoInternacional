@@ -197,9 +197,9 @@ function DisarmStatus({ totalPages,setTotalPages,hedges,setHedges,page,setPage }
                       className='bi-u-text-base-black bi-u-centerText'>{hedge.id_hedge_relationship}</TableCellMedium>
                     <TableCellMedium className='bi-u-centerText'>{hedge.id_hedge_item}</TableCellMedium>
                     <TableCellMedium className='bi-u-centerText'>{hedge.id_hedge_instrument}</TableCellMedium>
-                    <TableCellMedium className='bi-u-centerText'>{hedge.cat_hedge_type}</TableCellMedium>
+                    <TableCellMedium className='bi-u-centerText'>{hedge.cat_hedge_item_type}</TableCellMedium>
                     <TableCellMedium className='bi-u-centerText'>{hedge.pct_effectiveness}</TableCellMedium>
-                    <TableCellMedium>{hedge.num_underlying_amount}</TableCellMedium>
+                    <TableCellMedium>{hedge.num_instrument_notional}</TableCellMedium>
                     <TableCellMedium>{hedge.dt_start_date}</TableCellMedium>
                     <TableCellMedium>{hedge.dt_maturity_date}</TableCellMedium>
                     <TableCellMedium>{hedge.user_insert}</TableCellMedium>

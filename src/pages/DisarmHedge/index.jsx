@@ -55,10 +55,9 @@ function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData,setHed
 
   //get Cobertura  
   const getHedge = (id) => {
-    const data = {'hedge':id}
+    const data = {'id':id}
     Api.call.post('hedges/disarmGet',data,{ headers:headers })
     .then(res => {
-      console.log(res.data)
       setHedgeStatusData(res.data);
     }).catch(err => {
       console.warn(err)})
@@ -81,7 +80,7 @@ function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData,setHed
     if (modalOpen) {
       return (
         <ModalSmall
-          message={`¿Quiere realizar el desarme de la cobertura ${hedgeStatusData.id_hedge_relationship}?`} 
+          message={`¿Desea realizar el desarme de la relación ${hedgeStatusData.id_hedge_relationship}?`} 
           buttons={
             <>
             <ButtonLPrimary
@@ -155,21 +154,21 @@ function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData,setHed
           <TableCellMedium>Fecha vencimiento</TableCellMedium>
         </TableDataHeader>
         {
-          hedgeStatusData &&
-            <>
+          hedgeStatusData?.map(hedgeRow => {
+            return (
               <TableDataRow key={uuidv4()}>
                 <TableDataRowWrapper>
                   <TableCellMedium
-                    className='bi-u-text-base-black'>{hedgeStatusData.id_hedge_relationship}</TableCellMedium>
-                  <TableCellMedium>{hedgeStatusData.id_hedge_item}</TableCellMedium>
-                  <TableCellMedium>{hedgeStatusData.id_hedge_instrument}</TableCellMedium>
-                  <TableCellMedium>{hedgeStatusData.cat_hedge_type}</TableCellMedium>
-                  <TableCellMedium>{hedgeStatusData.num_underlying_amount}</TableCellMedium>
-                  <TableCellMedium>{hedgeStatusData.dt_start_date}</TableCellMedium>
-                  <TableCellMedium>{hedgeStatusData.dt_maturity_date}</TableCellMedium>
+                    className='bi-u-text-base-black'>{hedgeRow.id_hedge_relationship}</TableCellMedium>
+                  <TableCellMedium>{hedgeRow.id_hedge_item}</TableCellMedium>
+                  <TableCellMedium>{hedgeRow.id_hedge_instrument}</TableCellMedium>
+                  <TableCellMedium>{hedgeRow.cat_hedge_item_type}</TableCellMedium>
+                  <TableCellMedium>{hedgeRow.num_instrument_notional}</TableCellMedium>
+                  <TableCellMedium>{hedgeRow.dt_start_date}</TableCellMedium>
+                  <TableCellMedium>{hedgeRow.dt_maturity_date}</TableCellMedium>
                 </TableDataRowWrapper>
               </TableDataRow>
-            </>
+            );})
         }
       </TableData>
       <TableHeader>
@@ -195,10 +194,10 @@ function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData,setHed
                 title='Motivo de desarme'
                 handleOnChange={handleDisarmReason}>
                   <option value=''>Seleccionar</option>
-                  <option value='1'>No existe objeto de cobertura</option>
-                  <option value='2'>Estrategia de negocio</option>
-                  <option value='3'>Estándar</option>
-                  <option value='4'>Texto libre</option>
+                  <option value='1'>El objeto cubierto no existe</option>
+                  <option value='2'>El nivel de tasas actual no justifica la cobertura</option>
+                  <option value='3'>Estrategia de negocio</option>
+                  <option value='4'>Otro</option>
               </SelectElement>
             </SimpleFormRow>
             <SimpleFormRow>

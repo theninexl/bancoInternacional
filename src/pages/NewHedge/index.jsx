@@ -25,43 +25,43 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
 
 
   //getData
-  const getData = async (endpoint, search, pagenumber, rowspage, orderby) => {
-    const headers = {
-      'Content-Type': 'application/json',
-      'x-access-token': token,
-    }
-    const { data } = await Api.call.post(endpoint, {'search':search, 'pagenumber':pagenumber, 'rowspage':rowspage, 'orderby':orderby},{ headers:headers })
-    return data;
-  }
+  // const getData = async (endpoint, search, pagenumber, rowspage, orderby) => {
+  //   const headers = {
+  //     'Content-Type': 'application/json',
+  //     'x-access-token': token,
+  //   }
+  //   const { data } = await Api.call.post(endpoint, {'search':search, 'pagenumber':pagenumber, 'rowspage':rowspage, 'orderby':orderby},{ headers:headers })
+  //   return data;
+  // }
 
   //cargar totalRowscount
-  const getTotaltowscount = async (busqueda, orden) => {
-    const results = await getData('hedges/getAll',busqueda,page,rowspage,orden)
-    .then(res => {
-      setTotalrowscount(res.rowscount[0].count);
-    })
-    .catch(err => console.warn(err));
-  }
+  // const getTotaltowscount = async (busqueda, orden) => {
+  //   const results = await getData('hedges/getAll',busqueda,page,rowspage,orden)
+  //   .then(res => {
+  //     setTotalrowscount(res.rowscount[0].count);
+  //   })
+  //   .catch(err => console.warn(err));
+  // }
 
   //cargar todas las coberturas
-  const getAllHedges = async () => {
-    const results = await getData('hedges/getAll',searchValue,page,totalrowscount, order)
-    .then(res => {
-      setAllHedges(res.data);
-      // setHedgeItemsOnSelect();
-    })
-    .catch(err => console.warn(err));
-  }
+  // const getAllHedges = async () => {
+  //   const results = await getData('hedges/getAll',searchValue,page,totalrowscount, order)
+  //   .then(res => {
+  //     setAllHedges(res.data);
+  //     // setHedgeItemsOnSelect();
+  //   })
+  //   .catch(err => console.warn(err));
+  // }
 
    //cargar 1 cobertura
-   const getHedge = async (busqueda, orden) => {
-    const results = await getData('hedges/getAll',busqueda,page,rowspage,orden)
-    .then(res => {
-      console.log(res);
-      setSelectedHedge(res.data)
-    })
-    .catch(err => console.warn(err));
-  }
+  //  const getHedge = async (busqueda, orden) => {
+  //   const results = await getData('hedges/getAll',busqueda,page,rowspage,orden)
+  //   .then(res => {
+  //     console.log(res);
+  //     setSelectedHedge(res.data)
+  //   })
+  //   .catch(err => console.warn(err));
+  // }
 
   //get CreateGet
   const getCreateHedge = () => {
@@ -70,7 +70,7 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
       'x-access-token': token,
     }
     const data = {}
-    Api.call.post('hedges/createGet',data,{ headers:headers })
+    Api.call.post('hedges/createGetCombos',data,{ headers:headers })
     .then(res => {
       console.log(res.data)
       setCreateHedgeItems(res.data);
@@ -103,21 +103,63 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
   // },[searchValue])
 
   //colocar todas las partidas de cubierta disponibles en el primer select cuando tengamos todas las coberturas cargadas
-  // useEffect(()=>{
-  //   setHedgeItemsOnSelect();
-  // },[allHedges])
+  useEffect(()=>{
+    setHedgeItemsOnSelect();
+  },[createHedgeItems])
 
   //rellenar select con todas las partidasd de cubierta
-  // const setHedgeItemsOnSelect = () => {
-  //   const itemSelect = document.getElementById('hedgeItemsSelect');
-  //  allHedges.map(hedge => {
-  //   const option = document.createElement('option');
-  //   option.setAttribute('value',hedge.id_hedge_item);
-  //   option.textContent = hedge.id_hedge_item;
-  //   itemSelect.appendChild(option);
-  //  })
-  // }
+  const setHedgeItemsOnSelect = () => {
+    const itemSelect = document.getElementById('hedgeItemsSelect');
+    console.log('createHedgeItems:',typeof(createHedgeItems));
+    
+    // createHedgeItems.map(hedge => {
+    //   console.log(hedge);
+    //   // const option = document.createElement('option');
+    //   // option.setAttribute('value',hedge.id_hedge_item);
+    //   // option.textContent = hedge.id_hedge_item;
+    //   // itemSelect.appendChild(option);
+    // })
+  }
   
+  const HandleSave = (e) => {    
+    e.preventDefault();
+    const formData = new FormData(form.current);
+
+    const data = {
+      id_hedge_item: formData.get('id_hedge_item'),
+      dt_maturity_date_item: formData.get('dt_maturity_date_item'),
+      num_notional_item: formData.get('num_notional_item'),
+      liabi_item: formData.get('liabi_item'),
+      id_hedge_instrument: formData.get('id_hedge_instrument'),
+      //dt_maturity_date_instrument: formData.get('dt_maturity_date_instrument'),
+      num_notional_instrument: formData.get('num_notional_instrument'),
+      coverage_instrument: formData.get('coverage_instrument'),
+      des_hedge_file: formData.get('xxxx')
+    }
+    
+    const dataSent = {
+      "id_hedge_item":data.id_hedge_item,
+      "dt_maturity_date":data.dt_maturity_date_item,
+      "num_notional_item":data.num_notional_item,
+      "liabi_item":data.liabi_item,
+      "id_hedge_instrument":data.id_hedge_instrument,
+      "num_notional_instrument":data.num_notional_instrument,
+      "coverage_instrument":data.coverage_instrument,
+      "des_hedge_file":data.des_hedge_file
+    }
+
+    if (data.dt_maturity_date_item === data.dt_maturity_date_instrument) {
+      Api.call.post("hedges/create",dataSent,{ headers:headers })
+      .then(res => {
+        navigate('/hedges');
+      })
+      .catch(err => {
+        setFormError('Error ',err,' al realizar la solicitud. Inténtalo de nuevo.')})
+    } else {
+      setFormError('La fechas de partida y derivado no coinciden')
+    }    
+  }
+
   const HandleCancel = () => {
     navigate('/hedges');
   }
@@ -135,7 +177,7 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
             <TableCellMedium>Partida cubierta</TableCellMedium>
             <TableCellMedium>Fecha vencimiento</TableCellMedium>
             <TableCellMedium>Nocional</TableCellMedium>
-            <TableCellMedium></TableCellMedium>
+            <TableCellMedium>Activo/Pasivo</TableCellMedium>
           </TableDataHeader>          
           {
             createHedgeItems && 
@@ -144,32 +186,39 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
                 <TableDataRowWrapper>
                   <TableCellMedium>
                   <SelectElement
-                        htmlFor='hedge_item_id'
+                        htmlFor='id_hedge_item'
                         value={createHedgeItems.items[0].id_hedge_item}
                         handleOnChange={(event) =>{
                           console.log(event.target.value);
                           setSearchValue(event.target.value);
                         }}
                         >
-                        <option value=''>Selecciona</option>
+                        <option value=''>Seleccionar</option>
                         <option value={createHedgeItems.items[0].id_hedge_item}>{createHedgeItems.items[0].id_hedge_item}</option>
                       </SelectElement>              
-                    
                   </TableCellMedium>
                   <TableCellMedium>
                   <LabelElement
-                      htmlFor='hedge_item_date'
-                      type='date'>
+                      htmlFor='dt_maturity_date_item'
+                      type='text'
+                      placeholder='Fecha'>
                     </LabelElement>
                     </TableCellMedium>
                   <TableCellMedium>
                     <LabelElement
-                      htmlFor='hedge_item_notional'
+                      htmlFor='num_notional_item'
                       type='text'
-                      placeholder='introduce nocional'>
+                      placeholder='Nocional'>
                     </LabelElement>
                   </TableCellMedium>
-                  <TableCellMedium></TableCellMedium>
+                  <TableCellMedium>
+                    
+                  <SelectElement
+                    htmlFor='liabi_item'>
+                      <option value='0'>Activo</option>
+                    <option value='1'>Pasivo</option>
+                  </SelectElement>
+                  </TableCellMedium>
                 </TableDataRowWrapper>            
               </TableDataRow>
             </>
@@ -191,36 +240,37 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
                 <TableDataRowWrapper>
                   <TableCellMedium>
                   <SelectElement
-                        htmlFor='hedge_instrument_id'
+                        htmlFor='id_hedge_instrument'
                         value={createHedgeItems.instruments[0].id_hedge_instrument}
                         handleOnChange={(event) =>{
                           console.log(event.target.value);
                           setSearchValue(event.target.value);
                         }}
                         >
-                        <option value=''>Selecciona</option>
+                        <option value=''>Seleccionar</option>
                         <option value={createHedgeItems.instruments[0].id_hedge_instrument}>{createHedgeItems.instruments[0].id_hedge_instrument}</option>
                       </SelectElement>              
                     
                   </TableCellMedium>
                   <TableCellMedium>
                   <LabelElement
-                      htmlFor='hedge_instrument_date'
-                      type='date'>
+                      htmlFor='dt_maturity_date_instrument'
+                      type='text'
+                      placeholder='Fecha'>
                     </LabelElement>
                     </TableCellMedium>
                   <TableCellMedium>
                     <LabelElement
-                      htmlFor='hedge_instrument_notional'
+                      htmlFor='num_notional_instrument'
                       type='text'
-                      placeholder='introduce nocional'>
+                      placeholder='Nocional'>
                     </LabelElement>
                   </TableCellMedium>
                   <TableCellMedium>
                     <LabelElement
-                      htmlFor='hedge_instrument_coverage'
+                      htmlFor='coverage_instrument'
                       type='number'
-                      placeholder='introduce %'>
+                      placeholder='%'>
                     </LabelElement>
                   </TableCellMedium>
                 </TableDataRowWrapper>            
@@ -247,16 +297,16 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
                     <SelectElement
                       htmlFor='tipo_de_ficha'
                       >
-                      <option value=''>Selecciona</option>
+                      <option value=''>Seleccionar</option>
                       <option value='VR'>VR</option>
                       <option value='FC'>FC</option>
                     </SelectElement>
                   </TableCellMedium>
                   <TableCellMedium>
                     <SelectElement
-                      htmlFor='ficha'
+                      htmlFor='des_hedge_file'
                       >
-                      <option value=''>Selecciona</option>
+                      <option value=''>Seleccionar</option>
                       <option value='VR'>F1</option>
                       <option value='FC'>F2</option>
                       <option value='FC'>F3</option>
@@ -284,7 +334,7 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
               <ButtonLPrimary
                 className='bi-o-button--short'
                 type='submit'
-                handleClick={HandleCancel}
+                handleClick={HandleSave}
                 >
                   Guardar
               </ButtonLPrimary>

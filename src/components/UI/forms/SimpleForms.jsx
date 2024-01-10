@@ -34,7 +34,8 @@ export const LabelElement = (props) => {
         placeholder={props.placeholder}
         defaultValue={props.value}
         onChange={props.handleOnChange}
-        required={props.required}/>
+        required={props.required}
+        disabled={props.disabled} />
     </label>
   );
 }
@@ -130,3 +131,4 @@ export const UploadFileTo64 = (props) => {
     </label>
   );
 }
+

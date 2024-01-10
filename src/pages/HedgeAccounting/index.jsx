@@ -1,17 +1,18 @@
 import { useEffect,useState } from 'react';
-import { createSearchParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 // import { GlobalContext } from '../../context';
 import Api from '../../services/api';
 import { TableHeader } from '../../components/UI/tables/TableHeaders';
 import { TableData, TableDataHeader, TableDataRow, TableCellMedium, TableCellShort, TableDataRowWrapper } from '../../components/UI/tables/TableDataElements';
 import TablePagination from '../../components/TablePagination';
-import { ButtonLPrimary, ButtonLTransparent, SortButton } from '../../components/UI/buttons/Buttons';
+import { SortButton } from '../../components/UI/buttons/Buttons';
 import { IconButSm } from '../../components/UI/buttons/IconButtons';
-import { DocumentArrowDownIcon, BoltIcon } from '@heroicons/react/24/solid';
+import { DocumentArrowDownIcon, BoltIcon, EllipsisHorizontalIcon } from '@heroicons/react/24/solid';
 import { MainHeading } from '../../components/UI/headings';
 import { LabelElement } from '../../components/UI/forms/SimpleForms';
-import { CSVDownload, CSVLink } from 'react-csv';
+import { CSVLink } from 'react-csv';
+import { HedgesContextualActions } from '../../components/Hedges/HedgesContextualActions';
 
 
 
@@ -55,6 +56,7 @@ function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPag
   const getAllHedges = async () => {
     const results = await getData('hedges/getAll',searchValue,page,totalrowscount, order)
     .then(res => {
+      console.log(res.data)
       setAllHedges(res.data)})
     .catch(err => console.warn(err));
   }
@@ -66,6 +68,8 @@ function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPag
   useEffect(()=>{
     setPage(1);
   },[setPage])
+
+  
 
   //volver a pedir listar usuarios cuando cambia la página, el orden o el termino de busqueda
   useEffect(()=>{
@@ -83,15 +87,6 @@ function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPag
     console.log(allHedges);
   }
   
-  //desarmar cobertura
-  const requestDisarm = (id) => {
-    navigate({      
-      pathname:'/hedges-disarm',
-      search: createSearchParams({
-        id:id
-      }).toString()
-    });
-  }
 
   //reordenar resultados
   const sortItems = () => {
@@ -178,9 +173,9 @@ function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPag
             <TableCellMedium>
               <SortButton orderCol={9} handleClick={() => sortItems()}>Usuario</SortButton>
             </TableCellMedium>
+            <TableCellShort className='bi-u-centerText'>Validación</TableCellShort>
             <TableCellShort className='bi-u-centerText'>Ficha</TableCellShort>
-            <TableCellShort className='bi-u-centerText'>Desarmar</TableCellShort>
-            <TableCellShort className='bi-u-centerText'>Validar</TableCellShort>
+            <TableCellShort className='bi-u-centerText'></TableCellShort>
           </TableDataHeader>
           {
             hedges?.map(hedge => {
@@ -198,31 +193,22 @@ function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPag
                     <TableCellMedium>{hedge.dt_maturity_date}</TableCellMedium>
                     <TableCellMedium>{hedge.user_insert}</TableCellMedium>
                     <TableCellShort className='bi-u-centerText'>
+                      1/X
+                    </TableCellShort>
+                    <TableCellShort className='bi-u-centerText'>
                       <IconButSm
                         className="bi-o-icon-button-small--disabled">
                         <DocumentArrowDownIcon/>
                       </IconButSm>
                     </TableCellShort>
-                    <TableCellShort className='bi-u-centerText'>
+                    <TableCellShort style={{'position':'relative'}}>
                       { hedge.disarmVisible ? 
-                        <IconButSm
-                          handleClick={() => requestDisarm(hedge.id_hedge_relationship)}
-                          className="bi-o-icon-button-small--primary">
-                          <BoltIcon/>
-                        </IconButSm>
+                        <HedgesContextualActions
+                          hedgeId={hedge.id_hedge_relationship}  
+                        />
                         :
                         ''
                       }
-                      
-                    </TableCellShort>
-                    <TableCellShort className='bi-u-centerText'> 
-                      { hedge.validateVisible ? 
-                        <ButtonLPrimary>
-                          Validar
-                        </ButtonLPrimary>
-                        : 
-                        ''
-                      }                     
                     </TableCellShort>
                     </TableDataRowWrapper>
                 </TableDataRow>

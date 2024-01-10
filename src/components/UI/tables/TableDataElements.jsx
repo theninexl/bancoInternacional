@@ -41,7 +41,7 @@ export const TableDataRowWrapper = (props) => {
 
 export const TableCellLong = (props) => {
   return (
-    <div className={`tablecell-long ${props.className}`}>
+    <div className={`tablecell-long ${props.className}`} style={props.style}>
       {props.children}
     </div>
   );
@@ -49,7 +49,7 @@ export const TableCellLong = (props) => {
 
 export const TableCellMedium = (props) => {
   return (
-    <div className={`tablecell-medium ${props.className}`}>
+    <div className={`tablecell-medium ${props.className}`} style={props.style}>
       {props.children}
     </div>
   );
@@ -57,7 +57,7 @@ export const TableCellMedium = (props) => {
 
 export const TableCellShort = (props) => {
   return (
-    <div className={`tablecell-short ${props.className}`}>
+    <div className={`tablecell-short ${props.className}`} style={props.style}>
       {props.children}
     </div>
   );

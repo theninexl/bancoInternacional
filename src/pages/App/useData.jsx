@@ -45,6 +45,10 @@ export const useData = () => {
   const [hedgeStatus,setHedgeStatus] = useState([]);
   const [hedgeDisarmData, setHedgeDisarmData] = useState([]);
 
+  //hedgeDisarm
+  const [deferredFlowFile, setDeferredFlowFile] = useState();
+  const [deferredFlowInfo, setDeferredFlowInfo] = useState();
+
 
   //list pagination
   const [page, setPage] = useState(1); 
@@ -83,5 +87,9 @@ export const useData = () => {
       setHedgeStatus,
       hedgeDisarmData,
       setHedgeDisarmData,
+      deferredFlowFile,
+      setDeferredFlowFile,
+      deferredFlowInfo,
+      setDeferredFlowInfo
     };
 }

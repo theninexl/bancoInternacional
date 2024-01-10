@@ -35,7 +35,8 @@ export const LabelElement = (props) => {
         defaultValue={props.value}
         onChange={props.handleOnChange}
         required={props.required}
-        disabled={props.disabled} />
+        disabled={props.disabled}
+        readOnly={props.readOnly} />
     </label>
   );
 }

@@ -56,7 +56,6 @@ function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPag
   const getAllHedges = async () => {
     const results = await getData('hedges/getAll',searchValue,page,totalrowscount, order)
     .then(res => {
-      console.log(res.data)
       setAllHedges(res.data)})
     .catch(err => console.warn(err));
   }
@@ -82,10 +81,10 @@ function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPag
   },[totalrowscount])
 
 
-  const downloadCSVData = () => {
-    console.log(totalrowscount);
-    console.log(allHedges);
-  }
+  // const downloadCSVData = () => {
+  //   console.log(totalrowscount);
+  //   console.log(allHedges);
+  // }
   
 
   //reordenar resultados

@@ -25,11 +25,13 @@ function Login({ setAccount,setSignOut }){
       password:data.password
     })
     .then(res => {
+      console.log(res);
       const stringifiedAccount = JSON.stringify(res.data);
       localStorage.setItem('account', stringifiedAccount);
       setAccount(res.data);
       handleSignIn()
     }).catch(err => {
+      console.log(err);
       if (err.response.status === 409) setLoginError('Email o contraseña incorrectos')
       else setLoginError('Error al realizar la solicitud')
     })

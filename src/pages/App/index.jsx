@@ -32,14 +32,16 @@ const AppRoutes = () => {
     setAllHedges,
     page,
     setPage,
-    fileInstrument,
-    setFileInstrument,
     hedgeStatus,
     setHedgeStatus,
     hedgeStatusData,
     setHedgeStatusData,
     hedgeDisarmData,
     setHedgeDisarmData,
+    deferredFlowFile,
+    setDeferredFlowFile,
+    deferredFlowInfo,
+    setDeferredFlowInfo
   } = useData();
 
   //evaluar signout
@@ -107,6 +109,10 @@ const AppRoutes = () => {
         setHedgeStatusData={setHedgeStatusData}
         hedgeDisarmData={hedgeDisarmData}
         setHedgeDisarmData={setHedgeDisarmData}
+        deferredFlowFile={deferredFlowFile}
+        setDeferredFlowFile={setDeferredFlowFile}
+        deferredFlowInfo={deferredFlowInfo}
+        setDeferredFlowInfo={setDeferredFlowInfo}
       /> 
       : 
       <Navigate replace to={'/login'}/>},

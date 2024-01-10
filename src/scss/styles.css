@@ -226,6 +226,7 @@ strong {
 .bi-l-container-cols {
   display: flex;
   flex-flow: row nowrap;
+  width: 100%;
 }
 
 .bi-l-section {
@@ -252,6 +253,7 @@ strong {
 .bi-l-col {
   border-right: 1px solid #CECECE;
   flex-grow: 1;
+  flex-basis: 0;
   padding: 0 32px;
 }
 .bi-l-col:last-child {
@@ -306,6 +308,7 @@ strong {
   display: flex;
   flex-flow: column nowrap;
   padding: 16px 0;
+  width: 100%;
 }
 .bi-l-form-simple__row label {
   display: flex;
@@ -542,7 +545,7 @@ strong {
   text-align: center;
   color: #0081FF;
   background-color: #FFFFFF;
-  box-shadow: 0px 0px 0px 2px #0081FF inset;
+  box-shadow: 0px 0px 0px 1px #CECECE inset;
 }
 .bi-o-button-large--transparent:hover {
   text-decoration: none;
@@ -621,7 +624,7 @@ strong {
   text-align: center;
   color: #0081FF;
   background-color: #FFFFFF;
-  box-shadow: 0px 0px 0px 2px #0081FF inset;
+  box-shadow: 0px 0px 0px 1px #CECECE inset;
 }
 .bi-o-button-medium--transparent:hover {
   text-decoration: none;
@@ -683,7 +686,7 @@ strong {
   text-align: center;
   color: #0081FF;
   background-color: #FFFFFF;
-  box-shadow: 0px 0px 0px 2px #0081FF inset;
+  box-shadow: 0px 0px 0px 1px #CECECE inset;
 }
 .bi-o-button-small--transparent:hover {
   text-decoration: none;
@@ -1043,7 +1046,7 @@ strong {
   right: -4px;
 }
 
-.bi-o-overlay, .bi-c-overlay--notifications, .bi-c-overlay--activeUser {
+.bi-o-overlay, .bi-c-overlay--notifications, .bi-c-overlay--activeUser, .bi-c-overlay--entryOptions {
   border: 1px solid #CECECE;
   border-radius: 8px;
   box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.1);
@@ -1343,7 +1346,6 @@ strong {
 
 .bi-c-form-simple {
   display: flex;
-  align-items: center;
   gap: 8px;
 }
 .bi-c-form-simple label {
@@ -1401,8 +1403,9 @@ strong {
 .bi-c-form-simple input[type=text], .bi-c-form-simple input[type=number], .bi-c-form-simple input[type=email], .bi-c-form-simple input[type=password], .bi-c-form-simple input[type=date] {
   border: 1px solid #CECECE;
   border-radius: 8px;
-  height: 48px;
+  height: 44px;
   text-indent: 12px;
+  padding: 0;
   font-size: 14px;
   font-size: 1.4rem;
   line-height: 24px;
@@ -1627,6 +1630,7 @@ strong {
   overflow: hidden;
   flex-grow: 1;
   position: relative;
+  min-width: 150px;
 }
 .bi-c-select-icon__select {
   -webkit-appearance: none;
@@ -1684,17 +1688,24 @@ strong {
   z-index: -1;
 }
 
-.bi-c-overlay--notifications, .bi-c-overlay--activeUser {
+.bi-c-overlay--notifications, .bi-c-overlay--activeUser, .bi-c-overlay--entryOptions {
   background-color: #FFFFFF;
   position: absolute;
   z-index: 99;
-  margin-top: 8px;
+  margin-top: 4px;
+}
+.bi-c-overlay--notifications a, .bi-c-overlay--activeUser a, .bi-c-overlay--entryOptions a {
+  align-items: start !important;
 }
 .bi-c-overlay--notifications {
   right: 0;
 }
 .bi-c-overlay--activeUser {
   right: 32px;
+}
+.bi-c-overlay--entryOptions {
+  right: 0;
+  top: 48px;
 }
 
 .cm-c-accordion__button {

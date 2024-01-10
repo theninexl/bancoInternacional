@@ -68,8 +68,8 @@ function DisarmStatusDet({ hedgeStatusData,setHedgeStatusData,hedgeStatus,setHed
                     className='bi-u-text-base-black'>{hedgeStatusData.id_hedge_relationship}</TableCellMedium>
                   <TableCellMedium>{hedgeStatusData.id_hedge_item}</TableCellMedium>
                   <TableCellMedium>{hedgeStatusData.id_hedge_instrument}</TableCellMedium>
-                  <TableCellMedium>{hedgeStatusData.cat_hedge_type}</TableCellMedium>
-                  <TableCellMedium>{hedgeStatusData.num_underlying_amount}</TableCellMedium>
+                  <TableCellMedium>{hedgeStatusData.cat_hedge_item_type}</TableCellMedium>
+                  <TableCellMedium>{hedgeStatusData.num_instrument_notional}</TableCellMedium>
                   <TableCellMedium>{hedgeStatusData.dt_start_date}</TableCellMedium>
                   <TableCellMedium>{hedgeStatusData.dt_maturity_date}</TableCellMedium>
                   <TableCellMedium>{hedgeStatusData.disarm_reason}</TableCellMedium>

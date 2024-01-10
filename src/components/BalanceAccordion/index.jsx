@@ -26,6 +26,7 @@ const BalanceAccordion = ({ content }) => {
                 </a>
             </TableCellMedium>
             <TableCellMedium>{content.amount}</TableCellMedium>
+            <TableCellMedium>{content.currency}</TableCellMedium>
             <TableCellMedium>{content.totalCoverage}</TableCellMedium>
             <TableCellMedium>{content.derivatives}</TableCellMedium>
           </TableDataRowWrapper>
@@ -39,6 +40,7 @@ const BalanceAccordion = ({ content }) => {
               <TableDataRowWrapper key={uuidv4()}>
                 <TableCellMedium>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{subHeading.heading}</TableCellMedium>
                 <TableCellMedium>{subHeading.amount}</TableCellMedium>
+                <TableCellMedium>{subHeading.currency}</TableCellMedium>
                 <TableCellMedium>{subHeading.coverage}</TableCellMedium>
                 <TableCellMedium>{subHeading.derivatives}</TableCellMedium>
               </TableDataRowWrapper>

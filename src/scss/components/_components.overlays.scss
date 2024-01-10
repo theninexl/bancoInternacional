@@ -1,11 +1,15 @@
 .bi-c-overlay {
     $block:&;
-    &--notifications, &--activeUser {
+    &--notifications, &--activeUser, &--entryOptions {
         @extend .bi-o-overlay;
         background-color: getColor(white);
         position:absolute;
         z-index: 99;
-        margin-top:8px;
+        margin-top:4px;
+
+        a {
+            align-items: start !important;
+        }
     }
 
     &--notifications {
@@ -14,5 +18,10 @@
 
     &--activeUser {
         right: 32px;
+    }
+
+    &--entryOptions {
+        right: 0;
+        top: getSize($huge);
     }
 }

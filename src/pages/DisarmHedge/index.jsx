@@ -256,14 +256,14 @@ function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData,setHed
                   <TableDataRow>
                     <TableDataRowWrapper>
                       <TableCellMedium className='bi-u-text-base-black'>
-                        {hedgeStatusData.disarm_data ? 
+                        {hedgeStatusData.disarm_data === 'undefined' ? 
                           hedgeStatusData?.disarm_data[0].id_hedge_item
                           :
                           ''
                         }
                       </TableCellMedium>
                       <TableCellMedium>
-                        {hedgeStatusData.disarm_data ? 
+                        {hedgeStatusData.disarm_data === 'undefined' ? 
                           hedgeStatusData?.disarm_data[0].num_item_notional
                           :
                           ''
@@ -281,14 +281,14 @@ function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData,setHed
                   <TableDataRow>
                     <TableDataRowWrapper>
                       <TableCellMedium className='bi-u-text-base-black'>
-                        {hedgeStatusData.disarm_data ? 
+                        {hedgeStatusData.disarm_data === 'undefined' ? 
                           hedgeStatusData?.disarm_data[0].id_hedge_instrument
                           :
                           ''
                         }
                       </TableCellMedium>
                       <TableCellMedium>
-                        {hedgeStatusData.disarm_data ? 
+                        {hedgeStatusData.disarm_data === 'undefined' ? 
                           hedgeStatusData?.disarm_data[0]?.num_instrument_notional
                           :
                           ''

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDropzone } from "react-dropzone";
 
-export const FileDrop = ({deferredFlowFile,setDeferredFlowFile,deferredFlowInfo,setDeferredFlowInfo,htmlFor,accept,placeholder, className, children}) => {
+export const FileDrop = ({deferredFlowFile,setDeferredFlowFile,deferredFlowInfo,setDeferredFlowInfo,htmlFor,accept,placeholder, className, style, children}) => {
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: (acceptedFile) => {
       setDeferredFlowFile(acceptedFile);
@@ -10,7 +10,8 @@ export const FileDrop = ({deferredFlowFile,setDeferredFlowFile,deferredFlowInfo,
 
   return (
     <label
-      htmlFor={htmlFor} >
+      htmlFor={htmlFor}
+      style={style}>
         <span>{children}</span>
       <div
         {...getRootProps()} 

@@ -2,7 +2,7 @@ import { useRoutes, BrowserRouter, Navigate } from 'react-router-dom';
 import { useData, InitializeLocalStorage } from './useData';
 import HedgeAccounting from '../HedgeAccounting';
 import NewHedge from '../NewHedge';
-import DisarmStatus from '../DisarmStatus';
+import PendingValidations from '../PendingValidations';
 import DisarmStatusDet from '../DisarmStatusDet';
 import DisarmHedge from '../DisarmHedge';
 import Login from '../Login';
@@ -80,9 +80,9 @@ const AppRoutes = () => {
         /> 
       : 
       <Navigate replace to={'/login'}/>},
-     { path: '/hedges-status', 
+     { path: '/hedges-pending-validations', 
       element: !isUserSignOut ? 
-      <DisarmStatus
+      <PendingValidations
         hedges={hedges}
         setHedges={setHedges}
         page={page}
@@ -99,6 +99,10 @@ const AppRoutes = () => {
         setHedgeStatusData={setHedgeStatusData}
         hedgeStatus={hedgeStatus}
         setHedgeStatus={setHedgeStatus}
+        deferredFlowFile={deferredFlowFile}
+        setDeferredFlowFile={setDeferredFlowFile}
+        deferredFlowInfo={deferredFlowInfo}
+        setDeferredFlowInfo={setDeferredFlowInfo}
       /> 
       : 
       <Navigate replace to={'/login'}/>},
@@ -109,10 +113,6 @@ const AppRoutes = () => {
         setHedgeStatusData={setHedgeStatusData}
         hedgeDisarmData={hedgeDisarmData}
         setHedgeDisarmData={setHedgeDisarmData}
-        deferredFlowFile={deferredFlowFile}
-        setDeferredFlowFile={setDeferredFlowFile}
-        deferredFlowInfo={deferredFlowInfo}
-        setDeferredFlowInfo={setDeferredFlowInfo}
       /> 
       : 
       <Navigate replace to={'/login'}/>},

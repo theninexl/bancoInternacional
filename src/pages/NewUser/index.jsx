@@ -53,7 +53,7 @@ function NewUser(){
       .catch(err => {
         //console.log('err',err);
         //console.log(err.response)
-        setFormError('Error ',err,' al realizar la solicitud. Inténtalo de nuevo.')})
+        setFormError('Error ',err,' al realizar la solicitud')})
     } else {
       setFormError('La contraseña no coincide')
     }    

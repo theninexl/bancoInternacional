@@ -13,7 +13,7 @@ const SecNavbar = () => {
       secNavLinks: {
         1: { url:'/hedges', title:'Listar coberturas'},
         2: { url:'/hedges-new', title:'Crear cobertura'},
-        3: { url:'/hedges-status', title:'Status desarmes'},
+        3: { url:'/hedges-pending-validations', title:'Validaciones pendientes'},
       }
     },
     { currentPath: '/hedges-new',
@@ -21,15 +21,15 @@ const SecNavbar = () => {
       secNavLinks: {
         1: { url:'/hedges', title:'Listar coberturas'},
         2: { url:'/hedges-new', title:'Crear cobertura'},
-        3: { url:'/hedges-status', title:'Status desarmes'},
+        3: { url:'/hedges-pending-validations', title:'Validaciones pendientes'},
       }
     },
-    { currentPath: '/hedges-status',
+    { currentPath: '/hedges-pending-validations',
       pageTitle: 'Coberturas',
       secNavLinks: {
         1: { url:'/hedges', title:'Listar coberturas'},
         2: { url:'/hedges-new', title:'Crear cobertura'},
-        3: { url:'/hedges-status', title:'Status desarmes'},
+        3: { url:'/hedges-pending-validations', title:'Validaciones pendientes'},
       }
     },
     { currentPath: '/hedges-status-det',
@@ -37,7 +37,7 @@ const SecNavbar = () => {
       secNavLinks: {
         1: { url:'/hedges', title:'Listar coberturas'},
         2: { url:'/hedges-new', title:'Crear cobertura'},
-        3: { url:'/hedges-status', title:'Status desarmes'},
+        3: { url:'/hedges-pending-validations', title:'Validaciones pendientes'},
       }
     },
     { currentPath: '/hedges-disarm',
@@ -45,7 +45,7 @@ const SecNavbar = () => {
       secNavLinks: {
         1: { url:'/hedges', title:'Listar coberturas'},
         2: { url:'/hedges-new', title:'Crear cobertura'},
-        3: { url:'/hedges-status', title:'Status desarmes'},
+        3: { url:'/hedges-pending-validations', title:'Validaciones pendientes'},
       }
     },
     { currentPath: '/mgmt-balance-view',

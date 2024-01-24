@@ -55,6 +55,17 @@ export const ButtonMPrimary = (props) => {
   );
 }
 
+export const ButtonMSecondary = (props) => {
+  return (
+    <button
+      type={props.type}
+      className={`bi-o-button-medium--secondary ${props.className}`}
+      onClick={props.handleClick}>
+        {props.children}
+    </button>
+  );
+}
+
 export const ButtonMGhost = (props) => {
   return (
     <button

@@ -49,7 +49,7 @@ function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPag
       calcTotalPages(res.rowscount[0].count, rowspage);
       setHedges(res.data);
     })
-    .catch(err => console.warn(err));
+    .catch(err => console.log('error'));
   }
 
   //guardar todas las coberturas para descargar
@@ -133,7 +133,7 @@ function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPag
             <LabelElement
               htmlFor='searchHedges'
               type='text'
-              placeholder='Busca coberturas'
+              placeholder='Buscar'
               handleOnChange={(event)=>{
                 setSearchValue(event.target.value)
               }} />                
@@ -161,18 +161,20 @@ function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPag
               <SortButton orderCol={5} handleClick={() => sortItems()}>Ratio eficacia</SortButton>
             </TableCellMedium>
             <TableCellMedium>
-              <SortButton orderCol={6} handleClick={() => sortItems()}>Monto subyacente</SortButton>
+              <SortButton orderCol={6} handleClick={() => sortItems()}>Monto derivado</SortButton>
             </TableCellMedium>
             <TableCellMedium>
-              <SortButton orderCol={7} handleClick={() => sortItems()}>Fecha inicio</SortButton>
+              <SortButton orderCol={7} handleClick={() => sortItems()}>Monto objeto</SortButton>
             </TableCellMedium>
             <TableCellMedium>
-              <SortButton orderCol={8} handleClick={() => sortItems()}>Fecha vencimiento</SortButton>
+              <SortButton orderCol={8} handleClick={() => sortItems()}>Fecha inicio</SortButton>
             </TableCellMedium>
             <TableCellMedium>
-              <SortButton orderCol={9} handleClick={() => sortItems()}>Usuario</SortButton>
+              <SortButton orderCol={9} handleClick={() => sortItems()}>Fecha vencimiento</SortButton>
             </TableCellMedium>
-            <TableCellShort className='bi-u-centerText'>Validación</TableCellShort>
+            <TableCellMedium>
+              <SortButton orderCol={10} handleClick={() => sortItems()}>Usuario</SortButton>
+            </TableCellMedium>
             <TableCellShort className='bi-u-centerText'>Ficha</TableCellShort>
             <TableCellShort className='bi-u-centerText'></TableCellShort>
           </TableDataHeader>
@@ -188,12 +190,10 @@ function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPag
                     <TableCellMedium className='bi-u-centerText'>{hedge.cat_hedge_item_type}</TableCellMedium>
                     <TableCellMedium className='bi-u-centerText'>{hedge.pct_effectiveness}</TableCellMedium>
                     <TableCellMedium>{hedge.num_instrument_notional}</TableCellMedium>
+                    <TableCellMedium>{hedge.num_item_notional}</TableCellMedium>
                     <TableCellMedium>{hedge.dt_start_date}</TableCellMedium>
                     <TableCellMedium>{hedge.dt_maturity_date}</TableCellMedium>
                     <TableCellMedium>{hedge.user_insert}</TableCellMedium>
-                    <TableCellShort className='bi-u-centerText'>
-                      1/X
-                    </TableCellShort>
                     <TableCellShort className='bi-u-centerText'>
                       <IconButSm
                         className="bi-o-icon-button-small--disabled">

@@ -24,6 +24,7 @@ export const LabelElement = (props) => {
     <label 
       htmlFor={props.htmlFor}
       className={props.classNameLabel}
+      style={props.style}
       >
       <span>{props.children}</span>
       <input 

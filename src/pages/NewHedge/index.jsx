@@ -4,22 +4,28 @@ import Api from '../../services/api';
 import { DateTime } from "luxon";
 import { TableHeader } from '../../components/UI/tables/TableHeaders';
 import { LabelElement, SelectElement, SimpleFormHrz, SimpleFormRow,  ToggleElement,  UploadFileTo64 } from "../../components/UI/forms/SimpleForms";
-import { ButtonLGhost, ButtonLPrimary } from "../../components/UI/buttons/Buttons";
+import { ButtonLGhost, ButtonLPrimary, ButtonLSecondary } from "../../components/UI/buttons/Buttons";
 import { MainHeading } from "../../components/UI/headings";
 import { TableData, TableDataHeader, TableCellMedium, TableDataRow, TableDataRowWrapper } from "../../components/UI/tables/TableDataElements";
+
 
 
 const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowscount, setTotalrowscount }) => {
   const navigate = useNavigate();
   const form = useRef(null);
   const [formError, setFormError] = useState('');
+  //estados campos de creacion
   const [idHedgeItem, setIdHedgeItem] = useState('');
-  const [maturityDateItem, setMaturityDateItem] = useState('');
-  const [numNotionalItem, setNumNotionalItem] = useState();
   const [idHedgeInstrument, setIdHedgeInstrument] = useState('');
+  const [catHedgeFile, setCatHedgeFile] = useState('');
+  const [loadedCatHedgeItems, setLoadedCatHedgeItems] = useState('');
+  const [selectedCatHedgeItem, setSelectedCatHedgeItem] = useState('');
+  const [loadedCatHedgeInstruments, setLoadedCatHedgeInstruments] = useState('');
+  const [maturityDateItem, setMaturityDateItem] = useState('');
+  const [numNotionalItem, setNumNotionalItem] = useState(); 
   const [maturityDateInstrument, setMaturityDateInstrument] = useState('');
   const [numNotionalInstrument, setNumNotionalInstrument] = useState();
-  const [createHedgeItems, setCreateHedgeItems] = useState();  
+  const [createHedgeItems, setCreateHedgeItems] = useState();
 
   const accountInLocalStorage = localStorage.getItem('account');
   const parsedAccount = JSON.parse(accountInLocalStorage);
@@ -34,6 +40,7 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
     const data = {}
     Api.call.post('hedges/createGetCombos',data,{ headers:headers })
     .then(res => {
+      // console.log(res.data)
       setCreateHedgeItems(res.data);
     }).catch(err => {
       console.warn(err)})
@@ -41,30 +48,51 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
 
   //get Info extra Partida cubierta
   const createGetItem = (id) => {
-    const data = {'id':id}
+    const data = {'id_hedge_item':id}
     Api.call.post('hedges/createGetItem',data,{ headers:headers })
     .then(res => {
       // console.log(res.data);
-      const dateItem = DateTime.fromISO(res.data.dt_maturity_date).toFormat('yyyy-MM-dd'); 
+      const dateItem = DateTime.fromISO(res.data.dt_maturity_date).toFormat('dd-MM-yyyy'); 
       setMaturityDateItem(dateItem);
       setNumNotionalItem(res.data.num_notional);     
-      //setCreateItemDate(dateItem);
     }).catch(err => {
       console.warn(err)})
   }
 
   //get Info extra Derivado
   const createGetInstrument = (id) => {
-    const data = {'id':id}
+    const data = {'id_hedge_item':id}
     Api.call.post('hedges/createGetInstrument',data,{ headers:headers })
     .then(res => {
       // console.log(res.data);
-      const dateInstrument = DateTime.fromISO(res.data.dt_maturity_date).toFormat('yyyy-MM-dd');
+      const dateInstrument = DateTime.fromISO(res.data.dt_maturity_date).toFormat('dd-MM-yyyy');
       setMaturityDateInstrument(dateInstrument);
       setNumNotionalInstrument(res.data.num_notional);       
-      // setCreateInstrumentDate(dateInstrument);
     }).catch(err => {
       console.warn(err)})
+  }
+
+  //get info extra tipo objeto cubierto
+  const createGetHedgeItem = (hedgeFile) => {
+    const data = {'cat_hedge_file':hedgeFile}
+    Api.call.post('hedges/createGetHedgeItem', data, {headers:headers})
+    .then(res =>{
+      //console.log(res.data);
+      setLoadedCatHedgeItems(res.data.items);
+    }).catch(err => console.warn(err));
+  }
+
+  //get info extra tipo derivado
+  const createGetHedgeInstrument = (catHedgeFile, catHedgeItem) => {
+    const data = {
+      'cat_hedge_file': catHedgeFile,
+      'cat_hedge_item': catHedgeItem,
+    }
+    Api.call.post('hedges/createGetHedgeInstrument', data, {headers:headers})
+    .then(res =>{
+      // console.log(res.data);
+      setLoadedCatHedgeInstruments(res.data.items);
+    }).catch(err => console.warn(err));
   }
 
   useEffect(()=>{      
@@ -72,13 +100,12 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
     execGetCreateHedge();
   },[]);
 
-
-
   //colocar todas las partidas de cubierta disponibles en el primer select cuando tengamos todas las coberturas cargadas
   useEffect(()=>{
     if (createHedgeItems) {
       setHedgeItemsOnSelect();
       setHedgeInstrumentsOnSelect();
+      setHedgeFilesOnSelect();
     }
   },[createHedgeItems])
 
@@ -93,19 +120,48 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
   //llamar a cargar datos cuando cambia el derivado
   useEffect(() => {
     if (idHedgeInstrument) {
-
       const execCreateGetInstrument = async () => await createGetInstrument(idHedgeInstrument);
       execCreateGetInstrument();
     }
   },[idHedgeInstrument])
 
-  //rellenar select con todas las partidasd de cubierta
+  //llamar a rellenar el select de tipo de objeto cubierto cuando seleccionas un tipo de cobertura
+  useEffect(()=>{
+    if (loadedCatHedgeItems) {
+      setCatHedgeItemsOnSelect();
+    }
+  },[loadedCatHedgeItems])
+
+  //llamar a cargar datos cuando cambia el tipo de cobertura
+  useEffect(()=>{
+    const execCreateGetHedgeItem = async () => await createGetHedgeItem(catHedgeFile);
+    execCreateGetHedgeItem();
+  },[catHedgeFile])
+
+  //llamar a cargar datos cuando cambia el tipo de objeto cubierto
+  useEffect(()=> {
+    // console.log('catHedgeFile', catHedgeFile);
+    // console.log('selectedCatHedgeItem',selectedCatHedgeItem);
+    const execCreateGetHedgeInstrument = async () => await createGetHedgeInstrument(catHedgeFile, selectedCatHedgeItem);
+    execCreateGetHedgeInstrument();
+  },[selectedCatHedgeItem])
+
+  
+  //llamar a rellenar el select de tipo de derivado cuando seleccionas un tipo de objeto cubierto
+  useEffect(()=>{
+    if (loadedCatHedgeInstruments) {
+      setCatHedgeInstrumentsOnSelect();
+    }
+  },[loadedCatHedgeInstruments])
+
+
+  //rellenar select partida cubierta
   const setHedgeItemsOnSelect = () => {
     const itemSelect = document.getElementById('id_hedge_item');
     itemSelect.innerHTML = '';
     const firstOption = document.createElement('option');
-    firstOption.setAttribute('value','');
-    firstOption.textContent = 'Selecciona';
+    firstOption.setAttribute('value','-1');
+    firstOption.textContent = 'Seleccionar';
     itemSelect.appendChild(firstOption);
 
     createHedgeItems.items.map(hedge => {
@@ -121,8 +177,8 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
     const itemSelect = document.getElementById('id_hedge_instrument');
     itemSelect.innerHTML = '';
     const firstOption = document.createElement('option');
-    firstOption.setAttribute('value','');
-    firstOption.textContent = 'Selecciona';
+    firstOption.setAttribute('value','-1');
+    firstOption.textContent = 'Seleccionar';
     itemSelect.appendChild(firstOption);
 
     createHedgeItems.instruments.map(hedge => {
@@ -131,43 +187,156 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
       option.textContent = hedge.id_hedge_instrument;
       itemSelect.appendChild(option);
     })
+  }  
+  
+  //rellenar select tipo de cobertura
+  const setHedgeFilesOnSelect = () => {
+    const itemSelect = document.getElementById('cat_hedge_file');
+    itemSelect.innerHTML = '';
+    const firstOption = document.createElement('option');
+    firstOption.setAttribute('value','-1');
+    firstOption.textContent = 'Seleccionar';
+    itemSelect.appendChild(firstOption);
+
+    createHedgeItems.hedge_files.map(hedge => {
+     const option = document.createElement('option');
+     option.setAttribute('value',hedge.cat_hedge_file);
+     option.textContent = hedge.cat_hedge_file;
+     itemSelect.appendChild(option);
+    })
+  }
+
+  //rellenar select tipo objeto cubierto
+  const setCatHedgeItemsOnSelect = () => {
+    const itemSelect = document.getElementById('cat_hedge_item');
+    itemSelect.innerHTML = '';
+    const firstOption = document.createElement('option');
+    firstOption.setAttribute('value','-1');
+    firstOption.textContent = 'Seleccionar';
+    itemSelect.appendChild(firstOption);
+
+    loadedCatHedgeItems.map(hedgeItem => {
+      const option = document.createElement('option');
+      option.setAttribute('value',hedgeItem.cat_hedge_item);
+      option.textContent = hedgeItem.cat_hedge_item;
+      itemSelect.appendChild(option);
+    })
   }
   
-  const HandleSave = (e) => {    
+  //rellenar select tipo derivado
+  const setCatHedgeInstrumentsOnSelect = () => {
+    const itemSelect = document.getElementById('cat_hedge_instrument');
+    itemSelect.innerHTML = '';
+    const firstOption = document.createElement('option');
+    firstOption.setAttribute('value','-1');
+    firstOption.textContent = 'Seleccionar';
+    itemSelect.appendChild(firstOption);
+
+    loadedCatHedgeInstruments.map(hedgeInstrument => {
+      // console.log(hedgeInstrument);
+      const option = document.createElement('option');
+      option.setAttribute('value',hedgeInstrument.cat_hedge_instrument);
+      option.textContent = hedgeInstrument.cat_hedge_instrument;
+      itemSelect.appendChild(option);
+    })
+  } 
+
+  const handleSave = (e) => {
     e.preventDefault();
     const formData = new FormData(form.current);
-    const data = {
+    const formItems = {
       id_hedge_item: formData.get('id_hedge_item'),
       dt_maturity_date_item: formData.get('dt_maturity_date_item'),
-      num_notional_item: formData.get('num_notional_item'),
-      liabi_item: formData.get('liabi_item'),
-      id_hedge_instrument: formData.get('id_hedge_instrument'),
-      dt_maturity_date_instrument: formData.get('dt_maturity_date_instrument'),
-      num_notional_instrument: formData.get('num_notional_instrument'),
-      coverage_instrument: formData.get('coverage_instrument'),
-      card_type: formData.get('card_type'),
-      card: formData.get('card'),
-    }    
-    const dataSent = {
-      "id_hedge_item":data.id_hedge_item,
-      "dt_maturity_date":data.dt_maturity_date_item,
-      "num_notional_item":data.num_notional_item,
-      "liabi_item":data.liabi_item,
-      "id_hedge_instrument":data.id_hedge_instrument,
-      "dt_maturity_date_instrument": data.dt_maturity_date_instrument,
-      "num_notional_instrument":data.num_notional_instrument,
-      "coverage_instrument":data.coverage_instrument,
-      "card_type":data.card_type,
-      "card":data.card,
+      num_item_notional: formData.get('num_item_notional'),
+      cat_hedge_item_type: formData.get('cat_hedge_item_type'),
+      id_hedge_instrument: formData.get('id_hedge_instrument'),      
+      dt_maturity_date_instrument: formData.get('dt_maturity_date_instrument'),      
+      num_instrument_notional: formData.get('num_instrument_notional'),
+      pct: formData.get('pct'),
+      cat_hedge_file: formData.get('cat_hedge_file'),
+      cat_hedge_item: formData.get('cat_hedge_item'),
+      cat_hedge_instrument: formData.get('cat_hedge_instrument'),
     }
 
-    Api.call.post("hedges/create",dataSent,{ headers:headers })
-      .then(res => {
-        navigate('/hedges');
-      })
-      .catch(err => {
-        setFormError('Error al realizar la solicitud. Inténtalo de nuevo.')})
+    console.log(formItems);
+
+    Object.entries(formItems).forEach(([key, value]) => {
+      if (value === '-1' || value === '' || value === null) {
+        setFormError('Seleccione una opción válida para TODOS los campos');
+        return;
+      } else {
+        // setFormSavedItems(formItems);
+        // setModalOpen(true);
+
+        const dataSent = {
+          "id_hedge_item":formItems.id_hedge_item,
+          "id_hedge_instrument":formItems.id_hedge_instrument,
+          "cat_hedge_item_type":formItems.cat_hedge_item_type,
+          "pct":formItems.pct,
+          "id_hedge_file":formItems.id_hedge_file,
+          "cat_hedge_file": formItems.cat_hedge_file,
+          "cat_hedge_item": formItems.cat_hedge_item,
+          "cat_hedge_instrument": formItems.cat_hedge_instrument,
+        }
+        Api.call.post("hedges/create",dataSent,{ headers:headers })
+          .then(res => {
+            navigate('/hedges');
+          })
+          .catch(err => console.log(err))
+      }
+    })
+    
   }
+
+  
+
+  // const HandleSave = (e) => {    
+  //   e.preventDefault();
+  //   const formData = new FormData(form.current);
+  //   const data = {
+  //     id_hedge_item: formData.get('id_hedge_item'),
+  //     id_hedge_instrument: formData.get('id_hedge_instrument'),
+  //     dt_maturity_date_item: formData.get('dt_maturity_date_item'),
+  //     dt_maturity_date_instrument: formData.get('dt_maturity_date_instrument'),
+  //     num_item_notional: formData.get('num_item_notional'),
+  //     num_instrument_notional: formData.get('num_instrument_notional'),
+  //     pct: formData.get('pct'),
+
+  //     cat_hedge_file: formData.get('cat_hedge_file'),
+  //     cat_hedge_item: formData.get('cat_hedge_item'),
+  //     cat_hedge_instrument: formData.get('cat_hedge_instrument'),
+
+  //   }
+
+
+  //   if (data.id_hedge_item === -1 || data.id_hedge_instrument === -1 || data.cat_hedge_file === -1 || data.cat_hedge_item === -1 || data.cat_hedge_instrument === -1) {
+  //       setFormError('Seleccione una opción para todos los campos');
+  //       return;
+  //   }
+
+  //   if (data.pct === null) {
+  //     setFormError('Indique un porcentaje');
+  //     return;
+  //   }
+
+
+
+  //   const dataSent = {
+  //     "id_hedge_item":data.id_hedge_item,
+  //     "id_hedge_instrument":data.id_hedge_instrument,
+  //     "cat_hedge_item_type":data.cat_hedge_item_type,
+  //     "pct":data.pct,
+  //     "id_hedge_file":data.id_hedge_file
+  //   }
+
+  //   Api.call.post("hedges/create",dataSent,{ headers:headers })
+  //     .then(res => {
+  //       console.log(res.data);
+  //       // navigate('/hedges');
+  //     })
+  //     .catch(err => {
+  //       setFormError('Error al realizar la solicitud. Inténtelo de nuevo.')})
+  // }
 
   const HandleCancel = () => {
     navigate('/hedges');
@@ -202,13 +371,13 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
                           setIdHedgeItem(event.target.value);
                         }}
                         >
-                        <option value=''>Seleccionar</option>
+                        <option value='-1'>Seleccionar</option>
                       </SelectElement>              
                   </TableCellMedium>
                   <TableCellMedium>
                     <LabelElement
                       htmlFor='dt_maturity_date_item'
-                      type='date'
+                      type='text'
                       placeholder='Fecha'
                       value={maturityDateItem}
                       readOnly={true}
@@ -217,7 +386,7 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
                     </TableCellMedium>
                   <TableCellMedium>
                     <LabelElement
-                      htmlFor='num_notional_item'
+                      htmlFor='num_item_notional'
                       type='text'
                       value={numNotionalItem}
                       placeholder='Nocional'
@@ -228,8 +397,9 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
                   <TableCellMedium>
                     
                   <SelectElement
-                    htmlFor='liabi_item'>
-                      <option value='0'>Activo</option>
+                    htmlFor='cat_hedge_item_type'>
+                    <option value='-1'>Seleccionar</option>
+                    <option value='0'>Activo</option>
                     <option value='1'>Pasivo</option>
                   </SelectElement>
                   </TableCellMedium>
@@ -261,14 +431,14 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
                           setIdHedgeInstrument(event.target.value);
                         }}
                         >
-                        <option value=''>Seleccionar</option>
+                        <option value='-1'>Seleccionar</option>
                       </SelectElement>              
                     
                   </TableCellMedium>
                   <TableCellMedium>
                   <LabelElement
                       htmlFor='dt_maturity_date_instrument'
-                      type='date'
+                      type='text'
                       value={maturityDateInstrument}
                       placeholder='Fecha'
                       readOnly={true}
@@ -277,7 +447,7 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
                     </TableCellMedium>
                   <TableCellMedium>
                     <LabelElement
-                      htmlFor='num_notional_instrument'
+                      htmlFor='num_instrument_notional'
                       type='text'
                       value={numNotionalInstrument}
                       placeholder='Nocional'
@@ -288,7 +458,7 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
                   </TableCellMedium>
                   <TableCellMedium>
                     <LabelElement
-                      htmlFor='coverage_instrument'
+                      htmlFor='pct'
                       type='number'
                       placeholder='%'
                       >
@@ -304,9 +474,9 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
         {/* NUEVO INSTRUMENTO */}
         <TableData>
           <TableDataHeader>
-            <TableCellMedium>Tipo de ficha</TableCellMedium>
-            <TableCellMedium>Ficha</TableCellMedium>
-            <TableCellMedium></TableCellMedium>
+            <TableCellMedium>Tipo cobertura</TableCellMedium>
+            <TableCellMedium>Tipo objeto cubierto</TableCellMedium>
+            <TableCellMedium>Tipo derivado</TableCellMedium>
             <TableCellMedium></TableCellMedium>
           </TableDataHeader>
           {
@@ -315,26 +485,41 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
               <TableDataRow>
                 <TableDataRowWrapper>
                   <TableCellMedium>
-                    <SelectElement
-                      htmlFor='card_type'
-                      >
-                      <option value=''>Seleccionar</option>
-                      <option value='VR'>VR</option>
-                      <option value='FC'>FC</option>
-                    </SelectElement>
+                  <SelectElement
+                        htmlFor='cat_hedge_file'
+                        value={catHedgeFile}
+                        handleOnChange={(event) =>{
+                          event.preventDefault();
+                          setCatHedgeFile(event.target.value);
+                        }}
+                        >
+                        <option value='-1'>Seleccionar</option>
+                      </SelectElement>
                   </TableCellMedium>
                   <TableCellMedium>
-                    <SelectElement
-                      htmlFor='card'
-                      >
-                      <option value=''>Seleccionar</option>
-                      <option value='VR'>F1</option>
-                      <option value='FC'>F2</option>
-                      <option value='FC'>F3</option>
-                      <option value='FC'>F4</option>
-                    </SelectElement>
+                  <SelectElement
+                        htmlFor='cat_hedge_item'
+                        value={selectedCatHedgeItem}
+                        handleOnChange={(event) =>{
+                         event.preventDefault();
+                         setSelectedCatHedgeItem(event.target.value);
+                        }}
+                        >
+                        <option value='-1'>Seleccionar</option>
+                      </SelectElement>
                   </TableCellMedium>
-                  <TableCellMedium></TableCellMedium>
+                  <TableCellMedium>
+                  <SelectElement
+                        htmlFor='cat_hedge_instrument'
+                        //value={idHedgeItem}
+                        //handleOnChange={(event) =>{
+                        //  event.preventDefault();
+                        //  setIdHedgeItem(event.target.value);
+                        //}}
+                        >
+                        <option value='-1'>Seleccionar</option>
+                      </SelectElement>
+                  </TableCellMedium>
                   <TableCellMedium></TableCellMedium>
                 </TableDataRowWrapper>            
               </TableDataRow>
@@ -354,7 +539,7 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
             <ButtonLPrimary
               className='bi-o-button--short'
               type='submit'
-              handleClick={HandleSave}
+              handleClick={handleSave}
               >
                 Guardar
             </ButtonLPrimary>

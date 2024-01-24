@@ -1,0 +1,8 @@
+.bi-u-bgColor {
+  $block:&;
+
+  &-gray-light {
+    background-color: getColor(gray-light);
+  }
+
+}

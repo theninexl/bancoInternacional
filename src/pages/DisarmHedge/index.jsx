@@ -2,7 +2,6 @@ import { useEffect, useState, useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 // import { GlobalContext } from '../../context';
 import Api from '../../services/api';
-import Papa from 'papaparse';
 import { TableHeader } from '../../components/UI/tables/TableHeaders';
 import { TableData, TableDataHeader, TableDataRow, TableCellMedium, TableDataRowWrapper } from '../../components/UI/tables/TableDataElements';
 import { MainHeading, SubHeading } from '../../components/UI/headings';
@@ -11,16 +10,16 @@ import { ColsContainer, SimpleCol } from '../../components/UI/layout/LayoutSecti
 import { LabelElement, SelectElement, SimpleFormHrz, SimpleFormRow } from '../../components/UI/forms/SimpleForms';
 import { ButtonLGhost, ButtonLPrimary, ButtonLSecondary } from '../../components/UI/buttons/Buttons';
 import ModalSmall from '../../components/ModalSmall';
-import { FileDrop } from '../../components/UI/forms/FileDrop';
 
-function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData,setHedgeDisarmData,deferredFlowFile,setDeferredFlowFile,deferredFlowInfo,setDeferredFlowInfo }){
+function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData }){
   const navigate = useNavigate();
   // const context = useContext(GlobalContext);
   const [partialDisarm, setPartialDisarm] = useState(true);
   const [freeTextDisarmReason, setFreeTextDisarmReason] = useState(false);
   const [formError, setFormError] = useState(null);
   const [searchParams] = useSearchParams();
-  const [uploadedFileName, setUploadedFileName] = useState();
+  //modal disarm
+  const [modalOpen, setModalOpen] = useState(false);
   const hedgeID = searchParams.get('id');
   const disarmForm = useRef(null); 
   let notional_instrument = 0;
@@ -40,10 +39,10 @@ function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData,setHed
 
   //get Cobertura  
   const getHedge = (id) => {
-    const data = {'id':id}
+    const data = {'id_hedge_relationship':id.toString()}
     Api.call.post('hedges/disarmGet',data,{ headers:headers })
     .then(res => {
-      console.log(res.data);
+      // console.log(res);
       setHedgeStatusData(res.data);
     }).catch(err => {
       console.warn(err)})
@@ -60,36 +59,20 @@ function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData,setHed
     }
   },[partialDisarm])
 
-  //mirar cuando cambia deferrefFlowFile para parsearlo y guardarlo
-  useEffect(()=>{
-    if (deferredFlowFile) {
-      console.log(deferredFlowFile);
-      setUploadedFileName(deferredFlowFile[0]?.name);
-      Papa.parse(deferredFlowFile[0], {
-        complete: function(results) {
-          console.log(results.data);
-          setDeferredFlowInfo(results.data);     
-        }
-      });
-      console.log(deferredFlowInfo);
-    }
-  },[deferredFlowFile])
+  
 
   const handleDisarmType = () => {
     if (disarmType) {          
       disarmType.value === '0' ? setPartialDisarm(true) : setPartialDisarm (false);
     }
   }
-
   const handleDisarmReason = () => {
     if (disarm_reason) {
       disarm_reason.value === '4' ? setFreeTextDisarmReason(true): setFreeTextDisarmReason(false);
     }
   }
 
-
-  //mostrar modal disarm
-  const [modalOpen, setModalOpen] = useState(false);
+  
   const openDisarmModal = (e) => {
     e.preventDefault();
     setModalOpen(true);
@@ -100,7 +83,7 @@ function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData,setHed
     if (modalOpen) {
       return (
         <ModalSmall
-          message={`¿Desea realizar el desarme de la relación ${hedgeStatusData.data[0].id_hedge_relationship}?`} 
+          message={`¿Desea realizar el desarme de la relación ${hedgeStatusData.id_hedge_relationship}?`} 
           buttons={
             <>
             <ButtonLPrimary
@@ -122,34 +105,35 @@ function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData,setHed
 
   const handleDisarmeRequest = () => {
     const formData = new FormData(disarmForm.current);
-    const newNotionals = document.querySelectorAll('.newNotionalValue');
+    // const newNotionals = document.querySelectorAll('.newNotionalValue');
 
     const data = {
-      hedge:hedgeStatusData.id_hedge_relationship,
-      disarm_type: parseInt(formData.get('disarm_type')),
-      disarm_reason: formData.get('disarm_reason'),
-      object_new_notional: formData.get('object_new_notional'),
+      'id_hedge_relationship':hedgeStatusData.id_hedge_relationship.toString(),
+      'cat_disassembly': parseInt(formData.get('disarm_type')).toString(),
+      'cat_disassembly_reason': formData.get('disarm_reason').toString() || '',
+      'desc_disassembly_reason': formData.get('disarm_reason_freeText') || '',
+      'pct_disassembly_item': formData.get('object_new_notional') || 0,
+      'pct_disassembly_instrument': formData.get('instrument_new_notional') || 0,
     }
 
-    newNotionals.forEach(newNotional => {
-      data[newNotional.id] = newNotional.value;
-    })
+    // newNotionals.forEach(newNotional => {
+    //   data[newNotional.id] = newNotional.value;
+    // })
 
     Api.call.post("hedges/disarmExecute",data,{ headers:headers })
       .then(res => {
-        console.log(res);
+        //console.log(res);
         navigate('/hedges');
       })
       .catch(err => {
-        // console.log(data);
-        // console.log('err',err);
-        // console.log(err.response)
         setModalOpen(false);
-        setFormError('Error ',err,' al realizar la solicitud')
+        if (err.response.status == 409) {
+          setFormError('No se puede solicitar un desarme nuevo porque esta cobertura tiene pendiente la validación de un desarme anterior')
+        } else {
+          setFormError('Error  al realizar la solicitud')
+        }
       })  
   }
-
-  
 
   const HandleCancel = () => {
     navigate('/hedges');
@@ -173,24 +157,18 @@ function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData,setHed
           <TableCellMedium>Fecha inicio</TableCellMedium>
           <TableCellMedium>Fecha vencimiento</TableCellMedium>
         </TableDataHeader>
-
-        {
-          hedgeStatusData.data?.map(hedgeRow => {
-            return (
-              <TableDataRow key={uuidv4()}>
-                <TableDataRowWrapper>
-                  <TableCellMedium
-                    className='bi-u-text-base-black'>{hedgeRow.id_hedge_relationship}</TableCellMedium>
-                  <TableCellMedium>{hedgeRow.id_hedge_item}</TableCellMedium>
-                  <TableCellMedium>{hedgeRow.id_hedge_instrument}</TableCellMedium>
-                  <TableCellMedium>{hedgeRow.cat_hedge_item_type}</TableCellMedium>
-                  <TableCellMedium>{hedgeRow.num_instrument_notional}</TableCellMedium>
-                  <TableCellMedium>{hedgeRow.dt_start_date}</TableCellMedium>
-                  <TableCellMedium>{hedgeRow.dt_maturity_date}</TableCellMedium>
-                </TableDataRowWrapper>
-              </TableDataRow>
-            );})
-        }
+        <TableDataRow key={uuidv4()}>
+          <TableDataRowWrapper>
+            <TableCellMedium
+              className='bi-u-text-base-black'>{hedgeStatusData.id_hedge_relationship}</TableCellMedium>
+            <TableCellMedium>{hedgeStatusData.id_hedge_item}</TableCellMedium>
+            <TableCellMedium>{hedgeStatusData.id_hedge_instrument}</TableCellMedium>
+            <TableCellMedium>{hedgeStatusData.cat_hedge_item_type}</TableCellMedium>
+            <TableCellMedium>{hedgeStatusData.num_instrument_notional}</TableCellMedium>
+            <TableCellMedium>{hedgeStatusData.dt_start_date}</TableCellMedium>
+            <TableCellMedium>{hedgeStatusData.dt_maturity_date}</TableCellMedium>
+          </TableDataRowWrapper>
+        </TableDataRow>
       </TableData>
       <TableHeader>
         <SubHeading  className='bi-u-border-bb-gm bi-u-spacer-mt-huge'>
@@ -200,15 +178,7 @@ function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData,setHed
       <SimpleFormHrz innerRef={disarmForm}>
         <ColsContainer className='bi-u-border-bb-gm'>
           <SimpleCol>
-            <SimpleFormRow>
-              <FileDrop
-                htmlFor='deferredFlowsField'
-                placeholder={uploadedFileName ? uploadedFileName : 'selecciona o suelta CSV'}
-                accept='.csv'
-                deferredFlowFile={deferredFlowFile}
-                setDeferredFlowFile={setDeferredFlowFile}
-              >Flujos diferidos</FileDrop>
-            </SimpleFormRow>
+            
             <SimpleFormRow>
               <SelectElement
                 htmlFor='disarm_type'
@@ -256,18 +226,10 @@ function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData,setHed
                   <TableDataRow>
                     <TableDataRowWrapper>
                       <TableCellMedium className='bi-u-text-base-black'>
-                        {hedgeStatusData.disarm_data ? 
-                          hedgeStatusData?.disarm_data[0].id_hedge_item
-                          :
-                          ''
-                        }
+                        {hedgeStatusData.id_hedge_item}
                       </TableCellMedium>
                       <TableCellMedium>
-                        {hedgeStatusData.disarm_data ? 
-                          hedgeStatusData?.disarm_data[0].num_item_notional
-                          :
-                          ''
-                        }
+                        {hedgeStatusData.num_item_notional}
                       </TableCellMedium>
                       <TableCellMedium>                        
                           <LabelElement
@@ -281,22 +243,14 @@ function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData,setHed
                   <TableDataRow>
                     <TableDataRowWrapper>
                       <TableCellMedium className='bi-u-text-base-black'>
-                        {hedgeStatusData.disarm_data ? 
-                          hedgeStatusData?.disarm_data[0].id_hedge_instrument
-                          :
-                          ''
-                        }
+                        {hedgeStatusData.id_hedge_instrument}
                       </TableCellMedium>
                       <TableCellMedium>
-                        {hedgeStatusData.disarm_data ? 
-                          hedgeStatusData?.disarm_data[0]?.num_instrument_notional
-                          :
-                          ''
-                        }
+                        {hedgeStatusData.num_instrument_notional}
                       </TableCellMedium>
                       <TableCellMedium>                        
                           <LabelElement
-                          htmlFor='object_new_notional'
+                          htmlFor='instrument_new_notional'
                           type='number'
                           placeholder='introduce nocional'>
                         </LabelElement>                          

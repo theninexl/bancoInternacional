@@ -1,6 +1,7 @@
 .bi-u-spacer {
     $block:&;
     // margin top
+    &-mt-zero {margin-top: 0 !important;}
     &-mt-base { margin-top:getSize($base); }
     &-mt-tiny { margin-top: getSize($tiny);}
     &-mt-small{ margin-top: getSize($small);}
@@ -12,6 +13,7 @@
     &-mt-enormous{ margin-top: getSize($enormous);}
     &-mt-gigantic{ margin-top: getSize($gigantic);}
     // margin bottom
+    &-mb-zero {margin-bottom: 0 !important;}
     &-mb-base { margin-bottom:getSize($base); }
     &-mb-tiny { margin-bottom: getSize($tiny);}
     &-mb-small{ margin-bottom: getSize($small);}
@@ -26,11 +28,13 @@
     &-m-auto{margin:auto};
     &-mlr-auto{margin:0 auto};
     // padding top
+    &-pt-zero {padding-top: 0 !important;}
     &-pt-bigger{ padding-top: getSize($bigger);}
     &-pt-large{ padding-top: getSize($large);}
     &-pt-huge{ padding-top: getSize($huge);}
     &-pt-enormous{ padding-top: getSize($enormous);}
     //padding bottom
+    &-pb-zero {padding-bottom: 0 !important;}
     &-pb-bigger{ padding-bottom: getSize($bigger);}
     &-pb-large{ padding-bottom: getSize($large);}
     &-pb-huge{ padding-bottom: getSize($huge);}

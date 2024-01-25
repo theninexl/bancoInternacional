@@ -11,6 +11,7 @@ import { MainHeading } from '../../components/UI/headings';
 import { LabelElement } from '../../components/UI/forms/SimpleForms';
 import ModalBig from "../../components/ModalBig";
 import ModalSmall from '../../components/ModalSmall';
+import { ColsContainer, SectionThird, SimpleCol } from '../../components/UI/layout/LayoutSections';
 
 
 
@@ -191,24 +192,34 @@ function PendingValidations({ totalPages,setTotalPages,hedges,setHedges,page,set
           }
           buttons={
             <>
-            <ButtonLPrimary
-                className='bi-o-button--short'
-                handleClick={() => validateExecute(hedgeRelationshipData.id_hedge_relationship,1)}
+            <ColsContainer>
+              <SimpleCol
+                style={{border:'0', padding:'0', display:'flex', gap:'24px'}} >
+                <ButtonLPrimary
+                  className='bi-o-button--short'
+                  handleClick={() => validateExecute(hedgeRelationshipData.id_hedge_relationship,1)}
+                  >
+                    Aceptar
+                </ButtonLPrimary>
+                <ButtonLSecondary
+                  className='bi-o-button--short'
+                  handleClick={() => validateExecute(hedgeRelationshipData.id_hedge_relationship,2)}
                 >
-                  Aceptar
-              </ButtonLPrimary>
-              <ButtonLSecondary
-                className='bi-o-button--short'
-                handleClick={() => validateExecute(hedgeRelationshipData.id_hedge_relationship,2)}
-              >
-                Rechazar
-              </ButtonLSecondary>
+                  Rechazar
+                </ButtonLSecondary>
+              </SimpleCol>
+              <SectionThird
+                style={{padding:'0', display:'flex', 'justify-content':'end'}} >
+                <ButtonLGhost
+                  className='bi-o-button--large'
+                  handleClick={() => setModalOpen(false)}>
+                    Cancelar
+                </ButtonLGhost>
+              </SectionThird>
+            </ColsContainer>
+            
               
-              <ButtonLGhost
-                className='bi-o-button--large'
-                handleClick={() => setModalOpen(false)}>
-                  Cancelar
-              </ButtonLGhost>
+              
               
             </>
           }

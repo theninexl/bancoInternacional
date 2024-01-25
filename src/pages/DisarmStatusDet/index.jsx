@@ -114,7 +114,7 @@ function DisarmStatusDet({ hedgeStatusData,setHedgeStatusData,hedgeStatus,setHed
     <main className="bi-u-h-screen--wSubNav">
       <TableHeader>
         <MainHeading className='bi-u-border-bb-gm'>
-          Validar desarme
+          Estatus desarme
         </MainHeading>
       </TableHeader>
       <TableData>
@@ -152,15 +152,28 @@ function DisarmStatusDet({ hedgeStatusData,setHedgeStatusData,hedgeStatus,setHed
       </TableHeader>
       <TableData>        
         {
+          hedgeStatus.length > 0 ? 
             hedgeStatus.map(hedge => {
               const renderStatus = () => {
                 if (hedge.cat_status == '0') {
-                  return (<><span className='bi-u-warning-text'>{"Pendiente"}</span></>);
+                  return (<><span className='bi-o-textPill bi-u-bgColor-warning'>{"Pendiente"}</span></>);
                 } else if (hedge.cat_status == '1') {
-                  return (<><span className='bi-u-success-text'>{"Aprobado"}</span></>);
+                  return (<><span className='bi-o-textPill bi-u-bgColor-success bi-u-gray-light-text'>{"Aprobado"}</span></>);
                 } else if (hedge.cat_status == '2') {
-                  return (<><span className='bi-u-danger-text'>{"Denegado"}</span></>);  
+                  return (<><span className='bi-o-textPill bi-u-bgColor-danger bi-u-gray-light-text'>{"Denegado"}</span></>);  
                 }        
+              }
+
+              const renderDisassemblyReason = () => {
+                if (hedge.cat_disassembly_reason == 1) {
+                  return ('El objeto cubierto no existe.');
+                } else if (hedge.cat_disassembly_reason == 2) {
+                  return ('El nivel de tasas actual no justifica la cobertura.');
+                } else if (hedge.cat_disassembly_reason == 3) {
+                  return ('Estrageia de negocio.');
+                } else if (hedge.cat_disassembly_reason == 4) {
+                  return ('Otro:');
+                } 
               }
 
               const renderButtons = () => {
@@ -252,7 +265,7 @@ function DisarmStatusDet({ hedgeStatusData,setHedgeStatusData,hedgeStatus,setHed
                           <TableCellMedium>{hedge.pct_disassembly_item}</TableCellMedium>
                           <TableCellMedium>{hedge.num_disassembly_instrument_notional}</TableCellMedium>
                           <TableCellMedium>{hedge.pct_disassembly_instrument}</TableCellMedium>
-                          <TableCellMedium>{hedge.cat_disassembly_reason}, {hedge.desc_disassembly_reason}</TableCellMedium>
+                          <TableCellMedium>{renderDisassemblyReason()} {hedge.desc_disassembly_reason}</TableCellMedium>
                         </TableDataRowWrapper>
                       </TableDataRow>
                     </SimpleCol>
@@ -278,6 +291,16 @@ function DisarmStatusDet({ hedgeStatusData,setHedgeStatusData,hedgeStatus,setHed
                 </>
               );
             })
+            :
+            <>
+              <TableDataRow>
+                <TableDataRowWrapper>
+                  <TableCellLong>
+                    Esta cobertura no ha tenido ninguna solicitud de desarme
+                  </TableCellLong>
+                </TableDataRowWrapper>
+              </TableDataRow>
+            </>
           }
       </TableData>
     </main>

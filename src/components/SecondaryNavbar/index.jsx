@@ -14,6 +14,7 @@ const SecNavbar = () => {
         1: { url:'/hedges', title:'Listar coberturas'},
         2: { url:'/hedges-new', title:'Crear cobertura'},
         3: { url:'/hedges-pending-validations', title:'Validaciones pendientes'},
+        4: { url:'/hedges-efficacy-test', title:'Test de eficacia'},
       }
     },
     { currentPath: '/hedges-new',
@@ -22,6 +23,7 @@ const SecNavbar = () => {
         1: { url:'/hedges', title:'Listar coberturas'},
         2: { url:'/hedges-new', title:'Crear cobertura'},
         3: { url:'/hedges-pending-validations', title:'Validaciones pendientes'},
+        4: { url:'/hedges-efficacy-test', title:'Test de eficacia'},
       }
     },
     { currentPath: '/hedges-pending-validations',
@@ -30,6 +32,7 @@ const SecNavbar = () => {
         1: { url:'/hedges', title:'Listar coberturas'},
         2: { url:'/hedges-new', title:'Crear cobertura'},
         3: { url:'/hedges-pending-validations', title:'Validaciones pendientes'},
+        4: { url:'/hedges-efficacy-test', title:'Test de eficacia'},
       }
     },
     { currentPath: '/hedges-status-det',
@@ -38,6 +41,7 @@ const SecNavbar = () => {
         1: { url:'/hedges', title:'Listar coberturas'},
         2: { url:'/hedges-new', title:'Crear cobertura'},
         3: { url:'/hedges-pending-validations', title:'Validaciones pendientes'},
+        4: { url:'/hedges-efficacy-test', title:'Test de eficacia'},
       }
     },
     { currentPath: '/hedges-disarm',
@@ -46,6 +50,16 @@ const SecNavbar = () => {
         1: { url:'/hedges', title:'Listar coberturas'},
         2: { url:'/hedges-new', title:'Crear cobertura'},
         3: { url:'/hedges-pending-validations', title:'Validaciones pendientes'},
+        4: { url:'/hedges-efficacy-test', title:'Test de eficacia'},
+      }
+    },
+    { currentPath: '/hedges-efficacy-test',
+      pageTitle: 'Coberturas',
+      secNavLinks: {
+        1: { url:'/hedges', title:'Listar coberturas'},
+        2: { url:'/hedges-new', title:'Crear cobertura'},
+        3: { url:'/hedges-pending-validations', title:'Validaciones pendientes'},
+        4: { url:'/hedges-efficacy-test', title:'Test de eficacia'},
       }
     },
     { currentPath: '/mgmt-balance-view',

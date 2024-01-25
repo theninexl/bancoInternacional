@@ -69,7 +69,9 @@ body {
     }
 }
 
+.bi-u-white-text {color:getColor(white);}
 .bi-u-gray-text {color:getColor(gray-dark);}
+.bi-u-gray-light-text {color:getColor(gray-light)};
 .bi-u-success-text {color:getColor(success);}
 .bi-u-danger-text{color:getColor(danger);}
 .bi-u-warning-text{color:getColor(warning);}

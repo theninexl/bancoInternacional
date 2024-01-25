@@ -165,8 +165,16 @@ body {
   text-decoration: none;
 }
 
+.bi-u-white-text {
+  color: #FFFFFF;
+}
+
 .bi-u-gray-text {
   color: #727272;
+}
+
+.bi-u-gray-light-text {
+  color: #F4F4F4;
 }
 
 .bi-u-success-text {
@@ -1271,6 +1279,11 @@ strong {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.bi-o-textPill {
+  border-radius: 16px;
+  padding: 4px 8px;
+}
+
 /** Components **/
 .bi-c-navbar {
   display: flex;
@@ -1952,4 +1965,13 @@ strong {
 
 .bi-u-bgColor-gray-light {
   background-color: #F4F4F4;
+}
+.bi-u-bgColor-success {
+  background-color: #0FCC81;
+}
+.bi-u-bgColor-warning {
+  background-color: #FECD39;
+}
+.bi-u-bgColor-danger {
+  background-color: #F93A3A;
 }/*# sourceMappingURL=styles.css.map */

@@ -140,8 +140,6 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
 
   //llamar a cargar datos cuando cambia el tipo de objeto cubierto
   useEffect(()=> {
-    // console.log('catHedgeFile', catHedgeFile);
-    // console.log('selectedCatHedgeItem',selectedCatHedgeItem);
     const execCreateGetHedgeInstrument = async () => await createGetHedgeInstrument(catHedgeFile, selectedCatHedgeItem);
     execCreateGetHedgeInstrument();
   },[selectedCatHedgeItem])
@@ -208,18 +206,26 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
 
   //rellenar select tipo objeto cubierto
   const setCatHedgeItemsOnSelect = () => {
-    const itemSelect = document.getElementById('cat_hedge_item');
-    itemSelect.innerHTML = '';
-    const firstOption = document.createElement('option');
-    firstOption.setAttribute('value','-1');
-    firstOption.textContent = 'Seleccionar';
-    itemSelect.appendChild(firstOption);
+    //borro todas las opciones del select de objeto cubierto y añado solo la de seleccionar
+    const hedgeItemSelect = document.getElementById('cat_hedge_item');
+    hedgeItemSelect.innerHTML = '';
+    const firstItemOption = document.createElement('option');
+    firstItemOption.setAttribute('value','-1');
+    firstItemOption.textContent = 'Seleccionar';
+    hedgeItemSelect.appendChild(firstItemOption);
+    //borro todas las opciones del select de tipo de derivado y añado solo seleccionar
+    const hedgeInstrumentSelect = document.getElementById('cat_hedge_instrument');
+    hedgeInstrumentSelect.innerHTML = '';
+    const firstIntrumentOption = document.createElement('option');
+    firstIntrumentOption.setAttribute('value','-1');
+    firstIntrumentOption.textContent = 'Seleccionar';
+    hedgeInstrumentSelect.appendChild(firstIntrumentOption);
 
     loadedCatHedgeItems.map(hedgeItem => {
       const option = document.createElement('option');
       option.setAttribute('value',hedgeItem.cat_hedge_item);
       option.textContent = hedgeItem.cat_hedge_item;
-      itemSelect.appendChild(option);
+      hedgeItemSelect.appendChild(option);
     })
   }
   

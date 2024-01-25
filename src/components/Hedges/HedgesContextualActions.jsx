@@ -53,16 +53,16 @@ export const HedgesContextualActions = ({ hedgeId }) => {
             e.preventDefault();
             validateStatus(hedgeId)}} 
           className='bi-o-overlay__notification'>
-            <div className="notification--text">Validar desarme</div>
+            <div className="notification--text">Ver status</div>
         </Link>
-        <Link
+        {/* <Link
           onClick={(e) => {
             e.preventDefault();
             navigate('/hedges-status')}
           }
           className='bi-o-overlay__notification'>
             <div className="notification--text">Ver status</div>
-        </Link>
+        </Link> */}
       </div>
     </>
   );

@@ -5,4 +5,16 @@
     background-color: getColor(gray-light);
   }
 
+  &-success {
+    background-color: getColor(success);
+  }
+
+  &-warning {
+    background-color: getColor(warning);
+  }
+
+  &-danger {
+    background-color: getColor(danger);
+  }
+
 }

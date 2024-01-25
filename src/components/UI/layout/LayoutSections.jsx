@@ -1,6 +1,6 @@
 export const ColsContainer = (props) => {
   return (
-    <section className={`bi-l-container-cols ${props.className}`}>
+    <section className={`bi-l-container-cols ${props.className}`} style={props.style}>
       {props.children}
     </section>
   );
@@ -9,7 +9,7 @@ export const ColsContainer = (props) => {
 export const SimpleCol = (props) => {
   return (
     <section
-      className={`bi-l-col ${props.className}`}>
+      className={`bi-l-col ${props.className}`} style={props.style}>
         {props.children}
     </section>
   );
@@ -18,7 +18,7 @@ export const SimpleCol = (props) => {
 export const SectionHalf = (props) => {
   return (
     <section
-      className={`bi-l-6col ${props.className}`}>
+      className={`bi-l-6col ${props.className}`} style={props.style}>
         {props.children}
     </section>
   );
@@ -27,7 +27,7 @@ export const SectionHalf = (props) => {
 export const SectionThird = (props) => {
   return (
     <section
-      className={`bi-l-4col ${props.className}`}>
+      className={`bi-l-4col ${props.className}`} style={props.style}>
         {props.children}
     </section>
   );

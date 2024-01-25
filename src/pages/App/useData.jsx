@@ -54,6 +54,10 @@ export const useData = () => {
   const [page, setPage] = useState(1); 
   const [totalPages, setTotalPages] = useState(null);
 
+  //efficacy test
+  const [efficacyTestFile, setEfficacyTestFile] = useState();
+  const [efficacyTestInfo, setEfficacyTestInfo] = useState();
+
   //main navbar
   //UserBox component
   const [userBoxOpen, setUserBoxOpen] = useState(false);
@@ -90,6 +94,10 @@ export const useData = () => {
       deferredFlowFile,
       setDeferredFlowFile,
       deferredFlowInfo,
-      setDeferredFlowInfo
+      setDeferredFlowInfo,
+      efficacyTestFile,
+      setEfficacyTestFile,
+      efficacyTestInfo,
+      setEfficacyTestInfo,
     };
 }

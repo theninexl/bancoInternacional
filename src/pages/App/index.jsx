@@ -13,6 +13,7 @@ import NewUser from '../NewUser';
 import EditUser from '../EditUser';
 import MainNavbar from '../../components/MainNavbar';
 import '../../scss/styles.scss';
+import EfficacyTest from '../EfficacyTest';
 
 
 const AppRoutes = () => {  
@@ -41,7 +42,11 @@ const AppRoutes = () => {
     deferredFlowFile,
     setDeferredFlowFile,
     deferredFlowInfo,
-    setDeferredFlowInfo
+    setDeferredFlowInfo,
+    efficacyTestFile,
+    setEfficacyTestFile,
+    efficacyTestInfo,
+    setEfficacyTestInfo,
   } = useData();
 
   //evaluar signout
@@ -114,6 +119,16 @@ const AppRoutes = () => {
         hedgeDisarmData={hedgeDisarmData}
         setHedgeDisarmData={setHedgeDisarmData}
       /> 
+      : 
+      <Navigate replace to={'/login'}/>},
+    { path: '/hedges-efficacy-test', 
+      element: !isUserSignOut ?
+      <EfficacyTest 
+        efficacyTestFile={efficacyTestFile}
+        setEfficacyTestFile={setEfficacyTestFile}
+        efficacyTestInfo={efficacyTestInfo}
+        setEfficacyTestInfo={setEfficacyTestInfo}
+      />
       : 
       <Navigate replace to={'/login'}/>},
     { path: '/login', 

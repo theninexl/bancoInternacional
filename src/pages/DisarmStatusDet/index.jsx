@@ -59,15 +59,18 @@ function DisarmStatusDet({ hedgeStatusData,setHedgeStatusData,hedgeStatus,setHed
   //mirar cuando cambia deferrefFlowFile para parsearlo y guardarlo
   useEffect(()=>{
     if (deferredFlowFile) {
-      console.log(deferredFlowFile);
       setUploadedFileName(deferredFlowFile[0]?.name);
       Papa.parse(deferredFlowFile[0], {
         complete: function(results) {
-          console.log(results.data);
-          setDeferredFlowInfo(results.data);     
+          const deferredObj = {};
+          for (let i=1; i<results.data.length; i++) {
+            console.log(results.data[i]);
+            const propertyName = i.toString();
+            deferredObj[propertyName] = results.data[i];
+          }
+          setDeferredFlowInfo(deferredObj);     
         }
       });
-      console.log(deferredFlowInfo);
     }
   },[deferredFlowFile])
 
@@ -101,7 +104,8 @@ function DisarmStatusDet({ hedgeStatusData,setHedgeStatusData,hedgeStatus,setHed
     const dataSent = {
       "id_disassembly": id.toString(),
       "desc_comment": formItems.desc_comment,
-      "validate": '2'
+      "validate": '2',
+      "deferred_flows":deferredFlowInfo,
     }
     Api.call.post('hedges/validationDisarmExecute',dataSent,{ headers:headers })
     .then(res => {

@@ -13,7 +13,7 @@ import { TableData, TableDataHeader, TableCellMedium, TableDataRow, TableDataRow
 const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowscount, setTotalrowscount }) => {
   const navigate = useNavigate();
   const form = useRef(null);
-  const [formError, setFormError] = useState('');
+  const [formError, setFormError] = useState(null);
   //estados campos de creacion
   const [idHedgeItem, setIdHedgeItem] = useState('');
   const [idHedgeInstrument, setIdHedgeInstrument] = useState('');
@@ -52,8 +52,7 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
     Api.call.post('hedges/createGetItem',data,{ headers:headers })
     .then(res => {
       // console.log(res.data);
-      const dateItem = DateTime.fromISO(res.data.dt_maturity_date).toFormat('dd-MM-yyyy'); 
-      setMaturityDateItem(dateItem);
+      setMaturityDateItem(res.data.dt_maturity_date);
       setNumNotionalItem(res.data.num_notional);     
     }).catch(err => {
       console.warn(err)})
@@ -65,8 +64,7 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
     Api.call.post('hedges/createGetInstrument',data,{ headers:headers })
     .then(res => {
       // console.log(res.data);
-      const dateInstrument = DateTime.fromISO(res.data.dt_maturity_date).toFormat('dd-MM-yyyy');
-      setMaturityDateInstrument(dateInstrument);
+      setMaturityDateInstrument(res.data.dt_maturity_date);
       setNumNotionalInstrument(res.data.num_notional);       
     }).catch(err => {
       console.warn(err)})
@@ -152,7 +150,7 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
     }
   },[loadedCatHedgeInstruments])
 
-
+  
   //rellenar select partida cubierta
   const setHedgeItemsOnSelect = () => {
     const itemSelect = document.getElementById('id_hedge_item');
@@ -208,18 +206,23 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
   const setCatHedgeItemsOnSelect = () => {
     //borro todas las opciones del select de objeto cubierto y añado solo la de seleccionar
     const hedgeItemSelect = document.getElementById('cat_hedge_item');
-    hedgeItemSelect.innerHTML = '';
-    const firstItemOption = document.createElement('option');
-    firstItemOption.setAttribute('value','-1');
-    firstItemOption.textContent = 'Seleccionar';
-    hedgeItemSelect.appendChild(firstItemOption);
+    if (hedgeItemSelect) {
+      hedgeItemSelect.innerHTML = '';
+      const firstItemOption = document.createElement('option');
+      firstItemOption.setAttribute('value','-1');
+      firstItemOption.textContent = 'Seleccionar';
+      hedgeItemSelect.appendChild(firstItemOption);
+    }
+    
     //borro todas las opciones del select de tipo de derivado y añado solo seleccionar
     const hedgeInstrumentSelect = document.getElementById('cat_hedge_instrument');
-    hedgeInstrumentSelect.innerHTML = '';
-    const firstIntrumentOption = document.createElement('option');
-    firstIntrumentOption.setAttribute('value','-1');
-    firstIntrumentOption.textContent = 'Seleccionar';
-    hedgeInstrumentSelect.appendChild(firstIntrumentOption);
+    if (hedgeInstrumentSelect) {
+      hedgeInstrumentSelect.innerHTML = '';
+      const firstIntrumentOption = document.createElement('option');
+      firstIntrumentOption.setAttribute('value','-1');
+      firstIntrumentOption.textContent = 'Seleccionar';
+      hedgeInstrumentSelect.appendChild(firstIntrumentOption);
+    }
 
     loadedCatHedgeItems.map(hedgeItem => {
       const option = document.createElement('option');
@@ -232,11 +235,13 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
   //rellenar select tipo derivado
   const setCatHedgeInstrumentsOnSelect = () => {
     const itemSelect = document.getElementById('cat_hedge_instrument');
-    itemSelect.innerHTML = '';
-    const firstOption = document.createElement('option');
-    firstOption.setAttribute('value','-1');
-    firstOption.textContent = 'Seleccionar';
-    itemSelect.appendChild(firstOption);
+    if (itemSelect) {
+      itemSelect.innerHTML = '';
+      const firstOption = document.createElement('option');
+      firstOption.setAttribute('value','-1');
+      firstOption.textContent = 'Seleccionar';
+      itemSelect.appendChild(firstOption);
+    }
 
     loadedCatHedgeInstruments.map(hedgeInstrument => {
       // console.log(hedgeInstrument);
@@ -245,10 +250,30 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
       option.textContent = hedgeInstrument.cat_hedge_instrument;
       itemSelect.appendChild(option);
     })
-  } 
+  }
 
-  const handleSave = (e) => {
-    e.preventDefault();
+  // useState(()=>{
+  //   if (formItems) {
+  //     let keys = Object.keys(formItems);
+  //     for (let i=0; i< keys.length; i++) {
+  //       let key = keys[i];
+  //       let value = extractedData[key];
+  //       console.log('evaluo: ',key,' con valor:',value);
+  //       if (value == '-1' || value == '') {
+  //         console.log('no pasa');
+  //         setFormError('Seleccione una opción válida para TODOS los campos');
+  //         break;
+  //       } 
+  //     }  
+  //   }  
+  // },[formItems])
+
+
+
+  const handleSave = (event) => {
+    event.preventDefault();
+    console.log('handleSave')
+
     const formData = new FormData(form.current);
     const formItems = {
       id_hedge_item: formData.get('id_hedge_item'),
@@ -264,85 +289,27 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
       cat_hedge_instrument: formData.get('cat_hedge_instrument'),
     }
 
-    console.log(formItems);
-
-    Object.entries(formItems).forEach(([key, value]) => {
-      if (value === '-1' || value === '' || value === null) {
+    const dataSent = {
+      "id_hedge_item":formItems.id_hedge_item,
+      "id_hedge_instrument":formItems.id_hedge_instrument,
+      "cat_hedge_item_type":formItems.cat_hedge_item_type,
+      "pct":formItems.pct,
+      "id_hedge_file":formItems.id_hedge_file,
+      "cat_hedge_file": formItems.cat_hedge_file,
+      "cat_hedge_item": formItems.cat_hedge_item,
+      "cat_hedge_instrument": formItems.cat_hedge_instrument,
+    }
+    Api.call.post("hedges/create",dataSent,{ headers:headers })
+      .then(res => {
+        // console.log(res);
+        navigate('/hedges');
+      })
+      .catch(err =>{
+        // console.log(err);
         setFormError('Seleccione una opción válida para TODOS los campos');
-        return;
-      } else {
-        // setFormSavedItems(formItems);
-        // setModalOpen(true);
-
-        const dataSent = {
-          "id_hedge_item":formItems.id_hedge_item,
-          "id_hedge_instrument":formItems.id_hedge_instrument,
-          "cat_hedge_item_type":formItems.cat_hedge_item_type,
-          "pct":formItems.pct,
-          "id_hedge_file":formItems.id_hedge_file,
-          "cat_hedge_file": formItems.cat_hedge_file,
-          "cat_hedge_item": formItems.cat_hedge_item,
-          "cat_hedge_instrument": formItems.cat_hedge_instrument,
-        }
-        Api.call.post("hedges/create",dataSent,{ headers:headers })
-          .then(res => {
-            navigate('/hedges');
-          })
-          .catch(err => console.log(err))
-      }
-    })
+      })
     
   }
-
-  
-
-  // const HandleSave = (e) => {    
-  //   e.preventDefault();
-  //   const formData = new FormData(form.current);
-  //   const data = {
-  //     id_hedge_item: formData.get('id_hedge_item'),
-  //     id_hedge_instrument: formData.get('id_hedge_instrument'),
-  //     dt_maturity_date_item: formData.get('dt_maturity_date_item'),
-  //     dt_maturity_date_instrument: formData.get('dt_maturity_date_instrument'),
-  //     num_item_notional: formData.get('num_item_notional'),
-  //     num_instrument_notional: formData.get('num_instrument_notional'),
-  //     pct: formData.get('pct'),
-
-  //     cat_hedge_file: formData.get('cat_hedge_file'),
-  //     cat_hedge_item: formData.get('cat_hedge_item'),
-  //     cat_hedge_instrument: formData.get('cat_hedge_instrument'),
-
-  //   }
-
-
-  //   if (data.id_hedge_item === -1 || data.id_hedge_instrument === -1 || data.cat_hedge_file === -1 || data.cat_hedge_item === -1 || data.cat_hedge_instrument === -1) {
-  //       setFormError('Seleccione una opción para todos los campos');
-  //       return;
-  //   }
-
-  //   if (data.pct === null) {
-  //     setFormError('Indique un porcentaje');
-  //     return;
-  //   }
-
-
-
-  //   const dataSent = {
-  //     "id_hedge_item":data.id_hedge_item,
-  //     "id_hedge_instrument":data.id_hedge_instrument,
-  //     "cat_hedge_item_type":data.cat_hedge_item_type,
-  //     "pct":data.pct,
-  //     "id_hedge_file":data.id_hedge_file
-  //   }
-
-  //   Api.call.post("hedges/create",dataSent,{ headers:headers })
-  //     .then(res => {
-  //       console.log(res.data);
-  //       // navigate('/hedges');
-  //     })
-  //     .catch(err => {
-  //       setFormError('Error al realizar la solicitud. Inténtelo de nuevo.')})
-  // }
 
   const HandleCancel = () => {
     navigate('/hedges');
@@ -374,6 +341,7 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
                         value={idHedgeItem}
                         handleOnChange={(event) =>{
                           event.preventDefault();
+                          setFormError(null);
                           setIdHedgeItem(event.target.value);
                         }}
                         >
@@ -384,7 +352,7 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
                     <LabelElement
                       htmlFor='dt_maturity_date_item'
                       type='text'
-                      placeholder='Fecha'
+                      placeholder=''
                       value={maturityDateItem}
                       readOnly={true}
                       >
@@ -395,7 +363,7 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
                       htmlFor='num_item_notional'
                       type='text'
                       value={numNotionalItem}
-                      placeholder='Nocional'
+                      placeholder=''
                       readOnly={true}
                      >
                     </LabelElement>
@@ -434,6 +402,7 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
                         value={idHedgeInstrument}
                         handleOnChange={(event) =>{
                           event.preventDefault();
+                          setFormError(null);
                           setIdHedgeInstrument(event.target.value);
                         }}
                         >
@@ -446,7 +415,7 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
                       htmlFor='dt_maturity_date_instrument'
                       type='text'
                       value={maturityDateInstrument}
-                      placeholder='Fecha'
+                      placeholder=''
                       readOnly={true}
                       >
                     </LabelElement>
@@ -456,7 +425,7 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
                       htmlFor='num_instrument_notional'
                       type='text'
                       value={numNotionalInstrument}
-                      placeholder='Nocional'
+                      placeholder=''
                       readOnly={true}
                       
                       >
@@ -466,7 +435,7 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
                     <LabelElement
                       htmlFor='pct'
                       type='number'
-                      placeholder='%'
+                      placeholder=''
                       >
                     </LabelElement>
                   </TableCellMedium>
@@ -496,6 +465,7 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
                         value={catHedgeFile}
                         handleOnChange={(event) =>{
                           event.preventDefault();
+                          setFormError(null);
                           setCatHedgeFile(event.target.value);
                         }}
                         >
@@ -508,6 +478,7 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
                         value={selectedCatHedgeItem}
                         handleOnChange={(event) =>{
                          event.preventDefault();
+                         setFormError(null);
                          setSelectedCatHedgeItem(event.target.value);
                         }}
                         >

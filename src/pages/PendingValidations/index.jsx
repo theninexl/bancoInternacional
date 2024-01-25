@@ -209,7 +209,7 @@ function PendingValidations({ totalPages,setTotalPages,hedges,setHedges,page,set
                 </ButtonLSecondary>
               </SimpleCol>
               <SectionThird
-                style={{padding:'0', display:'flex', 'justify-content':'end'}} >
+                style={{padding:'0', display:'flex', justifyContent:'end'}} >
                 <ButtonLGhost
                   className='bi-o-button--large'
                   handleClick={() => setModalOpen(false)}>

@@ -79,7 +79,7 @@ function EfficacyTest({ efficacyTestFile,setEfficacyTestFile,efficacyTestInfo,se
             <EfficacyTestFileDrop
               style={{padding:'0 12px'}}
               htmlFor='efficacyTestFileField'
-              placeholder={uploadedFileName ? uploadedFileName : 'Selecciona o arrastra CSV'}
+              placeholder={uploadedFileName ? uploadedFileName : 'Seleccionar/arrastrar CSV'}
               accept='.csv'
               efficacyTestFile={efficacyTestFile}
               setEfficacyTestFile={setEfficacyTestFile} >

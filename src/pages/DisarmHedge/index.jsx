@@ -235,7 +235,7 @@ function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData }){
                           <LabelElement
                           htmlFor='object_new_notional'
                           type='number'
-                          placeholder='introduce nocional'>
+                          placeholder=''>
                         </LabelElement>                          
                       </TableCellMedium>
                     </TableDataRowWrapper>
@@ -252,7 +252,7 @@ function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData }){
                           <LabelElement
                           htmlFor='instrument_new_notional'
                           type='number'
-                          placeholder='introduce nocional'>
+                          placeholder=''>
                         </LabelElement>                          
                       </TableCellMedium>
                     </TableDataRowWrapper>

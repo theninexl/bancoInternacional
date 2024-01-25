@@ -207,7 +207,7 @@ function DisarmStatusDet({ hedgeStatusData,setHedgeStatusData,hedgeStatus,setHed
                                 style={{padding:'0 12px'}}
                                 htmlFor='desc_comment'
                                 type='text'
-                                placeholder='Escribir razón'
+                                placeholder=''
                                 >  
                                 Motivo rechazo                             
                               </LabelElement>
@@ -216,7 +216,7 @@ function DisarmStatusDet({ hedgeStatusData,setHedgeStatusData,hedgeStatus,setHed
                               <FileDrop
                                 style={{padding:'0 12px'}}
                                 htmlFor='deferredFlowsField'
-                                placeholder={uploadedFileName ? uploadedFileName : 'selecciona o suelta CSV'}
+                                placeholder={uploadedFileName ? uploadedFileName : 'Seleccionar/arrastrar CSV'}
                                 accept='.csv'
                                 deferredFlowFile={deferredFlowFile}
                                 setDeferredFlowFile={setDeferredFlowFile}
@@ -258,9 +258,9 @@ function DisarmStatusDet({ hedgeStatusData,setHedgeStatusData,hedgeStatus,setHed
                       </TableDataRow>
                       <TableDataHeader>
                         <TableCellMedium>Nocional objeto</TableCellMedium>
-                        <TableCellMedium>% objeto</TableCellMedium>
+                        <TableCellMedium>% Objeto</TableCellMedium>
                         <TableCellMedium>Nocional derivado</TableCellMedium>
-                        <TableCellMedium>& derivado</TableCellMedium>
+                        <TableCellMedium>% Derivado</TableCellMedium>
                         <TableCellMedium>Motivo desarme</TableCellMedium>
                       </TableDataHeader>
                       <TableDataRow>

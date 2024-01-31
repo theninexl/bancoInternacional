@@ -1,9 +1,13 @@
-import axios from "axios";
+import axios from 'axios';
+
+const SERVER = window?._env_?.TEST_DB_SERVER;
+const PORT = window?._env_?.TEST_DB_PORT;
+
+const baseURL = `http://${SERVER}:${PORT}/api/`;
 
 const Api = {
   call: axios.create({
-    //baseURL: 'http://10.60.20.31:8888/api/',
-    baseURL: 'http://85.54.47.35:8888/api/',
+    baseURL:baseURL,
     headers: {
         'Content-Type': 'application/json;charset=utf-8'
     }

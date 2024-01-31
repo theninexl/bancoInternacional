@@ -127,7 +127,8 @@ function DisarmStatusDet({ hedgeStatusData,setHedgeStatusData,hedgeStatus,setHed
           <TableCellMedium>Partida cubierta</TableCellMedium>
           <TableCellMedium>Instrumento</TableCellMedium>
           <TableCellMedium>Tipo</TableCellMedium>
-          <TableCellMedium>Monto subyacente</TableCellMedium>
+          <TableCellMedium>Nocional derivado</TableCellMedium>
+          <TableCellMedium>Nocional objeto</TableCellMedium>
           <TableCellMedium>Fecha inicio</TableCellMedium>
           <TableCellMedium>Fecha vencimiento</TableCellMedium>
         </TableDataHeader>
@@ -142,6 +143,7 @@ function DisarmStatusDet({ hedgeStatusData,setHedgeStatusData,hedgeStatus,setHed
                   <TableCellMedium>{hedgeStatusData.id_hedge_instrument}</TableCellMedium>
                   <TableCellMedium>{hedgeStatusData.cat_hedge_item_type}</TableCellMedium>
                   <TableCellMedium>{hedgeStatusData.num_instrument_notional}</TableCellMedium>
+                  <TableCellMedium>{hedgeStatusData.num_item_notional}</TableCellMedium>
                   <TableCellMedium>{hedgeStatusData.dt_start_date}</TableCellMedium>
                   <TableCellMedium>{hedgeStatusData.dt_maturity_date}</TableCellMedium>
                 </TableDataRowWrapper>

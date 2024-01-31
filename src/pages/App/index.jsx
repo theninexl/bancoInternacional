@@ -180,7 +180,6 @@ const App = () => {
 
   InitializeLocalStorage();
 
-
   return (
     <>
       <BrowserRouter>

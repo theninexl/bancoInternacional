@@ -389,7 +389,7 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
             <TableCellMedium>Derivado</TableCellMedium>
             <TableCellMedium>Fecha vencimiento</TableCellMedium>
             <TableCellMedium>Nocional</TableCellMedium>
-            <TableCellMedium>% Derivado</TableCellMedium>
+            <TableCellMedium>% Utilizado</TableCellMedium>
           </TableDataHeader>
           {
             createHedgeItems && 

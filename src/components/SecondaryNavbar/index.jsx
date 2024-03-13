@@ -6,7 +6,9 @@ const SecNavbar = () => {
   const secNavInfo = [
     { currentPath: '/',
       pageTitle: 'Inicio',
-      secNavLinks: {}
+      secNavLinks: {
+        1: { url:'/', title:'Inicio'},
+      }
     },
     { currentPath: '/hedges',
       pageTitle: 'Coberturas',

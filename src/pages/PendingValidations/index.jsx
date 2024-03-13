@@ -277,28 +277,31 @@ function PendingValidations({ totalPages,setTotalPages,hedges,setHedges,page,set
               <SortButton orderCol={1} handleClick={() => sortItems()}>Ref.</SortButton>
             </TableCellShort>
             <TableCellMedium className='bi-u-centerText'>
-              <SortButton orderCol={2} handleClick={() => sortItems()}>Tipo</SortButton>
+              <SortButton orderCol={2} handleClick={() => sortItems()}>Validación</SortButton>
             </TableCellMedium>
             <TableCellMedium className='bi-u-centerText'>
-              <SortButton orderCol={3} handleClick={() => sortItems()}>Partida</SortButton>
+              <SortButton orderCol={3} handleClick={() => sortItems()}>Partida cubierta</SortButton>
             </TableCellMedium>
             <TableCellMedium className='bi-u-centerText'>
               <SortButton orderCol={4} handleClick={() => sortItems()}>Derivado</SortButton>
             </TableCellMedium>
             <TableCellMedium className='bi-u-centerText'>
-              <SortButton orderCol={5} handleClick={() => sortItems()}>Tipo</SortButton>
+              <SortButton orderCol={5} handleClick={() => sortItems()}>Tipo cobertura</SortButton>
+            </TableCellMedium>
+            <TableCellMedium className='bi-u-centerText'>
+              <SortButton orderCol={6} handleClick={() => sortItems()}>Tipo objeto cubierto</SortButton>
             </TableCellMedium>
             <TableCellMedium className='bi-u-textRight'>
-              <SortButton orderCol={6} handleClick={() => sortItems()}>Nocional derivado</SortButton>
+              <SortButton orderCol={7} handleClick={() => sortItems()}>Nocional derivado</SortButton>
             </TableCellMedium>
             <TableCellMedium className='bi-u-centerText'>
-              <SortButton orderCol={7} handleClick={() => sortItems()}>Fecha inicio</SortButton>
+              <SortButton orderCol={8} handleClick={() => sortItems()}>Fecha inicio</SortButton>
             </TableCellMedium>
             <TableCellMedium className='bi-u-centerText'>
-              <SortButton orderCol={8} handleClick={() => sortItems()}>Fecha vencimiento</SortButton>
+              <SortButton orderCol={9} handleClick={() => sortItems()}>Fecha vencimiento</SortButton>
             </TableCellMedium>
             <TableCellMedium className='bi-u-centerText'>
-              <SortButton orderCol={9} handleClick={() => sortItems()}>Usuario</SortButton>
+              <SortButton orderCol={10} handleClick={() => sortItems()}>Usuario</SortButton>
             </TableCellMedium>
             <TableCellShort  className='bi-u-centerText'></TableCellShort>
           </TableDataHeader>
@@ -319,7 +322,8 @@ function PendingValidations({ totalPages,setTotalPages,hedges,setHedges,page,set
                     <TableCellMedium className='bi-u-centerText'>{renderType()}</TableCellMedium>
                     <TableCellMedium className='bi-u-centerText'>{hedge.id_hedge_item}</TableCellMedium>
                     <TableCellMedium className='bi-u-centerText'>{hedge.id_hedge_instrument}</TableCellMedium>
-                    <TableCellMedium className='bi-u-centerText'>{hedge.cat_hedge_item_type}</TableCellMedium>
+                    <TableCellMedium className='bi-u-centerText'>{hedge.cat_hedge_file}</TableCellMedium>
+                    <TableCellMedium className='bi-u-centerText'>{hedge.cat_hedge_item}</TableCellMedium>
                     <TableCellMedium className='bi-u-textRight'>{hedge.num_instrument_notional}</TableCellMedium>
                     <TableCellMedium className='bi-u-centerText'>{hedge.dt_start_date}</TableCellMedium>
                     <TableCellMedium className='bi-u-centerText'>{hedge.dt_maturity_date}</TableCellMedium>

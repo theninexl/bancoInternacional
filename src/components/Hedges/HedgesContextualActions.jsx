@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect,useState } from "react";
+import { usePostData } from "../../hooks/usePostData";
 import { Link, createSearchParams, useNavigate } from "react-router-dom";
 import { EllipsisHorizontalIcon } from "@heroicons/react/24/solid";
 import { IconButSm } from "../UI/buttons/IconButtons";
@@ -6,7 +7,9 @@ import { IconButSm } from "../UI/buttons/IconButtons";
 
 export const HedgesContextualActions = ({ hedgeId }) => {
   const navigate = useNavigate();
-  const [optionsBoxOpen, setOptionsBoxOpen] = useState(false)
+  const [optionsBoxOpen, setOptionsBoxOpen] = useState(false);
+
+  const getSheet = usePostData();
 
   //overlay boton opciones
   const handleDisplayBox = () => {  
@@ -31,7 +34,17 @@ export const HedgesContextualActions = ({ hedgeId }) => {
         id:id
       }).toString()
     });
+  }  
+
+
+  //descargar ficha
+  const downloadSheet = (id) => {
+    getSheet.postData('hedges/getSheet',{'id_hedge_relationship':id});
   }
+
+  useEffect(()=>{
+    if(getSheet.responsePostData) console.log(getSheet.responsePostData);
+  },[getSheet.responsePostData])
 
   return (
     <>
@@ -54,6 +67,13 @@ export const HedgesContextualActions = ({ hedgeId }) => {
             validateStatus(hedgeId)}} 
           className='bi-o-overlay__notification'>
             <div className="notification--text">Ver status</div>
+        </Link>
+        <Link 
+          onClick={(e) => {
+            e.preventDefault();
+            downloadSheet(hedgeId)}}
+          className='bi-o-overlay__notification'>
+            <div className="notification--text">Descargar ficha</div>
         </Link>
         {/* <Link
           onClick={(e) => {

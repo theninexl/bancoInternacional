@@ -172,13 +172,13 @@ function DisarmStatusDet({ hedgeStatusData,setHedgeStatusData,hedgeStatus,setHed
 
               const renderDisassemblyReason = () => {
                 if (hedge.cat_disassembly_reason == 1) {
-                  return ('El objeto cubierto no existe.');
+                  return ('El objeto cubierto no existe');
                 } else if (hedge.cat_disassembly_reason == 2) {
-                  return ('El nivel de tasas actual no justifica la cobertura.');
+                  return ('El nivel de tasas actual no justifica la cobertura');
                 } else if (hedge.cat_disassembly_reason == 3) {
-                  return ('Estrageia de negocio.');
+                  return ('Estrageia de negocio');
                 } else if (hedge.cat_disassembly_reason == 4) {
-                  return ('Otro:');
+                  return ('Otro');
                 } 
               }
 
@@ -260,9 +260,9 @@ function DisarmStatusDet({ hedgeStatusData,setHedgeStatusData,hedgeStatus,setHed
                       </TableDataRow>
                       <TableDataHeader>
                         <TableCellMedium>Nocional objeto</TableCellMedium>
-                        <TableCellMedium>% Objeto</TableCellMedium>
+                        <TableCellMedium>% Objeto solicitado</TableCellMedium>
                         <TableCellMedium>Nocional derivado</TableCellMedium>
-                        <TableCellMedium>% Derivado</TableCellMedium>
+                        <TableCellMedium>% Derivado solicitado</TableCellMedium>
                         <TableCellMedium>Motivo desarme</TableCellMedium>
                       </TableDataHeader>
                       <TableDataRow>

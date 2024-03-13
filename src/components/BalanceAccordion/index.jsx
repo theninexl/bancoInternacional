@@ -22,27 +22,27 @@ const BalanceAccordion = ({ content }) => {
                 <a onClick={handleOpen}>
                   <ChevronRightIcon 
                     className={open ? `bi-o-inlineIcon--big bi-u-rotateRight` : `bi-o-inlineIcon--big bi-u-noRotate`} />
-                    &nbsp;{content.heading}
+                    &nbsp;{content.id_item}
                 </a>
             </TableCellMedium>
-            <TableCellMedium>{content.amount}</TableCellMedium>
-            <TableCellMedium>{content.currency}</TableCellMedium>
-            <TableCellMedium>{content.totalCoverage}</TableCellMedium>
-            <TableCellMedium>{content.derivatives}</TableCellMedium>
+            <TableCellMedium>{content.num_amount}</TableCellMedium>
+            {/*<TableCellMedium>{content.currency}</TableCellMedium>*/}
+            <TableCellMedium>{content.pct_amount_covered}%</TableCellMedium>
+            <TableCellMedium></TableCellMedium>
           </TableDataRowWrapper>
         </div>
 
         {open ? (
           <div className='dataRowAccordion--content' key={uuidv4()}>
          {
-          content.subheadings.map(subHeading => {
+          content.items.map(subHeading => {
             return (
               <TableDataRowWrapper key={uuidv4()}>
-                <TableCellMedium>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{subHeading.heading}</TableCellMedium>
-                <TableCellMedium>{subHeading.amount}</TableCellMedium>
-                <TableCellMedium>{subHeading.currency}</TableCellMedium>
-                <TableCellMedium>{subHeading.coverage}</TableCellMedium>
-                <TableCellMedium>{subHeading.derivatives}</TableCellMedium>
+                <TableCellMedium>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{subHeading.id_hedge_accounting}</TableCellMedium>
+                <TableCellMedium>{subHeading.num_amount}</TableCellMedium>
+                {/*<TableCellMedium>{subHeading.currency}</TableCellMedium>*/}
+                <TableCellMedium>{subHeading.pct_amount_covered}%</TableCellMedium>
+                <TableCellMedium></TableCellMedium>
               </TableDataRowWrapper>
             );
           })

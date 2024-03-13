@@ -287,6 +287,7 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
       cat_hedge_file: formData.get('cat_hedge_file'),
       cat_hedge_item: formData.get('cat_hedge_item'),
       cat_hedge_instrument: formData.get('cat_hedge_instrument'),
+      //date_from: formData.get('date_from')
     }
 
     const dataSent = {
@@ -298,6 +299,7 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
       "cat_hedge_file": formItems.cat_hedge_file,
       "cat_hedge_item": formItems.cat_hedge_item,
       "cat_hedge_instrument": formItems.cat_hedge_instrument,
+      //"date_from": formItems.date_from
     }
     Api.call.post("hedges/create",dataSent,{ headers:headers })
       .then(res => {
@@ -306,7 +308,7 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
       })
       .catch(err =>{
         // console.log(err);
-        setFormError('Seleccione una opción válida para TODOS los campos');
+        setFormError('Se ha producido un error');
       })
     
   }
@@ -452,7 +454,7 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
             <TableCellMedium>Tipo cobertura</TableCellMedium>
             <TableCellMedium>Tipo objeto cubierto</TableCellMedium>
             <TableCellMedium>Tipo derivado</TableCellMedium>
-            <TableCellMedium></TableCellMedium>
+            <TableCellMedium>Fecha inicio</TableCellMedium>
           </TableDataHeader>
           {
             createHedgeItems && 
@@ -497,7 +499,19 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
                         <option value='-1'>Seleccionar</option>
                       </SelectElement>
                   </TableCellMedium>
-                  <TableCellMedium></TableCellMedium>
+                  <TableCellMedium>
+
+                    <LabelElement
+                      htmlFor='date_from'
+                      type='date'
+                      //value={maturityDateInstrument}
+                      placeholder=''
+                      //readOnly={true}
+                      >
+                    </LabelElement>
+
+
+                  </TableCellMedium>
                 </TableDataRowWrapper>            
               </TableDataRow>
             </>

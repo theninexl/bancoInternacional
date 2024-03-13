@@ -6,9 +6,7 @@ const SecNavbar = () => {
   const secNavInfo = [
     { currentPath: '/',
       pageTitle: 'Inicio',
-      secNavLinks: {
-        1: { url:'/', title:'Inicio'},
-      }
+      secNavLinks: {}
     },
     { currentPath: '/hedges',
       pageTitle: 'Coberturas',
@@ -67,15 +65,7 @@ const SecNavbar = () => {
     { currentPath: '/mgmt-balance-view',
       pageTitle: 'Gestión de balance',
       secNavLinks: {
-        1: { url:'/mgmt-balance-view', title:'Vista balance'},
-        2: { url:'/mgmt-bonus-view', title:'Vista bono'},
-      }
-    },
-    { currentPath: '/mgmt-bonus-view',
-      pageTitle: 'Gestión de balance',
-      secNavLinks: {
-        1: { url:'/mgmt-balance-view', title:'Vista balance'},
-        2: { url:'/mgmt-bonus-view', title:'Vista bono'},
+        1: { url:'/mgmt-balance-view', title:'Vista balance'}
       }
     },
     { currentPath: '/users',

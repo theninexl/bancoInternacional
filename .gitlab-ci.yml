@@ -1,0 +1,163 @@
+default:
+  before_script:
+    - nvm use v20.5.1
+    - export JAVA_HOME=/etc/alternatives/java_sdk_1.8.0/
+
+include:
+  - project: pipelines/oc-pipelines
+    ref: master
+    file:
+      - snyk-template.yml
+      - secrets-template.yml
+      - ci-template.yml
+      - tbdflow-template.yml
+      - cdtbdflow-template.yml
+      - common-template.yml
+      - sonarqube-template.yml
+
+variables:
+  APP: 'fe-coberturas'
+  PORT: '8080'
+  NS: "aut-coberturas"
+
+stages:          # List of stages for jobs, and their order of execution
+  - install
+  - build
+  - create_image
+  - deploy_qa
+  - deploy_staging
+  - deploy_beta
+  - deploy_canary
+  - deploy_production
+
+install_npm:
+  extends:
+    - .npm_install
+    - .execution_always
+  inherit:
+    default: [before_script]
+    variables: true
+
+build_job:
+  extends:
+    - .npm_build
+    - .execution_always
+  inherit:
+    default: [before_script]
+    variables: true
+
+create_image:
+  extends:
+    - .createimage_template
+    - .variables_template
+    - .execution_always
+  variables:
+    OPENSHIFT_PROJECT: 'aut-coberturas-qa'
+
+
+deploy_qa:
+ extends:
+   - .deployqa_template
+   - .variables_template
+   - .execution_always
+ variables:
+   OPENSHIFT_PROJECT: "aut-coberturas-qa"
+   PRIVATE_URL: "fe-coberturas-qa.interconecta2.cl"
+   PRIVATE_APP: "false"
+   AUTOSCALE: "false"
+   ENVIRONMENT: "qa"
+   # Resources
+   MAX_CPU_MILICORES: "10"
+   MIN_CPU_MILICORES: "10"
+   MAX_MEMORY_MB: "400"
+   MIN_MEMORY_MB: "300"
+   AVERAGE_CPU_UTILIZATION: "80"
+   AVERAGE_MEMORY_UTILIZATION: "80"
+   MAX_REPLICA: "1"
+   MIN_REPLICA: "1"
+
+ # after_script:
+
+    # - oc set volumes dc/${APP}-${ENVIRONMENT} --configmap-name=${APP} --add --mount-path=/etc/nginx/conf.d/ -n ${OPENSHIFT_PROJECT} 
+
+deploy_staging:
+ extends:
+   - .deploystaging_template
+   - .variables_template
+   - .execution_always
+ variables:
+   OPENSHIFT_PROJECT: "aut-coberturas-staging"
+   OPENSHIFT_PROJECT_QA: "aut-coberturas-qa"
+   PRIVATE_URL: "fe-coberturas-staging.interconecta2.cl"
+   PRIVATE_APP: "false"
+   AUTOSCALE: "false"
+   # Resources
+   MAX_CPU_MILICORES: "10"
+   MIN_CPU_MILICORES: "10"
+   MAX_MEMORY_MB: "400"
+   MIN_MEMORY_MB: "300"
+   AVERAGE_CPU_UTILIZATION: "80"
+   AVERAGE_MEMORY_UTILIZATION: "80"
+   MAX_REPLICA: "1"
+   MIN_REPLICA: "1"
+
+
+deploy_beta:
+  extends:
+    - .deploybeta_template
+    - .execution_master_manual
+    - .variables_template
+  inherit:
+    default: false
+    variables: true
+  dependencies: []
+  cache: {}
+  variables:
+    OPENSHIFT_PROJECT: "aut-coberturas"
+    OPENSHIFT_PROJECT_QA: "aut-coberturas-qa"
+    PRIVATE_APP: "false"
+    AUTOSCALE: "false"
+    # Resources
+    MAX_CPU_MILICORES: "10"
+    MIN_CPU_MILICORES: "10"
+    MAX_MEMORY_MB: "400"
+    MIN_MEMORY_MB: "300"
+    AVERAGE_CPU_UTILIZATION: "80"
+    AVERAGE_MEMORY_UTILIZATION: "80"
+    MAX_REPLICA: "1"
+    MIN_REPLICA: "1"
+
+deploy_canary:
+  extends:
+    - .deploycanary_template
+    - .execution_tag
+    - .variables_template
+  needs: []
+  variables:
+    OPENSHIFT_PROJECT: "aut-coberturas"
+
+deploy_production:
+  extends:
+    - .deployproduction_template
+    - .variables_template
+    - .execution_tag
+  variables:
+    OPENSHIFT_PROJECT: "aut-coberturas"
+    PUBLIC_URL: ""
+    PRIVATE_APP: "false"
+    AUTOSCALE: "true"
+    PRIVATE_URL: "aut-coberturas.interconecta2.cl"
+    # Resources
+    MAX_CPU_MILICORES: "10"
+    MIN_CPU_MILICORES: "10"
+    MAX_MEMORY_MB: "400"
+    MIN_MEMORY_MB: "300"
+    AVERAGE_CPU_UTILIZATION: "80"
+    AVERAGE_MEMORY_UTILIZATION: "80"
+    MAX_REPLICA: "2"
+    MIN_REPLICA: "2"
+
+
+
+
+

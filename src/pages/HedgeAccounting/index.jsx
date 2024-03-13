@@ -1,7 +1,6 @@
 import { useEffect,useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
-// import { GlobalContext } from '../../context';
 import Api from '../../services/api';
 import { TableHeader } from '../../components/UI/tables/TableHeaders';
 import { TableData, TableDataHeader, TableDataRow, TableCellMedium, TableCellShort, TableDataRowWrapper } from '../../components/UI/tables/TableDataElements';
@@ -10,7 +9,7 @@ import { SortButton } from '../../components/UI/buttons/Buttons';
 import { IconButSm } from '../../components/UI/buttons/IconButtons';
 import { DocumentArrowDownIcon, BoltIcon, EllipsisHorizontalIcon } from '@heroicons/react/24/solid';
 import { MainHeading } from '../../components/UI/headings';
-import { LabelElement } from '../../components/UI/forms/SimpleForms';
+import { LabelElement,SelectElement } from '../../components/UI/forms/SimpleForms';
 import { CSVLink } from 'react-csv';
 import { HedgesContextualActions } from '../../components/Hedges/HedgesContextualActions';
 
@@ -22,28 +21,31 @@ function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPag
   const [searchValue, setSearchValue] = useState('');
   const [order, setOrder] = useState(1);
   const [allHedges, setAllHedges] = useState([]);
+  const [hedgeStatus, setHedgeStatus] = useState();
   const sortBtns = document.querySelectorAll('.bi-o-sortButton');
 
+  //guardar token peticiones
   const accountInLocalStorage = localStorage.getItem('account');
   const parsedAccount = JSON.parse(accountInLocalStorage);
   const token = parsedAccount.token;
+
 
   //calcular paginacion
   const calcTotalPages = (totalResults,totalRows) => setTotalPages(Math.ceil(totalResults/totalRows));
 
   //getData
-  const getData = async (endpoint, search, pagenumber, rowspage, orderby) => {
+  const getData = async (endpoint, search, pagenumber, rowspage, orderby, status) => {
     const headers = {
       'Content-Type': 'application/json',
       'x-access-token': token,
     }
-    const { data } = await Api.call.post(endpoint, {'search':search, 'pagenumber':pagenumber, 'rowspage':rowspage, 'orderby':orderby},{ headers:headers })
+    const { data } = await Api.call.post(endpoint, {'search':search, 'pagenumber':pagenumber, 'rowspage':rowspage, 'orderby':orderby, 'status':status},{ headers:headers })
     return data;
   }
 
   //listar 10 usuarios
-  const getHedges = async (busqueda, orden) => {
-    const results = await getData('hedges/getAll',busqueda,page,rowspage,orden)
+  const getHedges = async (busqueda, orden, status) => {
+    const results = await getData('hedges/getAll',busqueda,page,rowspage,orden,status)
     .then(res => {
       setTotalrowscount(res.rowscount[0].count);
       calcTotalPages(res.rowscount[0].count, rowspage);
@@ -60,31 +62,24 @@ function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPag
     .catch(err => console.warn(err));
   }
 
-  const execGetHedges = (search,order) => getHedges(search = search, order = order);
+  const execGetHedges = (search,order, status) => getHedges(search = search, order = order, status = status);
   const execGetAllHedges = () => getAllHedges();
 
   //resetear pagina a 1
   useEffect(()=>{
     setPage(1);
   },[setPage])
-
   
 
   //volver a pedir listar usuarios cuando cambia la página, el orden o el termino de busqueda
   useEffect(()=>{
-    execGetHedges(searchValue,order);
-  },[page, order, searchValue]);
+    execGetHedges(searchValue,order, hedgeStatus);
+  },[page, order, searchValue, hedgeStatus]);
 
   //pedir todos los usuarios cuando sabemos el número de filas totales
   useEffect(()=>{
     execGetAllHedges();
   },[totalrowscount])
-
-
-  // const downloadCSVData = () => {
-  //   console.log(totalrowscount);
-  //   console.log(allHedges);
-  // }
   
 
   //reordenar resultados
@@ -127,7 +122,7 @@ function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPag
     <main className="bi-u-h-screen--wSubNav">
        <TableHeader>
           <MainHeading>
-            Validación de coberturas
+            Relación de coberturas
           </MainHeading>
           <div className='bi-c-form-simple'>
             <LabelElement
@@ -136,7 +131,19 @@ function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPag
               placeholder='Buscar'
               handleOnChange={(event)=>{
                 setSearchValue(event.target.value)
-              }} />                
+              }} />
+              <SelectElement
+              htmlFor='list-hedge-status'
+              value={hedgeStatus}
+              handleOnChange={(event) =>{
+                event.preventDefault()
+                setHedgeStatus(event.target.value)
+              }}
+              >
+              <option value='1'>En curso</option>
+              <option value='3'>Desarmadas</option>
+              <option value='2'>Rechazadas</option>
+            </SelectElement>
             <CSVLink
               className='bi-c-navbar-links__textbutt'
               filename={"coberturas.csv"}
@@ -155,10 +162,10 @@ function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPag
               <SortButton orderCol={3} handleClick={() => sortItems()}>Derivado</SortButton>
             </TableCellMedium>
             <TableCellMedium className='bi-u-centerText'>
-              <SortButton orderCol={4} handleClick={() => sortItems()}>Tipo</SortButton>
+              <SortButton orderCol={4} handleClick={() => sortItems()}>Tipo cobertura</SortButton>
             </TableCellMedium>
             <TableCellMedium className='bi-u-centerText'>
-              <SortButton orderCol={5} handleClick={() => sortItems()}>Ratio eficacia</SortButton>
+              <SortButton orderCol={5} handleClick={() => sortItems()}>Tipo objeto cubierto</SortButton>
             </TableCellMedium>
             <TableCellMedium>
               <SortButton orderCol={6} handleClick={() => sortItems()}>Nocional derivado</SortButton>
@@ -173,7 +180,6 @@ function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPag
               <SortButton orderCol={9} handleClick={() => sortItems()}>Usuario</SortButton>
             </TableCellMedium>
             <TableCellShort className='bi-u-centerText'></TableCellShort>
-            <TableCellShort className='bi-u-centerText'></TableCellShort>
           </TableDataHeader>
           {
             hedges?.map(hedge => {
@@ -184,18 +190,12 @@ function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPag
                       className='bi-u-text-base-black bi-u-centerText'>{hedge.id_hedge_relationship}</TableCellMedium>
                     <TableCellMedium className='bi-u-centerText'>{hedge.id_hedge_item}</TableCellMedium>
                     <TableCellMedium className='bi-u-centerText'>{hedge.id_hedge_instrument}</TableCellMedium>
-                    <TableCellMedium className='bi-u-centerText'>{hedge.cat_hedge_item_type}</TableCellMedium>
-                    <TableCellMedium className='bi-u-centerText'>{hedge.pct_effectiveness}</TableCellMedium>
+                    <TableCellMedium className='bi-u-centerText'>{hedge.cat_hedge_file}</TableCellMedium>
+                    <TableCellMedium className='bi-u-centerText'>{hedge.cat_hedge_item}</TableCellMedium>
                     <TableCellMedium>{hedge.num_instrument_notional}</TableCellMedium>
                     <TableCellMedium>{hedge.dt_start_date}</TableCellMedium>
                     <TableCellMedium>{hedge.dt_maturity_date}</TableCellMedium>
                     <TableCellMedium>{hedge.user_insert}</TableCellMedium>
-                    <TableCellShort className='bi-u-centerText'>
-                      <IconButSm
-                        className="bi-o-icon-button-small--disabled">
-                        <DocumentArrowDownIcon/>
-                      </IconButSm>
-                    </TableCellShort>
                     <TableCellShort style={{'position':'relative'}}>
                       { hedge.disarmVisible ? 
                         <HedgesContextualActions

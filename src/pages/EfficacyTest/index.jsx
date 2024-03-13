@@ -1,5 +1,5 @@
 import { useEffect,useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import Api from '../../services/api';
 import Papa from 'papaparse';
 import { TableHeader } from '../../components/UI/tables/TableHeaders';
@@ -32,8 +32,23 @@ function EfficacyTest({ efficacyTestFile,setEfficacyTestFile,efficacyTestInfo,se
           for (let i=1; i<results.data.length; i++) {
             const deferredObj = {};
             for (let j=0; j<results.data[i].length; j++) {
-              const number = j+1;              
-              const propertyName = 'col'+number.toString();
+              const number = j+1;
+              //const propertyName = 'col'+number.toString();
+              let propertyName = '';
+
+              if (j==1){
+                propertyName = 'hedge_file';
+              }
+              else if (j==2){
+                propertyName = 'hedge_relationship';
+              }
+              else if (j==3){
+                propertyName = 'date';
+              }
+              else if (j==4){
+                propertyName = 'pct';
+              }
+
               deferredObj[propertyName] = results.data[i];
             }
             deferredFile.push(deferredObj);
@@ -72,6 +87,9 @@ function EfficacyTest({ efficacyTestFile,setEfficacyTestFile,efficacyTestInfo,se
         <MainHeading>
           Test de Eficacia
         </MainHeading>
+        <div className='bi-c-form-simple'>            
+          <Link className='bi-c-navbar-links__textbutt' to='/templates/efficacyTestTemplate.csv' target="_blank" download >Descargar plantilla</Link>
+        </div>
       </TableHeader>
       <SectionHalf>
         <SimpleFormHrz>

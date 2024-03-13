@@ -3,11 +3,11 @@ import axios from 'axios';
 const SERVER = window?._env_?.DB_SERVER;
 const PORT = window?._env_?.DB_PORT;
 
-const baseURL = `https://${SERVER}:${PORT}/api/`;
+const baseURL = `http://${SERVER}:${PORT}/api/`;
 
 const Api = {
   call: axios.create({
-    baseURL:baseURL,
+    baseURL: baseURL,
     headers: {
         'Content-Type': 'application/json;charset=utf-8'
     }

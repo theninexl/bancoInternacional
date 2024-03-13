@@ -54,10 +54,6 @@ const AppRoutes = () => {
   const parsedSignOut = JSON.parse(signOUt);
   const isUserSignOut = signOut || parsedSignOut;
 
-  console.log('context.signOut',signOut);
-  console.log('parsedSignOut',parsedSignOut);
-  console.log('isUserSignOut',isUserSignOut);
-
   let routes = useRoutes([
     { path: '/', element: !isUserSignOut ? <Navigate replace to={'/hedges'}/> : <Navigate replace to={'/login'}/> },
     { path: '/hedges', 
@@ -145,7 +141,14 @@ const AppRoutes = () => {
       <Navigate replace to={'/hedges'}/> },
     { path: '/mgmt-balance-view', 
       element: !isUserSignOut ? 
-      <BalanceView/> 
+      <BalanceView
+        totalrowscount={totalrowscount}
+        setTotalrowscount={setTotalrowscount}
+        page={page}
+        setPage={setPage}
+        totalPages={totalPages}
+        setTotalPages={setTotalPages}
+      /> 
       : 
       <Navigate replace to={'/login'}/> },
     { path: '/mgmt-bonus-view', 

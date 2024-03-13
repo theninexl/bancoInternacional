@@ -1,0 +1,60 @@
+#!/bin/bash
+
+###
+### Funciones
+###
+
+function check_env_variable() {
+	if ! [[ -v $1 ]]; then
+		log "err" "Debe definir la variable de ambiente : $1"
+		exit 1
+	fi
+}
+
+log() {
+	_lvl="${1}"
+	_msg="${2}"
+
+	_clr_ok="\033[0;32m"
+	_clr_info="\033[0;34m"
+	_clr_warn="\033[0;33m"
+	_clr_err="\033[0;31m"
+	_clr_rst="\033[0m"
+
+	if [ "${_lvl}" = "ok" ]; then
+		printf "${_clr_ok}[OK]   %s${_clr_rst}\n" "${_msg}"
+	elif [ "${_lvl}" = "info" ]; then
+		printf "${_clr_info}[INFO] %s${_clr_rst}\n" "${_msg}"
+	elif [ "${_lvl}" = "warn" ]; then
+		printf "${_clr_warn}[WARN] %s${_clr_rst}\n" "${_msg}" 1>&2	# stdout -> stderr
+	elif [ "${_lvl}" = "err" ]; then
+		printf "${_clr_err}[ERR]  %s${_clr_rst}\n" "${_msg}" 1>&2	# stdout -> stderr
+	else
+		printf "${_clr_err}[???]  %s${_clr_rst}\n" "${_msg}" 1>&2	# stdout -> stderr
+	fi
+}
+
+################################################################################
+# REVISION DE ENV
+################################################################################
+
+###
+### Validación de variables
+###
+
+log "info" "Validando variables de entorno para fe-coberturas ..."
+
+check_env_variable ENVIRONMENT
+check_env_variable DB_SERVER
+
+################################################################################
+# ENTRYPOINT PRINCIPAL
+################################################################################
+
+log "info" "Iniciando fe-coberturas ..."
+
+/bin/bash -c /app/env.sh nginx
+nginx -g 'daemon off;'
+
+# Bash entrypoint
+exec $@

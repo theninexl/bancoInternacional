@@ -54,6 +54,10 @@ const AppRoutes = () => {
   const parsedSignOut = JSON.parse(signOUt);
   const isUserSignOut = signOut || parsedSignOut;
 
+  console.log('context.signOut',signOut);
+  console.log('parsedSignOut',parsedSignOut);
+  console.log('isUserSignOut',isUserSignOut);
+
   let routes = useRoutes([
     { path: '/', element: !isUserSignOut ? <Navigate replace to={'/hedges'}/> : <Navigate replace to={'/login'}/> },
     { path: '/hedges', 
@@ -179,7 +183,6 @@ const App = () => {
   } = useData();
 
   InitializeLocalStorage();
-
 
   return (
     <>

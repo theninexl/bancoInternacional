@@ -1,5 +1,4 @@
 import { useRef, useState } from "react";
-// import { GlobalContext } from '../../context';
 import Api from '../../services/api';
 import { SectionHalf } from "../../components/UI/layout/LayoutSections";
 import { ButtonLPrimary } from "../../components/UI/buttons/Buttons.jsx";
@@ -13,13 +12,11 @@ function Login({ setAccount,setSignOut }){
 
   const HandleLogin = (e) => {    
     e.preventDefault();
-    const formData = new FormData(form.current);
-    
+    const formData = new FormData(form.current);    
     const data = {
       email: formData.get('loginEmail'),
       password: formData.get('loginPwd')
     }   
-
     Api.call.post('users/login',{
       email:data.email,
       password:data.password

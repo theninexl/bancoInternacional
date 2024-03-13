@@ -4,6 +4,7 @@ import { createContext, useState } from 'react';
 export const GlobalContext = createContext();
 
 export const InitializeLocalStorage = () => {
+
   const accountInLocalStorage = localStorage.getItem('account');
   const signOutInLocalStorage = localStorage.getItem('sign-out');
   let parsedAccount;

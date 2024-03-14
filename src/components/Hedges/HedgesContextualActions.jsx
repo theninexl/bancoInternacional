@@ -6,6 +6,11 @@ import { IconButSm } from "../UI/buttons/IconButtons";
 
 
 export const HedgesContextualActions = ({ hedgeId }) => {
+
+  const SERVER = window?._env_?.DB_SERVER;
+  const PORT = window?._env_?.DB_PORT;
+
+
   const navigate = useNavigate();
   const [optionsBoxOpen, setOptionsBoxOpen] = useState(false);
 
@@ -69,12 +74,18 @@ export const HedgesContextualActions = ({ hedgeId }) => {
             <div className="notification--text">Ver status</div>
         </Link>
         <Link 
+          to={`http://${SERVER}:${PORT}/api/hedges/getSheet?id=${hedgeId}`}
+          download
+          className='bi-o-overlay__notification'>
+            <div className="notification--text">Descargar ficha</div>
+        </Link>
+        {/* <Link 
           onClick={(e) => {
             e.preventDefault();
             downloadSheet(hedgeId)}}
           className='bi-o-overlay__notification'>
             <div className="notification--text">Descargar ficha</div>
-        </Link>
+        </Link> */}
         {/* <Link
           onClick={(e) => {
             e.preventDefault();

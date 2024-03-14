@@ -1,16 +1,15 @@
 import { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Api from '../../services/api';
 import { useGetData } from "../../hooks/useGetData";
 import { usePostData } from "../../hooks/usePostData";
+import { useSaveData } from "../../hooks/useSaveData";
 import { DateTime } from "luxon";
 import { TableHeader } from '../../components/UI/tables/TableHeaders';
-import { LabelElement, SelectElement, SimpleFormHrz, SimpleFormRow, LabelIconField } from "../../components/UI/forms/SimpleForms";
+import { LabelElement, SelectElement, SimpleFormHrz, SimpleFormRow } from "../../components/UI/forms/SimpleForms";
 import Select from 'react-dropdown-select';
 import { ButtonLGhost, ButtonLPrimary } from "../../components/UI/buttons/Buttons";
 import { MainHeading } from "../../components/UI/headings";
 import { TableData, TableDataHeader, TableCellMedium, TableDataRow, TableDataRowWrapper } from "../../components/UI/tables/TableDataElements";
-import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
 
 
 
@@ -30,9 +29,6 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
   const [maturityDateInstrument, setMaturityDateInstrument] = useState('');
   const [numNotionalInstrument, setNumNotionalInstrument] = useState();
   const [createHedgeItems, setCreateHedgeItems] = useState([]);
-
-
-
 
   //get CreateGet
   const getCreateHedge = useGetData('hedges/createGetCombos');
@@ -232,23 +228,9 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
     })
   }
 
-  // useState(()=>{
-  //   if (formItems) {
-  //     let keys = Object.keys(formItems);
-  //     for (let i=0; i< keys.length; i++) {
-  //       let key = keys[i];
-  //       let value = extractedData[key];
-  //       console.log('evaluo: ',key,' con valor:',value);
-  //       if (value == '-1' || value == '') {
-  //         console.log('no pasa');
-  //         setFormError('Seleccione una opción válida para TODOS los campos');
-  //         break;
-  //       } 
-  //     }  
-  //   }  
-  // },[formItems])
+  //GUARDAR DATOS
 
-
+  const createNewHedge = useSaveData();
 
   const handleSave = (event) => {
     event.preventDefault();
@@ -269,31 +251,36 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
       cat_hedge_instrument: formData.get('cat_hedge_instrument'),
       date_from: formData.get('date_from')
     }
+    const dataSent = {};
 
-    console.log('formItems',formItems);
+    if (formItems) {
+      for (const [key, value] of Object.entries(formItems)) {        
+        if (value == '-1' || value == '') {
+          console.log(`${key}: ${value}`);
+          console.log('no pasa');
+          setFormError('Seleccione una opción válida para TODOS los campos');
+          break;
+        } else {
+          dataSent[key] = value;
+        } 
+      }
 
-    const dataSent = {
-      "id_hedge_item":formItems.id_hedge_item,
-      "id_hedge_instrument":formItems.id_hedge_instrument,
-      "cat_hedge_item_type":formItems.cat_hedge_item_type,
-      "pct":formItems.pct,
-      "id_hedge_file":formItems.id_hedge_file,
-      "cat_hedge_file": formItems.cat_hedge_file,
-      "cat_hedge_item": formItems.cat_hedge_item,
-      "cat_hedge_instrument": formItems.cat_hedge_instrument,
-      "date_from": formItems.date_from
+      if (Object.keys(formItems).length === Object.keys(dataSent).length) {
+        createNewHedge.uploadData('hedges/create', dataSent)
+      }
     }
-    // Api.call.post("hedges/create",dataSent,{ headers:headers })
-    //   .then(res => {
-    //     // console.log(res);
-    //     navigate('/hedges');
-    //   })
-    //   .catch(err =>{
-    //     // console.log(err);
-    //     setFormError('Se ha producido un error');
-    //   })
-    
   }
+
+  //mirar la respuesta de subir datos para setear error
+  useEffect(()=> {
+    if (createNewHedge.responseUpload) {
+      if (createNewHedge.responseUpload.code === 'ERR_NETWORK') { setFormError('Error de conexión, inténtelo más tarde')
+      } else if (createNewHedge.responseUpload.status === 'ok') { navigate('/hedges');
+      } else {
+        setFormError('Existe un error en el formulario, inténtelo de nuevo')
+      }
+    }
+  },[createNewHedge.responseUpload])
 
   const HandleCancel = () => {
     navigate('/hedges');

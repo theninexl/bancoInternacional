@@ -47,6 +47,7 @@ function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPag
   const getHedges = async (busqueda, orden, status) => {
     const results = await getData('hedges/getAll',busqueda,page,rowspage,orden,status)
     .then(res => {
+      console.log(res.data);
       setTotalrowscount(res.rowscount[0].count);
       calcTotalPages(res.rowscount[0].count, rowspage);
       setHedges(res.data);

@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-// import { GlobalContext } from '../../context';
+import { useSaveData } from "../../hooks/useSaveData";
 import Api from '../../services/api';
 import { TableHeader } from '../../components/UI/tables/TableHeaders';
 import { TableData, TableDataHeader, TableDataRow, TableCellMedium, TableDataRowWrapper } from '../../components/UI/tables/TableDataElements';
@@ -103,37 +103,69 @@ function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData }){
     }
   }
 
+  //GUARDAR DATOS
+
+  const executeDisarm = useSaveData();
+
   const handleDisarmeRequest = () => {
     const formData = new FormData(disarmForm.current);
     // const newNotionals = document.querySelectorAll('.newNotionalValue');
 
-    const data = {
-      'id_hedge_relationship':hedgeStatusData.id_hedge_relationship.toString(),
-      'cat_disassembly': parseInt(formData.get('disarm_type')).toString(),
-      'cat_disassembly_reason': formData.get('disarm_reason').toString() || '',
-      'desc_disassembly_reason': formData.get('disarm_reason_freeText') || '',
-      'pct_disassembly_item': formData.get('object_new_notional') || 0,
-      'pct_disassembly_instrument': formData.get('instrument_new_notional') || 0,
+    const formItems = {
+      id_hedge_relationship:hedgeStatusData.id_hedge_relationship.toString(),
+      cat_disassembly: parseInt(formData.get('disarm_type')).toString(),
+      cat_disassembly_reason: formData.get('disarm_reason').toString() || '',
+      desc_disassembly_reason: formData.get('disarm_reason_freeText') || '',
+      pct_disassembly_item: formData.get('object_new_notional'),
+      pct_disassembly_instrument: formData.get('instrument_new_notional'),
     }
 
-    // newNotionals.forEach(newNotional => {
-    //   data[newNotional.id] = newNotional.value;
-    // })
+    console.log('formItems',formItems);
 
-    Api.call.post("hedges/disarmExecute",data,{ headers:headers })
-      .then(res => {
-        //console.log(res);
-        navigate('/hedges');
-      })
-      .catch(err => {
-        setModalOpen(false);
-        if (err.response.status == 409) {
-          setFormError('No se puede solicitar un desarme nuevo porque esta cobertura tiene pendiente la validación de un desarme anterior')
+    const dataSent = {};
+
+    if (formItems) {
+      for (const [key, value] of Object.entries(formItems)) {        
+        if (value == '-1' || value == '') {
+          if (key == 'pct_disassembly_item' && formItems.cat_disassembly == 1 || key == 'pct_disassembly_instrument' && formItems.cat_disassembly == 1) {
+            console.log(formItems.cat_disassembly)
+            dataSent[key] = value;
+          } else if ( key == 'desc_disassembly_reason' && value == '' && formItems.cat_disassembly_reason != 4 ) {
+            dataSent[key] = value;
+          } else {
+            console.log(`${key}: ${value}`);
+            console.log('no pasa');
+            setFormError('Seleccione una opción válida para TODOS los campos');
+            setModalOpen(false);
+            break;
+          }          
         } else {
-          setFormError('Error  al realizar la solicitud')
-        }
-      })  
+          dataSent[key] = value;
+        }  
+      } 
+
+      if (Object.keys(formItems).length === Object.keys(dataSent).length) {
+        executeDisarm.uploadData('hedges/disarmExecute', dataSent)
+      }
+    }    
   }
+
+  //mirar la respuesta de subir datos para setear error
+  useEffect(()=> {
+    if (executeDisarm.responseUpload) {
+      if (executeDisarm.responseUpload.code === 'ERR_NETWORK') { 
+        setModalOpen(false);
+        setFormError('Error de conexión, inténtelo más tarde')
+      } else if (executeDisarm.responseUpload.response?.status === 409) { 
+        setModalOpen(false);
+        setFormError('No se puede solicitar un desarme nuevo porque esta cobertura tiene pendiente la validación de un desarme anterior');
+      } else if (executeDisarm.responseUpload.status === 'ok') { navigate('/hedges');
+      } else {
+        setModalOpen(false);
+        setFormError('Error  al realizar la solicitud, inténtelo de nuevo')
+      }
+    }
+  },[executeDisarm.responseUpload])
 
   const HandleCancel = () => {
     navigate('/hedges');

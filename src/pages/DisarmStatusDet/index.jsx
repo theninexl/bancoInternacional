@@ -16,6 +16,9 @@ function DisarmStatusDet({ hedgeStatusData,setHedgeStatusData,hedgeStatus,setHed
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [freeTextRejectReason, setFreeTextRejectReason] = useState(false);
+  const [showFlowsForApproval, setShowFlowsForApproval] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
   const [uploadedFileName, setUploadedFileName] = useState();
   const rejectForm = useRef(null); 
 
@@ -75,15 +78,28 @@ function DisarmStatusDet({ hedgeStatusData,setHedgeStatusData,hedgeStatus,setHed
   },[deferredFlowFile])
 
   //manejar aprobado peticion validacion
-  const handleApproval = (event, id) => {
+  //manejar rechazo peticion validacion
+  const handleApproval = (e) => {
+    e.preventDefault();
+    setShowFlowsForApproval(true);
+  }
+
+
+  //manejar finalizacion aprobacion petición validacion
+  const handleApprovalCompletion = (event, id) => {
     event.preventDefault();
     const dataSent = {
       'id_disassembly':id.toString(),
-      'validate':'1'
+      'validate':'1',
+      "deferred_flows":deferredFlowInfo,
     }
     Api.call.post('hedges/validationDisarmExecute',dataSent,{ headers:headers })
     .then(res => {
-      navigate('/hedges');
+      if (res.data.status != "ok") {
+        setErrorMsg(res.statusText);
+      } else {
+        navigate('/hedges');
+      }
     }).catch(err => {
       console.warn(err)})
   }
@@ -92,6 +108,7 @@ function DisarmStatusDet({ hedgeStatusData,setHedgeStatusData,hedgeStatus,setHed
   const handleReject = (e) => {
     e.preventDefault();
     setFreeTextRejectReason(true);
+
   }
 
   //manejar finalizacion rechazo petición validacion
@@ -105,17 +122,40 @@ function DisarmStatusDet({ hedgeStatusData,setHedgeStatusData,hedgeStatus,setHed
       "id_disassembly": id.toString(),
       "desc_comment": formItems.desc_comment,
       "validate": '2',
-      "deferred_flows":deferredFlowInfo,
     }
     Api.call.post('hedges/validationDisarmExecute',dataSent,{ headers:headers })
     .then(res => {
-      navigate('/hedges');
+      if (res.data.status != "ok") {
+        setErrorMsg(res.statusText);
+      } else {
+        navigate('/hedges');
+      }
     }).catch(err => {
       console.warn(err)})
   }
 
+  const renderView = () => {
+    if (modalOpen) {
+      return (
+        <ModalSmall
+          message={`Tu petición no ha podido ser completada. Error: ${errorMsg}?`} 
+          buttons={
+            <>
+              <ButtonLSecondary
+                className='bi-o-button--short'
+                handleClick={() => setModalOpen(false)}>
+                  Cancelar
+              </ButtonLSecondary>
+            </>
+          }
+        />
+      );
+    }
+  }
+
   return (
     <main className="bi-u-h-screen--wSubNav">
+      {renderView()}
       <TableHeader>
         <MainHeading className='bi-u-border-bb-gm'>
           Estatus desarme
@@ -187,7 +227,7 @@ function DisarmStatusDet({ hedgeStatusData,setHedgeStatusData,hedgeStatus,setHed
                   return (
                     <>
                       <SimpleFormHrz innerRef={rejectForm}>
-                        {freeTextRejectReason ? '' :
+                        {(freeTextRejectReason || showFlowsForApproval) ? '' :
                           <>
                           <SimpleFormRow className='bi-u-centerText bi-u-spacer-pt-zero'>
                             <ButtonMPrimary
@@ -214,6 +254,18 @@ function DisarmStatusDet({ hedgeStatusData,setHedgeStatusData,hedgeStatus,setHed
                                 Motivo rechazo                             
                               </LabelElement>
                             </SimpleFormRow>
+                            <SimpleFormRow className='bi-u-centerText bi-u-spacer-pt-zero'>
+                              <ButtonMPrimary
+                                handleClick={() => handleRejectCompletion(event, hedge.id_disassembly)}>
+                                Enviar rechazo
+                              </ButtonMPrimary>
+                            </SimpleFormRow>
+                          </>
+                          :
+                          '' }
+
+                        {showFlowsForApproval ? 
+                          <>
                             <SimpleFormRow className='bi-u-spacer-pt-zero'>
                               <FileDrop
                                 style={{padding:'0 12px'}}
@@ -226,8 +278,8 @@ function DisarmStatusDet({ hedgeStatusData,setHedgeStatusData,hedgeStatus,setHed
                             </SimpleFormRow>
                             <SimpleFormRow className='bi-u-centerText bi-u-spacer-pt-zero'>
                               <ButtonMPrimary
-                                handleClick={() => handleRejectCompletion(event, hedge.id_disassembly)}>
-                                Enviar rechazo
+                                handleClick={() => handleApprovalCompletion(event, hedge.id_disassembly)}>
+                                Enviar aprobación
                               </ButtonMPrimary>
                             </SimpleFormRow>
                           </>

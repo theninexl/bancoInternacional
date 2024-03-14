@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import Api from '../../services/api';
 import { SectionHalf } from "../../components/UI/layout/LayoutSections";
 import { ButtonLGhost, ButtonLPrimary } from "../../components/UI/buttons/Buttons.jsx";
-import { LabelElement, SimpleFormHrz, SimpleFormRow } from "../../components/UI/forms/SimpleForms";
+import { LabelElement, SelectElement, SimpleFormHrz, SimpleFormRow } from "../../components/UI/forms/SimpleForms";
 import { TableHeader } from "../../components/UI/tables/TableHeaders";
 import { MainHeading } from "../../components/UI/headings";
 
@@ -128,14 +128,24 @@ function EditUser(){
               </LabelElement>
             </SimpleFormRow>
             <SimpleFormRow>
-              <LabelElement
+              <SelectElement
+                htmlFor='newUserDepartment'
+                title='Departamento'
+                value={department}
+                handleOnChange={e => setDepartment(e.target.value)}>
+                <option value=''>Seleccionar</option>
+                <option value='Departamento 1'>Departamento 1</option>
+                <option value='Departamento 2'>Departamento 2</option>
+                <option value='Departamento 3'>Departamento 3</option>
+              </SelectElement>
+              {/* <LabelElement
                 htmlFor='UserDepartment'
                 type='text'
                 placeholder={department}
                 value={department}
                 handleOnChange={e => setDepartment(e.target.value)}>
                   Departamento
-              </LabelElement>
+              </LabelElement> */}
             </SimpleFormRow>
             <SimpleFormRow>
               <LabelElement

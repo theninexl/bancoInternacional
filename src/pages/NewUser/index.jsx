@@ -4,7 +4,7 @@ import Api from '../../services/api';
 import { SectionHalf } from "../../components/UI/layout/LayoutSections";
 import { TableHeader } from "../../components/UI/tables/TableHeaders";
 import { ButtonLGhost, ButtonLPrimary } from "../../components/UI/buttons/Buttons.jsx";
-import { LabelElement, SimpleFormHrz, SimpleFormRow } from "../../components/UI/forms/SimpleForms";
+import { LabelElement, SelectElement, SimpleFormHrz, SimpleFormRow } from "../../components/UI/forms/SimpleForms";
 import { MainHeading } from "../../components/UI/headings";
 
 
@@ -90,12 +90,14 @@ function NewUser(){
               </LabelElement>
             </SimpleFormRow>
             <SimpleFormRow>
-              <LabelElement
+              <SelectElement
                 htmlFor='newUserDepartment'
-                type='text'
-                placeholder='Departamento'>
-                  Departamento
-              </LabelElement>
+                title='Departamento'>
+                <option value=''>Seleccionar</option>
+                <option value='Departamento 1'>Departamento 1</option>
+                <option value='Departamento 2'>Departamento 2</option>
+                <option value='Departamento 3'>Departamento 3</option>
+              </SelectElement>
             </SimpleFormRow>
             <SimpleFormRow>
               <LabelElement

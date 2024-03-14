@@ -1,12 +1,16 @@
 import { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Api from '../../services/api';
+import { useGetData } from "../../hooks/useGetData";
+import { usePostData } from "../../hooks/usePostData";
 import { DateTime } from "luxon";
 import { TableHeader } from '../../components/UI/tables/TableHeaders';
-import { LabelElement, SelectElement, SimpleFormHrz, SimpleFormRow,  ToggleElement,  UploadFileTo64 } from "../../components/UI/forms/SimpleForms";
-import { ButtonLGhost, ButtonLPrimary, ButtonLSecondary } from "../../components/UI/buttons/Buttons";
+import { LabelElement, SelectElement, SimpleFormHrz, SimpleFormRow, LabelIconField } from "../../components/UI/forms/SimpleForms";
+import Select from 'react-dropdown-select';
+import { ButtonLGhost, ButtonLPrimary } from "../../components/UI/buttons/Buttons";
 import { MainHeading } from "../../components/UI/headings";
 import { TableData, TableDataHeader, TableCellMedium, TableDataRow, TableDataRowWrapper } from "../../components/UI/tables/TableDataElements";
+import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
 
 
 
@@ -17,7 +21,7 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
   //estados campos de creacion
   const [idHedgeItem, setIdHedgeItem] = useState('');
   const [idHedgeInstrument, setIdHedgeInstrument] = useState('');
-  const [catHedgeFile, setCatHedgeFile] = useState('');
+  const [catHedgeFile, setCatHedgeFile] = useState();
   const [loadedCatHedgeItems, setLoadedCatHedgeItems] = useState('');
   const [selectedCatHedgeItem, setSelectedCatHedgeItem] = useState('');
   const [loadedCatHedgeInstruments, setLoadedCatHedgeInstruments] = useState('');
@@ -36,156 +40,193 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
   }
 
   //get CreateGet
-  const getCreateHedge = () => {
-    const data = {}
-    Api.call.post('hedges/createGetCombos',data,{ headers:headers })
-    .then(res => {
-      // console.log(res.data)
-      setCreateHedgeItems(res.data);
-    }).catch(err => {
-      console.warn(err)})
-  }
+  const getCreateHedge = useGetData('hedges/createGetCombos');
+  useEffect (() => {    
+    if (getCreateHedge.responseGetData) { 
+      console.log(getCreateHedge.responseGetData);
+      setCatHedgeFile(getCreateHedge.responseGetData.data.hedge_files);      
+    }
+  },[getCreateHedge.responseGetData])
 
+  //mirar cuando hay elementos en HedgeFile para llamar a la función que rellena el select de tipo de cobertura
+  useEffect(()=>{
+    if (catHedgeFile) {
+      console.log('catHedgeFile',catHedgeFile)
+      setHedgeFilesOnSelect();
+    }
+  },[catHedgeFile])
+
+  //get initial HedgeItems
+  const getinitialHedges = useGetData('hedges/createPredictiveItem',{"search":""});
+  useEffect (() => {    
+    if (getinitialHedges.responseGetData) { 
+      setIdHedgeItem(getinitialHedges.responseGetData.data.items);
+    }
+  },[getinitialHedges.responseGetData])
+
+  //getItemDetails
+  const getItem = usePostData();
+  const getItemDetails = (id) => {
+    console.log('entro en getIemDetails',id)
+    if(id){
+      getItem.postData('hedges/createGetItem',{'id_hedge_item':id});
+    }
+  }
   //get Info extra Partida cubierta
-  const createGetItem = (id) => {
-    const data = {'id_hedge_item':id}
-    Api.call.post('hedges/createGetItem',data,{ headers:headers })
-    .then(res => {
-      // console.log(res.data);
-      setMaturityDateItem(res.data.dt_maturity_date);
-      setNumNotionalItem(res.data.num_notional);     
-    }).catch(err => {
-      console.warn(err)})
-  }
+  useEffect(()=>{
+    if(getItem.responsePostData) {
+      console.log(getItem.responsePostData);
+      setMaturityDateItem(getItem.responsePostData.data.dt_maturity_date);
+      setNumNotionalItem(getItem.responsePostData.data.num_notional); 
+    }
+  },[getItem.responsePostData])
 
-  //get Info extra Derivado
-  const createGetInstrument = (id) => {
-    const data = {'id_hedge_item':id}
-    Api.call.post('hedges/createGetInstrument',data,{ headers:headers })
-    .then(res => {
-      // console.log(res.data);
-      setMaturityDateInstrument(res.data.dt_maturity_date);
-      setNumNotionalInstrument(res.data.num_notional);       
-    }).catch(err => {
-      console.warn(err)})
+  //get initial HedgeInstruments
+  const getinitialHedgeInstruments = useGetData('hedges/createPredictiveInstrument',{"search":""});
+  useEffect (() => {    
+    if (getinitialHedgeInstruments.responseGetData) { 
+      setIdHedgeInstrument(getinitialHedgeInstruments.responseGetData.data.instruments);
+    }
+  },[getinitialHedges.responseGetData])
+
+  //getInstrumentDetails
+  const getInstrument = usePostData();
+  const getInstrumentDetails = (id) => {
+    console.log('entro en getInstrumentDetails',id)
+    if(id){
+      getInstrument.postData('hedges/createGetInstrument',{'id_hedge_item':id});
+    }
   }
+  //get Info extra Derivado
+  useEffect(()=>{
+    if(getInstrument.responsePostData) {
+      console.log(getInstrument.responsePostData);
+      setMaturityDateInstrument(getInstrument.responsePostData.data.dt_maturity_date);
+      setNumNotionalInstrument(getInstrument.responsePostData.data.num_notional); 
+    }
+  },[getInstrument.responsePostData])
+
+  
+
+  
+
 
   //get info extra tipo objeto cubierto
-  const createGetHedgeItem = (hedgeFile) => {
-    const data = {'cat_hedge_file':hedgeFile}
-    Api.call.post('hedges/createGetHedgeItem', data, {headers:headers})
-    .then(res =>{
-      //console.log(res.data);
-      setLoadedCatHedgeItems(res.data.items);
-    }).catch(err => console.warn(err));
-  }
+  // const createGetHedgeItem = (hedgeFile) => {
+  //   const data = {'cat_hedge_file':hedgeFile}
+  //   Api.call.post('hedges/createGetHedgeItem', data, {headers:headers})
+  //   .then(res =>{
+  //     //console.log(res.data);
+  //     setLoadedCatHedgeItems(res.data.items);
+  //   }).catch(err => console.warn(err));
+  // }
 
   //get info extra tipo derivado
-  const createGetHedgeInstrument = (catHedgeFile, catHedgeItem) => {
-    const data = {
-      'cat_hedge_file': catHedgeFile,
-      'cat_hedge_item': catHedgeItem,
-    }
-    Api.call.post('hedges/createGetHedgeInstrument', data, {headers:headers})
-    .then(res =>{
-      // console.log(res.data);
-      setLoadedCatHedgeInstruments(res.data.items);
-    }).catch(err => console.warn(err));
-  }
+  // const createGetHedgeInstrument = (catHedgeFile, catHedgeItem) => {
+  //   const data = {
+  //     'cat_hedge_file': catHedgeFile,
+  //     'cat_hedge_item': catHedgeItem,
+  //   }
+  //   Api.call.post('hedges/createGetHedgeInstrument', data, {headers:headers})
+  //   .then(res =>{
+  //     // console.log(res.data);
+  //     setLoadedCatHedgeInstruments(res.data.items);
+  //   }).catch(err => console.warn(err));
+  // }
 
-  useEffect(()=>{      
-    const execGetCreateHedge = async () => await getCreateHedge();
-    execGetCreateHedge();
-  },[]);
+  // useEffect(()=>{      
+  //   const execGetCreateHedge = async () => await getCreateHedge();
+  //   execGetCreateHedge();
+  // },[]);
 
   //colocar todas las partidas de cubierta disponibles en el primer select cuando tengamos todas las coberturas cargadas
   useEffect(()=>{
     if (createHedgeItems) {
-      setHedgeItemsOnSelect();
-      setHedgeInstrumentsOnSelect();
+      // setHedgeItemsOnSelect();
+      // setHedgeInstrumentsOnSelect();
       setHedgeFilesOnSelect();
     }
   },[createHedgeItems])
 
   //llamar a cargar datos cuando cambia la partida cubierta
-  useEffect(() => {
-    if (idHedgeItem) {
-      const execCreateGetItem = async () => await createGetItem(idHedgeItem);
-      execCreateGetItem();
-    }
-  },[idHedgeItem])
+  // useEffect(() => {
+  //   if (idHedgeItem) {
+  //     const execCreateGetItem = async () => await createGetItem(idHedgeItem);
+  //     execCreateGetItem();
+  //   }
+  // },[idHedgeItem])
 
   //llamar a cargar datos cuando cambia el derivado
-  useEffect(() => {
-    if (idHedgeInstrument) {
-      const execCreateGetInstrument = async () => await createGetInstrument(idHedgeInstrument);
-      execCreateGetInstrument();
-    }
-  },[idHedgeInstrument])
+  // useEffect(() => {
+  //   if (idHedgeInstrument) {
+  //     const execCreateGetInstrument = async () => await createGetInstrument(idHedgeInstrument);
+  //     execCreateGetInstrument();
+  //   }
+  // },[idHedgeInstrument])
 
   //llamar a rellenar el select de tipo de objeto cubierto cuando seleccionas un tipo de cobertura
-  useEffect(()=>{
-    if (loadedCatHedgeItems) {
-      setCatHedgeItemsOnSelect();
-    }
-  },[loadedCatHedgeItems])
+  // useEffect(()=>{
+  //   if (loadedCatHedgeItems) {
+  //     setCatHedgeItemsOnSelect();
+  //   }
+  // },[loadedCatHedgeItems])
 
   //llamar a cargar datos cuando cambia el tipo de cobertura
-  useEffect(()=>{
-    const execCreateGetHedgeItem = async () => await createGetHedgeItem(catHedgeFile);
-    execCreateGetHedgeItem();
-  },[catHedgeFile])
+  // useEffect(()=>{
+  //   const execCreateGetHedgeItem = async () => await createGetHedgeItem(catHedgeFile);
+  //   execCreateGetHedgeItem();
+  // },[catHedgeFile])
 
   //llamar a cargar datos cuando cambia el tipo de objeto cubierto
-  useEffect(()=> {
-    const execCreateGetHedgeInstrument = async () => await createGetHedgeInstrument(catHedgeFile, selectedCatHedgeItem);
-    execCreateGetHedgeInstrument();
-  },[selectedCatHedgeItem])
+  // useEffect(()=> {
+  //   const execCreateGetHedgeInstrument = async () => await createGetHedgeInstrument(catHedgeFile, selectedCatHedgeItem);
+  //   execCreateGetHedgeInstrument();
+  // },[selectedCatHedgeItem])
 
   
   //llamar a rellenar el select de tipo de derivado cuando seleccionas un tipo de objeto cubierto
-  useEffect(()=>{
-    if (loadedCatHedgeInstruments) {
-      setCatHedgeInstrumentsOnSelect();
-    }
-  },[loadedCatHedgeInstruments])
+  // useEffect(()=>{
+  //   if (loadedCatHedgeInstruments) {
+  //     setCatHedgeInstrumentsOnSelect();
+  //   }
+  // },[loadedCatHedgeInstruments])
 
   
   //rellenar select partida cubierta
-  const setHedgeItemsOnSelect = () => {
-    const itemSelect = document.getElementById('id_hedge_item');
-    itemSelect.innerHTML = '';
-    const firstOption = document.createElement('option');
-    firstOption.setAttribute('value','-1');
-    firstOption.textContent = 'Seleccionar';
-    itemSelect.appendChild(firstOption);
+  // const setHedgeItemsOnSelect = () => {
+  //   const itemSelect = document.getElementById('id_hedge_item');
+  //   itemSelect.innerHTML = '';
+  //   const firstOption = document.createElement('option');
+  //   firstOption.setAttribute('value','-1');
+  //   firstOption.textContent = 'Seleccionar';
+  //   itemSelect.appendChild(firstOption);
 
-    createHedgeItems.items.map(hedge => {
-      const option = document.createElement('option');
-      option.setAttribute('value',hedge.id_hedge_item);
-      option.textContent = hedge.id_hedge_item;
-      itemSelect.appendChild(option);
-    })
-  }
+  //   createHedgeItems.items.map(hedge => {
+  //     const option = document.createElement('option');
+  //     option.setAttribute('value',hedge.id_hedge_item);
+  //     option.textContent = hedge.id_hedge_item;
+  //     itemSelect.appendChild(option);
+  //   })
+  // }
 
   //rellenar select derivados con todos los instrumentos
-  const setHedgeInstrumentsOnSelect = () => {
-    const itemSelect = document.getElementById('id_hedge_instrument');
-    itemSelect.innerHTML = '';
-    const firstOption = document.createElement('option');
-    firstOption.setAttribute('value','-1');
-    firstOption.textContent = 'Seleccionar';
-    itemSelect.appendChild(firstOption);
+  // const setHedgeInstrumentsOnSelect = () => {
+  //   const itemSelect = document.getElementById('id_hedge_instrument');
+  //   itemSelect.innerHTML = '';
+  //   const firstOption = document.createElement('option');
+  //   firstOption.setAttribute('value','-1');
+  //   firstOption.textContent = 'Seleccionar';
+  //   itemSelect.appendChild(firstOption);
 
-    createHedgeItems.instruments.map(hedge => {
-      const option = document.createElement('option');
-      option.setAttribute('value',hedge.id_hedge_instrument);
-      option.textContent = hedge.id_hedge_instrument;
-      itemSelect.appendChild(option);
-    })
-  }  
+  //   createHedgeItems.instruments.map(hedge => {
+  //     const option = document.createElement('option');
+  //     option.setAttribute('value',hedge.id_hedge_instrument);
+  //     option.textContent = hedge.id_hedge_instrument;
+  //     itemSelect.appendChild(option);
+  //   })
+  // }  
   
-  //rellenar select tipo de cobertura
+  // rellenar select tipo de cobertura
   const setHedgeFilesOnSelect = () => {
     const itemSelect = document.getElementById('cat_hedge_file');
     itemSelect.innerHTML = '';
@@ -203,54 +244,54 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
   }
 
   //rellenar select tipo objeto cubierto
-  const setCatHedgeItemsOnSelect = () => {
-    //borro todas las opciones del select de objeto cubierto y añado solo la de seleccionar
-    const hedgeItemSelect = document.getElementById('cat_hedge_item');
-    if (hedgeItemSelect) {
-      hedgeItemSelect.innerHTML = '';
-      const firstItemOption = document.createElement('option');
-      firstItemOption.setAttribute('value','-1');
-      firstItemOption.textContent = 'Seleccionar';
-      hedgeItemSelect.appendChild(firstItemOption);
-    }
+  // const setCatHedgeItemsOnSelect = () => {
+  //   //borro todas las opciones del select de objeto cubierto y añado solo la de seleccionar
+  //   const hedgeItemSelect = document.getElementById('cat_hedge_item');
+  //   if (hedgeItemSelect) {
+  //     hedgeItemSelect.innerHTML = '';
+  //     const firstItemOption = document.createElement('option');
+  //     firstItemOption.setAttribute('value','-1');
+  //     firstItemOption.textContent = 'Seleccionar';
+  //     hedgeItemSelect.appendChild(firstItemOption);
+  //   }
     
-    //borro todas las opciones del select de tipo de derivado y añado solo seleccionar
-    const hedgeInstrumentSelect = document.getElementById('cat_hedge_instrument');
-    if (hedgeInstrumentSelect) {
-      hedgeInstrumentSelect.innerHTML = '';
-      const firstIntrumentOption = document.createElement('option');
-      firstIntrumentOption.setAttribute('value','-1');
-      firstIntrumentOption.textContent = 'Seleccionar';
-      hedgeInstrumentSelect.appendChild(firstIntrumentOption);
-    }
+  //   //borro todas las opciones del select de tipo de derivado y añado solo seleccionar
+  //   const hedgeInstrumentSelect = document.getElementById('cat_hedge_instrument');
+  //   if (hedgeInstrumentSelect) {
+  //     hedgeInstrumentSelect.innerHTML = '';
+  //     const firstIntrumentOption = document.createElement('option');
+  //     firstIntrumentOption.setAttribute('value','-1');
+  //     firstIntrumentOption.textContent = 'Seleccionar';
+  //     hedgeInstrumentSelect.appendChild(firstIntrumentOption);
+  //   }
 
-    loadedCatHedgeItems.map(hedgeItem => {
-      const option = document.createElement('option');
-      option.setAttribute('value',hedgeItem.cat_hedge_item);
-      option.textContent = hedgeItem.cat_hedge_item;
-      hedgeItemSelect.appendChild(option);
-    })
-  }
+  //   loadedCatHedgeItems.map(hedgeItem => {
+  //     const option = document.createElement('option');
+  //     option.setAttribute('value',hedgeItem.cat_hedge_item);
+  //     option.textContent = hedgeItem.cat_hedge_item;
+  //     hedgeItemSelect.appendChild(option);
+  //   })
+  // }
   
   //rellenar select tipo derivado
-  const setCatHedgeInstrumentsOnSelect = () => {
-    const itemSelect = document.getElementById('cat_hedge_instrument');
-    if (itemSelect) {
-      itemSelect.innerHTML = '';
-      const firstOption = document.createElement('option');
-      firstOption.setAttribute('value','-1');
-      firstOption.textContent = 'Seleccionar';
-      itemSelect.appendChild(firstOption);
-    }
+  // const setCatHedgeInstrumentsOnSelect = () => {
+  //   const itemSelect = document.getElementById('cat_hedge_instrument');
+  //   if (itemSelect) {
+  //     itemSelect.innerHTML = '';
+  //     const firstOption = document.createElement('option');
+  //     firstOption.setAttribute('value','-1');
+  //     firstOption.textContent = 'Seleccionar';
+  //     itemSelect.appendChild(firstOption);
+  //   }
 
-    loadedCatHedgeInstruments.map(hedgeInstrument => {
-      // console.log(hedgeInstrument);
-      const option = document.createElement('option');
-      option.setAttribute('value',hedgeInstrument.cat_hedge_instrument);
-      option.textContent = hedgeInstrument.cat_hedge_instrument;
-      itemSelect.appendChild(option);
-    })
-  }
+  //   loadedCatHedgeInstruments.map(hedgeInstrument => {
+  //     // console.log(hedgeInstrument);
+  //     const option = document.createElement('option');
+  //     option.setAttribute('value',hedgeInstrument.cat_hedge_instrument);
+  //     option.textContent = hedgeInstrument.cat_hedge_instrument;
+  //     itemSelect.appendChild(option);
+  //   })
+  // }
 
   // useState(()=>{
   //   if (formItems) {
@@ -331,58 +372,56 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
             <TableCellMedium>Fecha vencimiento</TableCellMedium>
             <TableCellMedium>Nocional</TableCellMedium>
             <TableCellMedium>Activo/Pasivo</TableCellMedium>
-          </TableDataHeader>          
-          {
-            createHedgeItems && 
-            <>
-              <TableDataRow>
-                <TableDataRowWrapper>
-                  <TableCellMedium>
-                  <SelectElement
-                        htmlFor='id_hedge_item'
-                        value={idHedgeItem}
-                        handleOnChange={(event) =>{
-                          event.preventDefault();
-                          setFormError(null);
-                          setIdHedgeItem(event.target.value);
-                        }}
-                        >
-                        <option value='-1'>Seleccionar</option>
-                      </SelectElement>              
-                  </TableCellMedium>
-                  <TableCellMedium>
-                    <LabelElement
-                      htmlFor='dt_maturity_date_item'
-                      type='text'
-                      placeholder=''
-                      value={maturityDateItem}
-                      readOnly={true}
-                      >
-                    </LabelElement>
-                    </TableCellMedium>
-                  <TableCellMedium>
-                    <LabelElement
-                      htmlFor='num_item_notional'
-                      type='text'
-                      value={numNotionalItem}
-                      placeholder=''
-                      readOnly={true}
-                     >
-                    </LabelElement>
-                  </TableCellMedium>
-                  <TableCellMedium>
-                    
-                  <SelectElement
-                    htmlFor='cat_hedge_item_type'>
-                    <option value='-1'>Seleccionar</option>
-                    <option value='0'>Activo</option>
-                    <option value='1'>Pasivo</option>
-                  </SelectElement>
-                  </TableCellMedium>
-                </TableDataRowWrapper>            
-              </TableDataRow>
-            </>
-          }
+          </TableDataHeader>      
+          <TableDataRow>
+            <TableDataRowWrapper>
+              <TableCellMedium>
+                <Select
+                 searchable
+                 placeholder='Escribe..'
+                 className='bi-c-dropdown-select'
+                 valueField='id_hedge_item'
+                 labelField='id_hedge_item'
+                 dropdownHandle={false}
+                 options={idHedgeItem}
+                 noDataRenderer={({ props, state, methods }) => (<div className='react-dropdown-select-item'><span className='react-dropdown-select-item'>No hay datos</span></div>)}
+                 onChange={(values) => { 
+                  if (values.length > 0) getItemDetails(values[0].id_hedge_item)            
+                  }} />
+              </TableCellMedium>
+              <TableCellMedium>
+                <LabelElement
+                  htmlFor='dt_maturity_date_item'
+                  type='text'
+                  placeholder=''
+                  value={maturityDateItem}
+                  readOnly={true}
+                  disabled={true}
+                  >
+                </LabelElement>
+              </TableCellMedium>
+              <TableCellMedium>
+                <LabelElement
+                  htmlFor='num_item_notional'
+                  type='text'
+                  value={numNotionalItem}
+                  placeholder=''
+                  readOnly={true}
+                  disabled={true}
+                  >
+                </LabelElement>
+              </TableCellMedium>
+              <TableCellMedium>
+                <SelectElement
+                  htmlFor='cat_hedge_item_type'>
+                  <option value='-1'>Seleccionar</option>
+                  <option value='0'>Activo</option>
+                  <option value='1'>Pasivo</option>
+                </SelectElement>
+              </TableCellMedium>
+            </TableDataRowWrapper>
+          </TableDataRow>    
+          
         </TableData>        
         
         {/* NUEVO INSTRUMENTO */}
@@ -393,62 +432,59 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
             <TableCellMedium>Nocional</TableCellMedium>
             <TableCellMedium>% Utilizado</TableCellMedium>
           </TableDataHeader>
-          {
-            createHedgeItems && 
-            <>
-              <TableDataRow>
-                <TableDataRowWrapper>
-                  <TableCellMedium>
-                  <SelectElement
-                        htmlFor='id_hedge_instrument'
-                        value={idHedgeInstrument}
-                        handleOnChange={(event) =>{
-                          event.preventDefault();
-                          setFormError(null);
-                          setIdHedgeInstrument(event.target.value);
-                        }}
-                        >
-                        <option value='-1'>Seleccionar</option>
-                      </SelectElement>              
-                    
-                  </TableCellMedium>
-                  <TableCellMedium>
-                  <LabelElement
-                      htmlFor='dt_maturity_date_instrument'
-                      type='text'
-                      value={maturityDateInstrument}
-                      placeholder=''
-                      readOnly={true}
-                      >
-                    </LabelElement>
-                    </TableCellMedium>
-                  <TableCellMedium>
-                    <LabelElement
-                      htmlFor='num_instrument_notional'
-                      type='text'
-                      value={numNotionalInstrument}
-                      placeholder=''
-                      readOnly={true}
-                      
-                      >
-                    </LabelElement>
-                  </TableCellMedium>
-                  <TableCellMedium>
-                    <LabelElement
-                      htmlFor='pct'
-                      type='number'
-                      placeholder=''
-                      >
-                    </LabelElement>
-                  </TableCellMedium>
-                </TableDataRowWrapper>            
-              </TableDataRow>
-            </>
-          }
+          <TableDataRow>
+            <TableDataRowWrapper>
+              <TableCellMedium>
+                <Select
+                  searchable
+                  placeholder='Escribe..'
+                  className='bi-c-dropdown-select'
+                  valueField='id_hedge_instrument'
+                  labelField='id_hedge_instrument'
+                  dropdownHandle={false}
+                  options={idHedgeInstrument}
+                  noDataRenderer={({ props, state, methods }) => (<div className='react-dropdown-select-item'><span className='react-dropdown-select-item'>No hay datos</span></div>)}
+                  onChange={(values) => { 
+                    console.log(values)
+                    if (values.length > 0) getInstrumentDetails(values[0].id_hedge_instrument)            
+                  }} />
+              </TableCellMedium>
+              <TableCellMedium>
+                <LabelElement
+                  htmlFor='dt_maturity_date_instrument'
+                  type='text'
+                  placeholder=''
+                  value={maturityDateInstrument}
+                  readOnly={true}
+                  disabled={true}
+                  >
+                </LabelElement>
+              </TableCellMedium>
+              <TableCellMedium>
+                <LabelElement
+                  htmlFor='num_instrument_notional'
+                  type='text'
+                  value={numNotionalInstrument}
+                  placeholder=''
+                  readOnly={true}
+                  disabled={true}
+                  >
+                </LabelElement>
+              </TableCellMedium>
+              <TableCellMedium>
+                <LabelElement
+                  htmlFor='pct'
+                  type='number'
+                  placeholder=''
+                  >
+                </LabelElement>
+              </TableCellMedium>
+            </TableDataRowWrapper>
+          </TableDataRow>
         </TableData>
 
 
-        {/* NUEVO INSTRUMENTO */}
+        {/* LINEA COBERTURA */}
         <TableData>
           <TableDataHeader>
             <TableCellMedium>Tipo cobertura</TableCellMedium>
@@ -456,6 +492,23 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
             <TableCellMedium>Tipo derivado</TableCellMedium>
             <TableCellMedium>Fecha inicio</TableCellMedium>
           </TableDataHeader>
+          <TableDataRow>
+            <TableDataRowWrapper>
+              <TableCellMedium>
+                <SelectElement
+                  htmlFor='cat_hedge_file'
+                  value={catHedgeFile}
+                  handleOnChange={(event) =>{
+                    event.preventDefault();
+                    setFormError(null);
+                    setCatHedgeFile(event.target.value);
+                  }}
+                  >
+                  <option value='-1'>Seleccionar</option>
+                </SelectElement>
+              </TableCellMedium>
+            </TableDataRowWrapper>
+          </TableDataRow>
           {
             createHedgeItems && 
             <>

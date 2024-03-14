@@ -1541,6 +1541,88 @@ strong {
   position: absolute;
 }
 
+.bi-c-field-icon {
+  border: 1px solid #CECECE;
+  border-radius: 8px;
+  height: 48px;
+  display: flex;
+  overflow: hidden;
+  /*hides input file and restyles input */
+  /* clears the ‘X’ from Internet Explorer */
+  /* clears the ‘X’ from Chrome */
+}
+.bi-c-field-icon__input {
+  border: 0;
+  outline: none;
+  text-indent: 12px;
+  flex-grow: 1;
+  font-size: 14px;
+  font-size: 1.4rem;
+  line-height: 24px;
+  line-height: 2.4rem;
+  font-family: "IBM Plex Sans", sans-serif;
+  font-weight: 400;
+  font-stretch: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.bi-c-field-icon__input:invalid, .bi-c-field-icon__input:focus:invalid {
+  border-color: #0081FF;
+  border-width: 2px;
+  outline: none;
+}
+.bi-c-field-icon--focus {
+  border-color: #0081FF;
+  border-width: 2px;
+  outline: none;
+}
+.bi-c-field-icon.error {
+  border: 1px solid #F93A3A;
+}
+.bi-c-field-icon.error .cm-c-field-icon__input {
+  color: #F93A3A;
+  font-family: "IBM Plex Sans", sans-serif;
+  font-weight: 700;
+  font-stretch: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.bi-c-field-icon.error .cm-c-field-icon__input::-moz-placeholder {
+  color: #F93A3A;
+}
+.bi-c-field-icon.error .cm-c-field-icon__input::placeholder {
+  color: #F93A3A;
+}
+.bi-c-field-icon input[type=file] {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+.bi-c-field-icon.fileUpload {
+  cursor: pointer;
+  display: flex;
+  flex-direction: row-reverse;
+}
+.bi-c-field-icon input[type=search]::-ms-clear {
+  display: none;
+  width: 0;
+  height: 0;
+}
+.bi-c-field-icon input[type=search]::-ms-reveal {
+  display: none;
+  width: 0;
+  height: 0;
+}
+.bi-c-field-icon input[type=search]::-webkit-search-decoration,
+.bi-c-field-icon input[type=search]::-webkit-search-cancel-button,
+.bi-c-field-icon input[type=search]::-webkit-search-results-button,
+.bi-c-field-icon input[type=search]::-webkit-search-results-decoration {
+  display: none;
+}
+
 .bi-c-uploadfield-icon {
   border: 1px solid #CECECE;
   border-radius: 8px;
@@ -1699,6 +1781,39 @@ strong {
   right: 8px;
   top: 12px;
   z-index: -1;
+}
+
+.bi-c-dropdown-select {
+  border: 1px solid #CECECE;
+  border-radius: 8px !important;
+  height: 48px;
+  min-width: 150px;
+}
+.bi-c-dropdown-select input {
+  font-size: 14px;
+  font-size: 1.4rem;
+  line-height: 24px;
+  line-height: 2.4rem;
+}
+.bi-c-dropdown-select input::-moz-placeholder, .bi-c-dropdown-select input input::-moz-placeholder {
+  color: #CECECE;
+}
+.bi-c-dropdown-select input::placeholder, .bi-c-dropdown-select input input::placeholder {
+  color: #CECECE;
+}
+.bi-c-dropdown-select input input::-moz-placeholder {
+  font-family: "IBM Plex Sans", sans-serif;
+  font-weight: 700;
+  font-stretch: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.bi-c-dropdown-select input input::placeholder {
+  font-family: "IBM Plex Sans", sans-serif;
+  font-weight: 700;
+  font-stretch: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .bi-c-overlay--notifications, .bi-c-overlay--activeUser, .bi-c-overlay--entryOptions {

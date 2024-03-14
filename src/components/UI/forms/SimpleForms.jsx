@@ -134,3 +134,37 @@ export const UploadFileTo64 = (props) => {
   );
 }
 
+export const LabelIconField = ({ htmlFor, spanTitle, classNameLabel, classNameInput, type, placeholder, value, style, children, handleOnChage, handleOnclick, required, disabled, readOnly}) => {
+  return (
+    <label 
+      htmlFor={htmlFor}
+      className={classNameLabel}
+      style={style}
+      >
+      <span>{spanTitle}</span>
+      <div className='bi-c-field-icon'>
+        <input 
+          className={`bi-c-field-icon__input ${classNameInput}`}
+          type={type}
+          name={htmlFor}
+          id={htmlFor}
+          placeholder={placeholder}
+          defaultValue={value}
+          onChange={handleOnChage}
+          required={required}
+          disabled={disabled}
+          readOnly={readOnly} />
+         <button 
+          className='bi-o-icon-button-small--secondary bi-c-field-icon__button' 
+          id={`${htmlFor}Btn`}
+          onClick={handleOnclick} >
+            {children}
+        </button>
+      </div>
+      
+    </label>
+  );
+}
+
+
+

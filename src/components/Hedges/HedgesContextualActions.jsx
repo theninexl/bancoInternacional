@@ -7,8 +7,10 @@ import { IconButSm } from "../UI/buttons/IconButtons";
 
 export const HedgesContextualActions = ({ hedgeId }) => {
 
-  const SERVER = window?._env_?.DB_SERVER;
-  const PORT = window?._env_?.DB_PORT;
+  // const SERVER = window?._env_?.DB_SERVER;
+  // const PORT = window?._env_?.DB_PORT;
+  const SERVER = import.meta.env.VITE_SERVER;
+  const PORT = import.meta.env.VITE_PORT;
 
 
   const navigate = useNavigate();

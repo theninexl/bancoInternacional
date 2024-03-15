@@ -23,7 +23,10 @@ function BalanceView({ page,setPage,totalrowscount,setTotalrowscount, totalPages
   //getBalanceView
   const getBalanceView = useGetData('balances/getBalanceView');
   useEffect (() => {    
-    if (getBalanceView.responseGetData) setBalanceView(getBalanceView.responseGetData.data.header);
+    if (getBalanceView.responseGetData) {
+      //console.log(getBalanceView.responseGetData);
+      setBalanceView(getBalanceView.responseGetData?.data?.header);
+    }
   },[getBalanceView.responseGetData])
 
   //resetear pagina a 1
@@ -39,24 +42,6 @@ function BalanceView({ page,setPage,totalrowscount,setTotalrowscount, totalPages
       //calcTotalPages(getBalanceView.responseGetData.data.length(), rowspage);
     }
   },[balanceView])
-  
-
-  const assets = [{
-      "id":"1",
-      "heading":"Instrument0s financieros de deuda emitidos",
-      "amount":"4.822MM",
-      'currency':'USD',
-      "totalCoverage":"0,0000000757%",
-      "derivatives":"",
-      "subheadings": [{
-        'id':'1',
-        'heading':'2201',
-        'amount':'4822434412206200000',
-        'currency':'USD',
-        'coverage':'0,00000000007%',
-        'derivatives':'3668'
-      }]
-    }];
 
   return (
     <main className="bi-u-h-screen--wSubNav">      
@@ -74,7 +59,7 @@ function BalanceView({ page,setPage,totalrowscount,setTotalrowscount, totalPages
             <TableCellMedium>Derivados</TableCellMedium>
           </TableDataHeader>
           {            
-            balanceView.map((assetItem) => {
+            balanceView?.map((assetItem) => {
               return (
                 <>
                   <BalanceAccordion 

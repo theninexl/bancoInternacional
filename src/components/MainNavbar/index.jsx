@@ -4,9 +4,8 @@ import SecNavbar from '../SecondaryNavbar';
 import Logo from '../UI/Logo';
 import UserBox from './UserBox';
 
-const MainNavbar = ({ signOut,setSignOut,setAccount,userBoxOpen,setUserBoxOpen }) => {
-  const path = useLocation().pathname;
-  
+const MainNavbar = ({ currentPath,signOut,setSignOut,setAccount,userBoxOpen,setUserBoxOpen }) => {
+  const path = useLocation().pathname;  
   //evaluar account
   const account = localStorage.getItem('account');
   const parsedAccount = JSON.parse(account);
@@ -99,7 +98,7 @@ const MainNavbar = ({ signOut,setSignOut,setAccount,userBoxOpen,setUserBoxOpen }
           </div>
         </div>
       </div>
-      {['/login','/'].includes(path) ? null : <SecNavbar/>}
+      {path.includes('/login') ? null : <SecNavbar currentPath={currentPath}/>}
     </header>
     </>
   );

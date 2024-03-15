@@ -1,4 +1,4 @@
-import { useRoutes, BrowserRouter, Navigate } from 'react-router-dom';
+import { useRoutes, BrowserRouter, Navigate, useLocation } from 'react-router-dom';
 import { useData, InitializeLocalStorage } from './useData';
 import HedgeAccounting from '../HedgeAccounting';
 import NewHedge from '../NewHedge';
@@ -18,6 +18,7 @@ import EfficacyTest from '../EfficacyTest';
 
 const AppRoutes = () => {  
   const {
+    currentPath,
     setAccount,
     signOut,
     setSignOut,
@@ -54,9 +55,18 @@ const AppRoutes = () => {
   const parsedSignOut = JSON.parse(signOUt);
   const isUserSignOut = signOut || parsedSignOut;
 
+
   let routes = useRoutes([
-    { path: '/', element: !isUserSignOut ? <Navigate replace to={'/hedges'}/> : <Navigate replace to={'/login'}/> },
-    { path: '/hedges', 
+    { path: `${currentPath}`, element: !isUserSignOut ? <Navigate replace to={`${currentPath}hedges`}/> : <Navigate replace to={`${currentPath}login`}/> },
+    { path: `${currentPath}login`, 
+      element: isUserSignOut ? 
+      <Login
+        setAccount={setAccount}
+        setSignOut={setSignOut}
+      /> 
+      : 
+      <Navigate replace to={`${currentPath}hedges`}/> },  
+    { path: `${currentPath}hedges`, 
       element: !isUserSignOut ? 
       <HedgeAccounting
         hedges={hedges}
@@ -71,8 +81,8 @@ const AppRoutes = () => {
         setTotalPages={setTotalPages}
         /> 
       : 
-      <Navigate replace to={'/login'}/> },
-    { path: '/hedges-new', 
+      <Navigate replace to={`${currentPath}login`}/> },
+    { path: `${currentPath}hedges-new`, 
       element: !isUserSignOut ? 
       <NewHedge
         hedges={hedges}
@@ -84,8 +94,8 @@ const AppRoutes = () => {
         page={page}
         /> 
       : 
-      <Navigate replace to={'/login'}/>},
-     { path: '/hedges-pending-validations', 
+      <Navigate replace to={`${currentPath}login`}/> },
+     { path: `${currentPath}hedges-pending-validations`, 
       element: !isUserSignOut ? 
       <PendingValidations
         hedges={hedges}
@@ -96,8 +106,8 @@ const AppRoutes = () => {
         setTotalPages={setTotalPages}
         /> 
       : 
-      <Navigate replace to={'/login'}/> },
-    { path: '/hedges-status-det', 
+      <Navigate replace to={`${currentPath}login`}/> },
+    { path: `${currentPath}hedges-status-det`, 
       element: !isUserSignOut ? 
       <DisarmStatusDet
         hedgeStatusData={hedgeStatusData}
@@ -110,8 +120,8 @@ const AppRoutes = () => {
         setDeferredFlowInfo={setDeferredFlowInfo}
       /> 
       : 
-      <Navigate replace to={'/login'}/>},
-    { path: '/hedges-disarm', 
+      <Navigate replace to={`${currentPath}login`}/> },
+    { path: `${currentPath}hedges-disarm`, 
       element: !isUserSignOut ?
       <DisarmHedge
         hedgeStatusData={hedgeStatusData}
@@ -120,8 +130,8 @@ const AppRoutes = () => {
         setHedgeDisarmData={setHedgeDisarmData}
       /> 
       : 
-      <Navigate replace to={'/login'}/>},
-    { path: '/hedges-efficacy-test', 
+      <Navigate replace to={`${currentPath}login`}/> },
+    { path: `${currentPath}hedges-efficacy-test`, 
       element: !isUserSignOut ?
       <EfficacyTest 
         efficacyTestFile={efficacyTestFile}
@@ -130,16 +140,8 @@ const AppRoutes = () => {
         setEfficacyTestInfo={setEfficacyTestInfo}
       />
       : 
-      <Navigate replace to={'/login'}/>},
-    { path: '/login', 
-      element: isUserSignOut ? 
-      <Login
-        setAccount={setAccount}
-        setSignOut={setSignOut}
-      /> 
-      : 
-      <Navigate replace to={'/hedges'}/> },
-    { path: '/mgmt-balance-view', 
+      <Navigate replace to={`${currentPath}login`}/> },
+    { path: `${currentPath}mgmt-balance-view`, 
       element: !isUserSignOut ? 
       <BalanceView
         totalrowscount={totalrowscount}
@@ -150,13 +152,13 @@ const AppRoutes = () => {
         setTotalPages={setTotalPages}
       /> 
       : 
-      <Navigate replace to={'/login'}/> },
-    { path: '/mgmt-bonus-view', 
+      <Navigate replace to={`${currentPath}login`}/> },
+    { path: `${currentPath}mgmt-bonus-view`, 
       element: !isUserSignOut ? 
       <BonusView/> 
       : 
-      <Navigate replace to={'/login'}/> },
-    { path: '/users', 
+      <Navigate replace to={`${currentPath}login`}/> },
+    { path: `${currentPath}users`, 
       element: !isUserSignOut ? 
       <Users
         setTotalPages={setTotalPages}
@@ -167,10 +169,10 @@ const AppRoutes = () => {
         totalPages={totalPages}
       /> 
       : 
-      <Navigate replace to={'/login'}/> },
-    { path: '/users-new', 
-      element: !isUserSignOut ? <NewUser/> : <Navigate replace to={'/login'}/> },
-    { path: '/users-edit', element: !isUserSignOut ? <EditUser/> : <Navigate replace to={'/login'}/>} 
+      <Navigate replace to={`${currentPath}login`}/> },
+    { path: `${currentPath}users-new`, 
+      element: !isUserSignOut ? <NewUser/> : <Navigate replace to={`${currentPath}login`}/> },
+    { path: `${currentPath}users-edit`, element: !isUserSignOut ? <EditUser/> : <Navigate replace to={`${currentPath}login`}/> } 
   ])
   return routes;
 }
@@ -178,6 +180,7 @@ const AppRoutes = () => {
 const App = () => {
 
   const {
+    currentPath,
     setAccount,
     signOut,
     setSignOut,
@@ -191,6 +194,7 @@ const App = () => {
     <>
       <BrowserRouter>
         <MainNavbar
+          currentPath={currentPath}
           signOut={signOut}
           setSignOut={setSignOut}
           setAccount={setAccount}

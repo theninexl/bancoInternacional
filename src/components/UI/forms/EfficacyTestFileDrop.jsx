@@ -1,12 +1,21 @@
-import { useState } from "react";
+import { useEffect,useState } from 'react';
 import { useDropzone } from "react-dropzone";
 
 export const EfficacyTestFileDrop = ({setEfficacyTestFile,htmlFor,accept,placeholder, className, style, children}) => {
+  
+  const [upfilename, setUpfilename] = useState(null);
+  
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: (acceptedFile) => {
       setEfficacyTestFile(acceptedFile);
+      setUpfilename(acceptedFile[0].name);
     },
   });
+
+  useEffect(()=>{
+    setUpfilename(null)
+  },[])
+
 
   return (
     <label
@@ -27,7 +36,7 @@ export const EfficacyTestFileDrop = ({setEfficacyTestFile,htmlFor,accept,placeho
         <span
             id={`${htmlFor}Placeholder`}
             className='placeholder'>
-              {placeholder}
+              {upfilename ? upfilename : placeholder}
           </span>
       </div>
         

@@ -11,7 +11,7 @@ import { EfficacyTestFileDrop } from '../../components/UI/forms/EfficacyTestFile
 
 function EfficacyTest({ efficacyTestFile,setEfficacyTestFile,efficacyTestInfo,setEfficacyTestInfo }){
   const navigate = useNavigate();
-  const [uploadedFileName, setUploadedFileName] = useState();
+  const [uploadedFileName, setUploadedFileName] = useState(null);
 
   const accountInLocalStorage = localStorage.getItem('account');
   const parsedAccount = JSON.parse(accountInLocalStorage);
@@ -20,6 +20,12 @@ function EfficacyTest({ efficacyTestFile,setEfficacyTestFile,efficacyTestInfo,se
     'Content-Type': 'application/json',
     'x-access-token': token,
   }
+
+  //resetear nombre del archivo cuando cambiamos de pagina
+  useState(()=>{
+    setUploadedFileName(null);
+    console.log('uploadedFileName',uploadedFileName)
+  },[])
   
 
   //mirar cuando cambia deferrefFlowFile para parsearlo y guardarlo
@@ -63,7 +69,7 @@ function EfficacyTest({ efficacyTestFile,setEfficacyTestFile,efficacyTestInfo,se
   //manejar subir archivo test
   const handleSendEfficacyTest = (e) => {
     e.preventDefault();  
-    console.log(efficacyTestInfo);
+    setUploadedFileName(null);
     const dataSent = {
       "data": efficacyTestInfo,
     }
@@ -88,7 +94,7 @@ function EfficacyTest({ efficacyTestFile,setEfficacyTestFile,efficacyTestInfo,se
           Test de Eficacia
         </MainHeading>
         <div className='bi-c-form-simple'>            
-          <Link className='bi-c-navbar-links__textbutt' to='/templates/efficacyTestTemplate.csv' target="_blank" download >Descargar plantilla</Link>
+          <Link className='bi-c-navbar-links__textbutt' to='/csv_templates/test_eficacia.csv' target="_blank" download >Descargar plantilla</Link>
         </div>
       </TableHeader>
       <SectionHalf>
@@ -97,7 +103,7 @@ function EfficacyTest({ efficacyTestFile,setEfficacyTestFile,efficacyTestInfo,se
             <EfficacyTestFileDrop
               style={{padding:'0 12px'}}
               htmlFor='efficacyTestFileField'
-              placeholder={uploadedFileName ? uploadedFileName : 'Seleccionar/arrastrar CSV'}
+              placeholder='Seleccionar/arrastrar CSV'
               accept='.csv'
               efficacyTestFile={efficacyTestFile}
               setEfficacyTestFile={setEfficacyTestFile} >

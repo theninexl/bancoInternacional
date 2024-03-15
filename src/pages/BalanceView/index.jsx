@@ -12,10 +12,21 @@ import { MainHeading } from '../../components/UI/headings';
 import { LabelElement } from '../../components/UI/forms/SimpleForms';
 
 import BalanceAccordion from '../../components/BalanceAccordion';
+import { CSVLink } from 'react-csv';
 
 function BalanceView({ page,setPage,totalrowscount,setTotalrowscount, totalPages, setTotalPages }){
   const rowspage = 10;
   const [balanceView, setBalanceView] = useState([]);
+
+  //ordenar la info para la descarga del CSV
+  const headers = [
+    {label:'Epigrafe', key:'id_item'},
+    {label:'Monto', key:'num_amount'},
+    {label:'% Cubierto', key:'pct_amount_covered'},
+    {label:'SubEpigrafe', key: 'items.id_hedge_accounting'},
+    {label:'Monto', key: 'items.num_amount'},
+    {label:'% Cubierto', key: 'items.pct_amount_covered'},
+  ]
 
   //calcular paginacion
   const calcTotalPages = (totalResults,totalRows) => setTotalPages(Math.ceil(totalResults/totalRows));
@@ -24,7 +35,7 @@ function BalanceView({ page,setPage,totalrowscount,setTotalrowscount, totalPages
   const getBalanceView = useGetData('balances/getBalanceView');
   useEffect (() => {    
     if (getBalanceView.responseGetData) {
-      //console.log(getBalanceView.responseGetData);
+      console.log(getBalanceView.responseGetData?.data?.header);
       setBalanceView(getBalanceView.responseGetData?.data?.header);
     }
   },[getBalanceView.responseGetData])
@@ -49,6 +60,12 @@ function BalanceView({ page,setPage,totalrowscount,setTotalrowscount, totalPages
           <MainHeading>
             Gestión de balance
           </MainHeading>
+          <div className='bi-c-form-simple'>
+          <CSVLink
+              className='bi-c-navbar-links__textbutt'
+              filename={"gestionBalance.csv"}
+              data={balanceView} headers={headers}>Descargar CSV</CSVLink>
+          </div>
         </TableHeader>
         <TableData>
           <TableDataHeader>

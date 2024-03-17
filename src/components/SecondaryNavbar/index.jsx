@@ -6,15 +6,15 @@ const SecNavbar = ({ currentPath }) => {
   console.log('path en secNavbar',currentPath);
 
   const secNavInfo = [
-    { currentPath: `${currentPath}`,
+    { currentPath: `/`,
       pageTitle: 'Inicio',
       secNavLinks: {}
     },
-    { currentPath: `${currentPath}login`,
+    { currentPath: `/login`,
       pageTitle: 'Login',
       secNavLinks: {}
     },
-    { currentPath: `${currentPath}hedges`,
+    { currentPath: `/hedges`,
       pageTitle: 'Coberturas',
       secNavLinks: {
         1: { url:'/hedges', title:'Listar coberturas'},
@@ -23,7 +23,7 @@ const SecNavbar = ({ currentPath }) => {
         4: { url:'/hedges-efficacy-test', title:'Test de eficacia'},
       }
     },
-    { currentPath: `${currentPath}hedges-new`,
+    { currentPath: `/hedges-new`,
       pageTitle: 'Coberturas',
       secNavLinks: {
         1: { url:'/hedges', title:'Listar coberturas'},
@@ -32,7 +32,7 @@ const SecNavbar = ({ currentPath }) => {
         4: { url:'/hedges-efficacy-test', title:'Test de eficacia'},
       }
     },
-    { currentPath: `${currentPath}hedges-pending-validations`,
+    { currentPath: `/hedges-pending-validations`,
       pageTitle: 'Coberturas',
       secNavLinks: {
         1: { url:'/hedges', title:'Listar coberturas'},
@@ -41,7 +41,7 @@ const SecNavbar = ({ currentPath }) => {
         4: { url:'/hedges-efficacy-test', title:'Test de eficacia'},
       }
     },
-    { currentPath: `${currentPath}hedges-status-det`,
+    { currentPath: `/hedges-status-det`,
       pageTitle: 'Coberturas',
       secNavLinks: {
         1: { url:'/hedges', title:'Listar coberturas'},
@@ -50,7 +50,7 @@ const SecNavbar = ({ currentPath }) => {
         4: { url:'/hedges-efficacy-test', title:'Test de eficacia'},
       }
     },
-    { currentPath: `${currentPath}hedges-disarm`,
+    { currentPath: `/hedges-disarm`,
       pageTitle: 'Coberturas',
       secNavLinks: {
         1: { url:'/hedges', title:'Listar coberturas'},
@@ -59,7 +59,7 @@ const SecNavbar = ({ currentPath }) => {
         4: { url:'/hedges-efficacy-test', title:'Test de eficacia'},
       }
     },
-    { currentPath: `${currentPath}hedges-efficacy-test`,
+    { currentPath: `/hedges-efficacy-test`,
       pageTitle: 'Coberturas',
       secNavLinks: {
         1: { url:'/hedges', title:'Listar coberturas'},
@@ -68,27 +68,27 @@ const SecNavbar = ({ currentPath }) => {
         4: { url:'/hedges-efficacy-test', title:'Test de eficacia'},
       }
     },
-    { currentPath: `${currentPath}mgmt-balance-view`,
+    { currentPath: `/mgmt-balance-view`,
       pageTitle: 'Gestión de balance',
       secNavLinks: {
         1: { url:'/mgmt-balance-view', title:'Vista balance'}
       }
     },
-    { currentPath: `${currentPath}users`,
+    { currentPath: `/users`,
       pageTitle: 'Usuarios',
       secNavLinks: {
         1: { url:'/users',title:'Listar usuarios'},
         2: { url:'/users-new',title:'Crear usuario'},
       }
     },
-    { currentPath: `${currentPath}users-new`,
+    { currentPath: `/users-new`,
       pageTitle: 'Usuarios',
       secNavLinks: {
         1: { url:'/users',title:'Listar usuarios'},
         2: { url:'/users-new',title:'Crear usuario'},
       }
     },
-    { currentPath: `${currentPath}users-edit`,
+    { currentPath: `/users-edit`,
       pageTitle: 'Usuarios',
       secNavLinks: {
         1: { url:'/users',title:'Listar usuarios'},
@@ -97,93 +97,7 @@ const SecNavbar = ({ currentPath }) => {
     },
   ]
 
-  // const secNavInfo = [
-  //   { currentPath: `${path}`,
-  //     pageTitle: 'Inicio',
-  //     secNavLinks: {}
-  //   },
-  //   { currentPath: `${path}hedges`,
-  //     pageTitle: 'Coberturas',
-  //     secNavLinks: {
-  //       1: { url:'/hedges', title:'Listar coberturas'},
-  //       2: { url:'/hedges-new', title:'Crear cobertura'},
-  //       3: { url:'/hedges-pending-validations', title:'Validaciones pendientes'},
-  //       4: { url:'/hedges-efficacy-test', title:'Test de eficacia'},
-  //     }
-  //   },
-  //   { currentPath: `${path}hedges-new`,
-  //     pageTitle: 'Coberturas',
-  //     secNavLinks: {
-  //       1: { url:'/hedges', title:'Listar coberturas'},
-  //       2: { url:'/hedges-new', title:'Crear cobertura'},
-  //       3: { url:'/hedges-pending-validations', title:'Validaciones pendientes'},
-  //       4: { url:'/hedges-efficacy-test', title:'Test de eficacia'},
-  //     }
-  //   },
-  //   { currentPath: `${path}hedges-pending-validations`,
-  //     pageTitle: 'Coberturas',
-  //     secNavLinks: {
-  //       1: { url:'/hedges', title:'Listar coberturas'},
-  //       2: { url:'/hedges-new', title:'Crear cobertura'},
-  //       3: { url:'/hedges-pending-validations', title:'Validaciones pendientes'},
-  //       4: { url:'/hedges-efficacy-test', title:'Test de eficacia'},
-  //     }
-  //   },
-  //   { currentPath: `${path}hedges-status-det`,
-  //     pageTitle: 'Coberturas',
-  //     secNavLinks: {
-  //       1: { url:'/hedges', title:'Listar coberturas'},
-  //       2: { url:'/hedges-new', title:'Crear cobertura'},
-  //       3: { url:'/hedges-pending-validations', title:'Validaciones pendientes'},
-  //       4: { url:'/hedges-efficacy-test', title:'Test de eficacia'},
-  //     }
-  //   },
-  //   { currentPath: `${path}hedges-disarm`,
-  //     pageTitle: 'Coberturas',
-  //     secNavLinks: {
-  //       1: { url:'/hedges', title:'Listar coberturas'},
-  //       2: { url:'/hedges-new', title:'Crear cobertura'},
-  //       3: { url:'/hedges-pending-validations', title:'Validaciones pendientes'},
-  //       4: { url:'/hedges-efficacy-test', title:'Test de eficacia'},
-  //     }
-  //   },
-  //   { currentPath: `${path}hedges-efficacy-test`,
-  //     pageTitle: 'Coberturas',
-  //     secNavLinks: {
-  //       1: { url:'/hedges', title:'Listar coberturas'},
-  //       2: { url:'/hedges-new', title:'Crear cobertura'},
-  //       3: { url:'/hedges-pending-validations', title:'Validaciones pendientes'},
-  //       4: { url:'/hedges-efficacy-test', title:'Test de eficacia'},
-  //     }
-  //   },
-  //   { currentPath: `${path}mgmt-balance-view`,
-  //     pageTitle: 'Gestión de balance',
-  //     secNavLinks: {
-  //       1: { url:'/mgmt-balance-view', title:'Vista balance'}
-  //     }
-  //   },
-  //   { currentPath: `${path}users`,
-  //     pageTitle: 'Usuarios',
-  //     secNavLinks: {
-  //       1: { url:'/users',title:'Listar usuarios'},
-  //       2: { url:'/users-new',title:'Crear usuario'},
-  //     }
-  //   },
-  //   { currentPath: `${path}users-new`,
-  //     pageTitle: 'Usuarios',
-  //     secNavLinks: {
-  //       1: { url:'/users',title:'Listar usuarios'},
-  //       2: { url:'/users-new',title:'Crear usuario'},
-  //     }
-  //   },
-  //   { currentPath: `${path}users-edit`,
-  //     pageTitle: 'Usuarios',
-  //     secNavLinks: {
-  //       1: { url:'/users',title:'Listar usuarios'},
-  //       2: { url:'/users-new',title:'Crear usuario'},
-  //     }
-  //   },
-  // ]
+  
 
   const currentInfo = secNavInfo.find(item => item.currentPath === path);
   const secondaryLinks = Object.values(currentInfo.secNavLinks);  

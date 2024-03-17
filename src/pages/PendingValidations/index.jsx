@@ -1,5 +1,5 @@
 import { useEffect,useState } from 'react';
-import { createSearchParams, useNavigate } from 'react-router-dom';
+import { Link, createSearchParams, useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 // import { GlobalContext } from '../../context';
 import Api from '../../services/api';
@@ -12,12 +12,18 @@ import { LabelElement } from '../../components/UI/forms/SimpleForms';
 import ModalBig from "../../components/ModalBig";
 import ModalSmall from '../../components/ModalSmall';
 import { ColsContainer, SectionThird, SimpleCol } from '../../components/UI/layout/LayoutSections';
+import { DocumentArrowDownIcon } from '@heroicons/react/24/solid';
 
 
 
 function PendingValidations({ totalPages,setTotalPages,hedges,setHedges,page,setPage }){
   const navigate = useNavigate();
   const rowspage = 10;
+
+  const SERVER = import.meta.env.VITE_SERVER;
+  const PORT = import.meta.env.VITE_PORT;
+
+
   const [searchValue, setSearchValue] = useState('');
   const [order, setOrder] = useState(1);
   //mostrar modal disarm
@@ -303,6 +309,7 @@ function PendingValidations({ totalPages,setTotalPages,hedges,setHedges,page,set
             <TableCellMedium className='bi-u-centerText'>
               <SortButton orderCol={10} handleClick={() => sortItems()}>Usuario</SortButton>
             </TableCellMedium>
+            <TableCellShort className='bi-u-centerText'></TableCellShort>
             <TableCellShort  className='bi-u-centerText'></TableCellShort>
           </TableDataHeader>
           {
@@ -328,6 +335,14 @@ function PendingValidations({ totalPages,setTotalPages,hedges,setHedges,page,set
                     <TableCellMedium className='bi-u-centerText'>{hedge.dt_start_date}</TableCellMedium>
                     <TableCellMedium className='bi-u-centerText'>{hedge.dt_maturity_date}</TableCellMedium>
                     <TableCellMedium className='bi-u-centerText'>{hedge.user_insert}</TableCellMedium>
+                    <TableCellShort>
+                      <Link
+                        to={`http://${SERVER}:${PORT}/api/hedges/getSheet?id=${hedge.id_hedge_relationship}`}
+                        download
+                        className='bi-o-icon-button-small--primary'>
+                          <DocumentArrowDownIcon />
+                      </Link>
+                    </TableCellShort>
                     <TableCellShort>
                       <ButtonLPrimary
                         handleClick={() => {

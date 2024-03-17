@@ -6,8 +6,6 @@ import { TableHeader } from '../../components/UI/tables/TableHeaders';
 import { TableData, TableDataHeader, TableDataRow, TableCellMedium, TableCellShort, TableDataRowWrapper } from '../../components/UI/tables/TableDataElements';
 import TablePagination from '../../components/TablePagination';
 import { SortButton } from '../../components/UI/buttons/Buttons';
-import { IconButSm } from '../../components/UI/buttons/IconButtons';
-import { DocumentArrowDownIcon, BoltIcon, EllipsisHorizontalIcon } from '@heroicons/react/24/solid';
 import { MainHeading } from '../../components/UI/headings';
 import { LabelElement,SelectElement } from '../../components/UI/forms/SimpleForms';
 import { CSVLink } from 'react-csv';

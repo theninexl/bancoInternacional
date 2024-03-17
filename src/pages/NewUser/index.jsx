@@ -38,10 +38,9 @@ function NewUser(){
     const dataSent = {
       "name":`${data.name}`,
       "surname":data.surname,
-      "department":data.department,
       "email":data.email,
       "password":data.password,
-      "cat_display":"",
+      "cat_display":data.department,
       "cat_role":""
     }
 
@@ -93,10 +92,9 @@ function NewUser(){
               <SelectElement
                 htmlFor='newUserDepartment'
                 title='Departamento'>
-                <option value=''>Seleccionar</option>
-                <option value='Departamento 1'>Departamento 1</option>
-                <option value='Departamento 2'>Departamento 2</option>
-                <option value='Departamento 3'>Departamento 3</option>
+                <option value='1'>Departamento 1</option>
+                <option value='2'>Departamento 2</option>
+                <option value='3'>Departamento 3</option>
               </SelectElement>
             </SimpleFormRow>
             <SimpleFormRow>

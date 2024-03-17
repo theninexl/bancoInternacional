@@ -34,9 +34,10 @@ function EditUser(){
     const data = { 'id_user':id}
     Api.call.post('users/getOne',data,{ headers:headers })
     .then(response => {
+      console.log(response);
       setUserName(response?.data?.name);
       setSurName(response?.data?.surname);
-      setDepartment(response?.data?.department);
+      setDepartment(response?.data?.cat_display);
       setEmail(response?.data?.email)
     }).catch(err => {
       setFormError(err);
@@ -72,10 +73,9 @@ function EditUser(){
         "id_user":userID,
         "name":data.name,
         "surname":data.surname,
-        "department":data.department,
         "email":data.email,
         "password":data.password,
-        "cat_display":"",
+        "cat_display":data.department,
         "cat_role":""
       }
 
@@ -86,7 +86,7 @@ function EditUser(){
       .catch(err => {
         console.log('err',err);
         console.log(err.response)
-        setFormError('Error ',err,' al realizar la solicitud')})    
+        setFormError('Error al realizar la solicitud')})    
     } else {
       setFormError('La contraseña no coincide')
     }    
@@ -133,10 +133,9 @@ function EditUser(){
                 title='Departamento'
                 value={department}
                 handleOnChange={e => setDepartment(e.target.value)}>
-                <option value=''>Seleccionar</option>
-                <option value='Departamento 1'>Departamento 1</option>
-                <option value='Departamento 2'>Departamento 2</option>
-                <option value='Departamento 3'>Departamento 3</option>
+                <option value='1'>Departamento 1</option>
+                <option value='2'>Departamento 2</option>
+                <option value='3'>Departamento 3</option>
               </SelectElement>
               {/* <LabelElement
                 htmlFor='UserDepartment'

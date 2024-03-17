@@ -18,8 +18,14 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
   const form = useRef(null);
   const [formError, setFormError] = useState(null);
   //estados campos de creacion
-  const [idHedgeItem, setIdHedgeItem] = useState('');
-  const [idHedgeInstrument, setIdHedgeInstrument] = useState('');
+  const [idHedgeItemSelected, setIdHedgeItemSelected] = useState('');
+  const [idHedgeSearchResults, setIdHedgeSearchResults] = useState(null);
+  const [showIdHedgeResultsModal, setShowIdHedgeResultsModal] = useState(false);
+
+  const [idHedgeInstrumentSelected, setIdHedgeInstrumentSelected] = useState('');
+  const [idHedgeInstrument, setIdHedgeInstrument] = useState(null);
+  const [showIdHedgeInstrumentResultsModal, setShowIdHedgeInstrumentResultsModal] = useState(false);
+
   const [catHedgeFile, setCatHedgeFile] = useState();
   const [loadedCatHedgeItems, setLoadedCatHedgeItems] = useState('');
   const [selectedCatHedgeItem, setSelectedCatHedgeItem] = useState('');
@@ -34,18 +40,26 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
   const getCreateHedge = useGetData('hedges/createGetCombos');
   useEffect (() => {    
     if (getCreateHedge.responseGetData) { 
-      setCreateHedgeItems(getCreateHedge.responseGetData.data.hedge_files);      
+      setCreateHedgeItems(getCreateHedge.responseGetData.data.hedge_files);  
     }
   },[getCreateHedge.responseGetData])
 
 
-  //get initial HedgeItems
-  const getinitialHedges = useGetData('hedges/createPredictiveItem',{"search":""});
-  useEffect (() => {    
-    if (getinitialHedges.responseGetData) { 
-      setIdHedgeItem(getinitialHedges.responseGetData.data.items);
+  //search Hedge Item (ParticaCubierta)
+  const searchHedgeResults= usePostData();
+  const getHedges = (search) => {
+    searchHedgeResults.postData('hedges/createPredictiveItem',{"search":search});
+  }
+
+  useEffect(()=> {
+    if (searchHedgeResults.responsePostData) {
+      setIdHedgeSearchResults(searchHedgeResults.responsePostData.data.items);
+      setShowIdHedgeResultsModal(true);
     }
-  },[getinitialHedges.responseGetData])
+
+  },[searchHedgeResults.responsePostData])
+
+
 
   //getItemDetails
   const getItem = usePostData();
@@ -57,24 +71,30 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
   //get Info extra Partida cubierta
   useEffect(()=>{
     if(getItem.responsePostData) {
-      console.log(getItem.responsePostData);
       setMaturityDateItem(getItem.responsePostData.data.dt_maturity_date);
       setNumNotionalItem(getItem.responsePostData.data.num_notional); 
     }
   },[getItem.responsePostData])
 
-  //get initial HedgeInstruments
-  const getinitialHedgeInstruments = useGetData('hedges/createPredictiveInstrument',{"search":""});
-  useEffect (() => {    
-    if (getinitialHedgeInstruments.responseGetData) { 
-      setIdHedgeInstrument(getinitialHedgeInstruments.responseGetData.data.instruments);
+
+  //search Hedge Instrument (Derivado)
+  const searchHedgeInstrumentsResults= usePostData();
+  const getHedgeInstruments = (search) => {
+    searchHedgeInstrumentsResults.postData('hedges/createPredictiveInstrument',{"search":search});
+  }
+
+  useEffect(()=>{
+    if (searchHedgeInstrumentsResults.responsePostData) {
+      setIdHedgeInstrument(searchHedgeInstrumentsResults.responsePostData.data.instruments);
+      setShowIdHedgeInstrumentResultsModal(true);
     }
-  },[getinitialHedges.responseGetData])
+
+  },[searchHedgeInstrumentsResults.responsePostData])
+ 
 
   //getInstrumentDetails
   const getInstrument = usePostData();
   const getInstrumentDetails = (id) => {
-    console.log('entro en getInstrumentDetails',id)
     if(id){
       getInstrument.postData('hedges/createGetInstrument',{'id_hedge_item':id});
     }
@@ -82,7 +102,6 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
   //get Info extra Derivado
   useEffect(()=>{
     if(getInstrument.responsePostData) {
-      console.log(getInstrument.responsePostData);
       setMaturityDateInstrument(getInstrument.responsePostData.data.dt_maturity_date);
       setNumNotionalInstrument(getInstrument.responsePostData.data.num_notional); 
     }
@@ -116,7 +135,6 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
   }
   useEffect(()=>{
     if(getHedgeItem.responsePostData) {
-      console.log(getHedgeItem.responsePostData);
       setLoadedCatHedgeItems(getHedgeItem.responsePostData.data.items);
     }
   },[getHedgeItem.responsePostData])
@@ -131,7 +149,6 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
   //mirar cuando cambia selectedCatHedgeItem para llamar a la función que obtiene la info de tipo de derivado
   useEffect(()=> {
     if (selectedCatHedgeItem) {
-      console.log('selectedCatHedgeItem',selectedCatHedgeItem);
       getCatHedgeItemDetails(catHedgeFile, selectedCatHedgeItem)
     }
   },[selectedCatHedgeItem])
@@ -145,7 +162,6 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
   }
   useEffect(()=>{
     if(getCatHedgeItem.responsePostData) {
-      console.log(getCatHedgeItem.responsePostData);
       setLoadedCatHedgeInstruments(getCatHedgeItem.responsePostData.data.items);
     }
   },[getCatHedgeItem.responsePostData])
@@ -220,12 +236,67 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
     }
 
     loadedCatHedgeInstruments.map(hedgeInstrument => {
-      // console.log(hedgeInstrument);
       const option = document.createElement('option');
       option.setAttribute('value',hedgeInstrument.cat_hedge_instrument);
       option.textContent = hedgeInstrument.cat_hedge_instrument;
       itemSelect.appendChild(option);
     })
+  }
+
+  //Render results Hedge (Partida cubierta)
+  const renderIdHedgeSearchResults = () => {
+    if (showIdHedgeResultsModal && idHedgeSearchResults.length == 0) {
+      return (
+        <div className='bi-c-dropdown-select__results-box' >
+          <span>No hay resultados</span>
+        </div>
+        );
+    } else if (showIdHedgeResultsModal && idHedgeSearchResults.length > 0) {      
+        return (
+        <div className='bi-c-dropdown-select__results-box' >
+          { idHedgeSearchResults?.map(result => {
+          return (
+            <span
+              className='result'
+              key={result.id_hedge_item}
+              onClick={(e) => {
+                e.preventDefault();
+                getItemDetails(result.id_hedge_item);
+                setShowIdHedgeResultsModal(false);
+              }}>{result.id_hedge_item}</span>
+          );
+        })}
+        </div>
+      );
+    }
+  }
+
+  //Render results Hedge Instruments (Derivados)
+  const renderIdHedgeInstrumentSearchResults = () => {
+    if (showIdHedgeInstrumentResultsModal && idHedgeInstrument.length == 0) {
+      return (
+        <div className='bi-c-dropdown-select__results-box' >
+          <span>No hay resultados</span>
+        </div>
+        );
+    } else if (showIdHedgeInstrumentResultsModal && idHedgeInstrument.length > 0) {      
+        return (
+        <div className='bi-c-dropdown-select__results-box' >
+          { idHedgeInstrument?.map(result => {
+          return (
+            <span
+              className='result'
+              key={result.id_hedge_instrument}
+              onClick={(e) => {
+                e.preventDefault();
+                getInstrumentDetails(result.id_hedge_instrument);
+                setShowIdHedgeInstrumentResultsModal(false);
+              }}>{result.id_hedge_instrument}</span>
+          );
+        })}
+        </div>
+      );
+    }
   }
 
   //GUARDAR DATOS
@@ -234,9 +305,12 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
 
   const handleSave = (event) => {
     event.preventDefault();
-    console.log('handleSave')
 
     const formData = new FormData(form.current);
+
+    const dateFrom = formData.get('date_from');
+    const dateFromTocado = DateTime.fromISO(dateFrom).toFormat("dd/MM/yyyy");
+
     const formItems = {
       id_hedge_item: formData.get('id_hedge_item'),
       dt_maturity_date_item: formData.get('dt_maturity_date_item'),
@@ -249,15 +323,15 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
       cat_hedge_file: formData.get('cat_hedge_file'),
       cat_hedge_item: formData.get('cat_hedge_item'),
       cat_hedge_instrument: formData.get('cat_hedge_instrument'),
-      date_from: formData.get('date_from')
+      date_from: dateFromTocado
     }
     const dataSent = {};
 
     if (formItems) {
       for (const [key, value] of Object.entries(formItems)) {        
         if (value == '-1' || value == '') {
-          console.log(`${key}: ${value}`);
-          console.log('no pasa');
+          // console.log(`${key}: ${value}`);
+          // console.log('no pasa');
           setFormError('Seleccione una opción válida para TODOS los campos');
           break;
         } else {
@@ -286,6 +360,8 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
     navigate('/hedges');
   }
 
+  
+
   return (
     <main className="bi-u-h-screen--wSubNav">
       <TableHeader className='bi-u-border-bb-gm'>
@@ -304,19 +380,23 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
           <TableDataRow>
             <TableDataRowWrapper>
               <TableCellMedium>
-                <Select
-                 searchable
-                 placeholder='Escribe..'
-                 className='bi-c-dropdown-select'
-                 valueField='id_hedge_item'
-                 labelField='id_hedge_item'
-                 name='id_hedge_item'
-                 dropdownHandle={false}
-                 options={idHedgeItem}
-                 noDataRenderer={({ props, state, methods }) => (<div className='react-dropdown-select-item'><span className='react-dropdown-select-item'>No hay datos</span></div>)}
-                 onChange={(values) => { 
-                  if (values.length > 0) getItemDetails(values[0].id_hedge_item)            
-                  }} />
+                <div
+                  className='bi-c-dropdown-select'>
+                  <LabelElement 
+                  htmlFor='id_hedge_item'
+                  type='text'
+                  value={idHedgeItemSelected}
+                  handleOnChange={(e) => {
+                    if (e.target.value.length >= 3) {
+                      getHedges(e.target.value);
+                    } else {
+                      setIdHedgeInstrument(null);
+                      setShowIdHedgeInstrumentResultsModal(false)
+                    }                    
+                  }}  />
+                  { renderIdHedgeSearchResults()}
+                </div>
+               
               </TableCellMedium>
               <TableCellMedium>
                 <LabelElement
@@ -341,7 +421,6 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
               <TableCellMedium>
                 <SelectElement
                   htmlFor='cat_hedge_item_type'>
-                  <option value='-1'>Seleccionar</option>
                   <option value='0'>Activo</option>
                   <option value='1'>Pasivo</option>
                 </SelectElement>
@@ -362,20 +441,22 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
           <TableDataRow>
             <TableDataRowWrapper>
               <TableCellMedium>
-                <Select
-                  searchable
-                  placeholder='Escribe..'
-                  className='bi-c-dropdown-select'
-                  valueField='id_hedge_instrument'
-                  labelField='id_hedge_instrument'
-                  name='id_hedge_instrument'
-                  dropdownHandle={false}
-                  options={idHedgeInstrument}
-                  noDataRenderer={({ props, state, methods }) => (<div className='react-dropdown-select-item'><span className='react-dropdown-select-item'>No hay datos</span></div>)}
-                  onChange={(values) => { 
-                    console.log(values)
-                    if (values.length > 0) getInstrumentDetails(values[0].id_hedge_instrument)            
-                  }} />
+                <div
+                  className='bi-c-dropdown-select'>
+                  <LabelElement 
+                  htmlFor='id_hedge_instrument'
+                  type='text'
+                  value={idHedgeInstrumentSelected}
+                  handleOnChange={(e) => {
+                    if (e.target.value.length >= 3) {                 
+                      getHedgeInstruments(e.target.value);
+                    } else {
+                      setIdHedgeSearchResults(null);
+                      setShowIdHedgeResultsModal(false);
+                    }                    
+                  }}  />
+                  { renderIdHedgeInstrumentSearchResults()}
+                </div>
               </TableCellMedium>
               <TableCellMedium>
                 <LabelElement
@@ -466,9 +547,7 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
                     <LabelElement
                       htmlFor='date_from'
                       type='date'
-                      //value={maturityDateInstrument}
                       placeholder=''
-                      //readOnly={true}
                       >
                     </LabelElement>
 

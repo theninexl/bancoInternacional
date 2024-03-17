@@ -373,10 +373,10 @@
 
 .bi-c-dropdown-select {
     $block:&;
-    border:1px solid getColor(gray-medium);
     border-radius: getSize($small) !important;
     height:getSize($huge);
     min-width: 150px;
+    position: relative;
 
     input {
         @include font-size($defFontSizeDT, $lineHeightDT);
@@ -387,6 +387,30 @@
 
         input::placeholder {
             @include bi-ps-bold;
+        }
+    }
+
+    &__results-box {
+        background-color: getColor(white);
+        border:1px solid getColor(gray-medium);
+        border-radius: getSize($small);
+        height: 300px;
+        overflow: auto;
+        padding: getSize($small);
+        position: absolute;
+        top:getSize($huge);
+        width: 200px;
+        z-index: 10;
+
+        span.result {
+            $block:&;
+            display: block;
+            cursor: pointer;
+
+            &:hover {
+                background-color: getColor(primary);
+                color:getColor(white);
+            }
         }
     }
 }

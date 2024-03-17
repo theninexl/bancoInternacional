@@ -17,43 +17,55 @@ import { CSVLink } from 'react-csv';
 function BalanceView({ page,setPage,totalrowscount,setTotalrowscount, totalPages, setTotalPages }){
   const rowspage = 10;
   const [balanceView, setBalanceView] = useState([]);
+  const [balanceFlat, setBalanceFlat] = useState([]);
 
-  //ordenar la info para la descarga del CSV
-  const headers = [
-    {label:'Epigrafe', key:'id_item'},
-    {label:'Monto', key:'num_amount'},
-    {label:'% Cubierto', key:'pct_amount_covered'},
-    {label:'SubEpigrafe', key: 'items.id_hedge_accounting'},
-    {label:'Monto', key: 'items.num_amount'},
-    {label:'% Cubierto', key: 'items.pct_amount_covered'},
-  ]
 
-  //calcular paginacion
-  const calcTotalPages = (totalResults,totalRows) => setTotalPages(Math.ceil(totalResults/totalRows));
 
   //getBalanceView
   const getBalanceView = useGetData('balances/getBalanceView');
   useEffect (() => {    
     if (getBalanceView.responseGetData) {
-      console.log(getBalanceView.responseGetData?.data?.header);
       setBalanceView(getBalanceView.responseGetData?.data?.header);
     }
   },[getBalanceView.responseGetData])
 
-  //resetear pagina a 1
-  useEffect(()=>{
-    setPage(1);
-  },[setPage])
+  const flattenObject = (obj) => {
+    const result = {}
+  
+    for (const i in obj) {
+      if (typeof obj[i] === "object" && !Array.isArray(obj[i])) {
+        const temp = flattenObject(obj[i]);
+        for (const j in temp) {
+          if (typeof obj[i][j] === "object" && !Array.isArray(obj[i])) {
+            const temp2 = flattenObject(obj[i][j]);
+            for (const h in temp2) {
+              result [i+"."+j+"."+h] = temp2[h];
+            }
+          } else {
+            result [i+"."+j] = temp[j];
+          }
+        }
+      } else {
+        result[i] = obj[i]
+      }
+    }
+  
+    return result
+  }
 
   useEffect(()=>{
-    if (balanceView) {
-      console.log('balanceView', balanceView)
-
-      //setTotalrowscount(getBalanceView.responseGetData.data.length());
-      //calcTotalPages(getBalanceView.responseGetData.data.length(), rowspage);
+    if (balanceView.length > 0) {
+      console.log('balanceViewType', typeof(balanceView));
+      console.log('balanceView',balanceView);
+      const newFlat = flattenObject(balanceView);
+      setBalanceFlat(Object.entries(newFlat))
     }
   },[balanceView])
 
+
+
+
+ 
   return (
     <main className="bi-u-h-screen--wSubNav">      
        <TableHeader>
@@ -64,7 +76,7 @@ function BalanceView({ page,setPage,totalrowscount,setTotalrowscount, totalPages
           <CSVLink
               className='bi-c-navbar-links__textbutt'
               filename={"gestionBalance.csv"}
-              data={balanceView} headers={headers}>Descargar CSV</CSVLink>
+              data={balanceFlat}>Descargar CSV</CSVLink>
           </div>
         </TableHeader>
         <TableData>

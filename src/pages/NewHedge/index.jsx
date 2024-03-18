@@ -6,7 +6,6 @@ import { useSaveData } from "../../hooks/useSaveData";
 import { DateTime } from "luxon";
 import { TableHeader } from '../../components/UI/tables/TableHeaders';
 import { LabelElement, SelectElement, SimpleFormHrz, SimpleFormRow } from "../../components/UI/forms/SimpleForms";
-import Select from 'react-dropdown-select';
 import { ButtonLGhost, ButtonLPrimary } from "../../components/UI/buttons/Buttons";
 import { MainHeading } from "../../components/UI/headings";
 import { TableData, TableDataHeader, TableCellMedium, TableDataRow, TableDataRowWrapper } from "../../components/UI/tables/TableDataElements";
@@ -263,6 +262,7 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
                 e.preventDefault();
                 getItemDetails(result.id_hedge_item);
                 setShowIdHedgeResultsModal(false);
+                setIdHedgeItemSelected(result.id_hedge_item);
               }}>{result.id_hedge_item}</span>
           );
         })}
@@ -291,6 +291,7 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
                 e.preventDefault();
                 getInstrumentDetails(result.id_hedge_instrument);
                 setShowIdHedgeInstrumentResultsModal(false);
+                setIdHedgeInstrumentSelected(result.id_hedge_instrument);
               }}>{result.id_hedge_instrument}</span>
           );
         })}
@@ -387,14 +388,17 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
                   type='text'
                   value={idHedgeItemSelected}
                   handleOnChange={(e) => {
+                    setIdHedgeItemSelected(e.target.value);
                     if (e.target.value.length >= 3) {
-                      getHedges(e.target.value);
+                      getHedges(e.target.value);                      
                     } else {
-                      setIdHedgeInstrument(null);
-                      setShowIdHedgeInstrumentResultsModal(false)
+                      setIdHedgeSearchResults(null);
+                      setShowIdHedgeResultsModal(false);
+                      setMaturityDateItem('');
+                      setNumNotionalItem('');                       
                     }                    
                   }}  />
-                  { renderIdHedgeSearchResults()}
+                  {renderIdHedgeSearchResults()}
                 </div>
                
               </TableCellMedium>
@@ -448,11 +452,14 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
                   type='text'
                   value={idHedgeInstrumentSelected}
                   handleOnChange={(e) => {
+                    setIdHedgeInstrumentSelected(e.target.value);
                     if (e.target.value.length >= 3) {                 
-                      getHedgeInstruments(e.target.value);
+                      getHedgeInstruments(e.target.value);                      
                     } else {
-                      setIdHedgeSearchResults(null);
-                      setShowIdHedgeResultsModal(false);
+                      setIdHedgeInstrument(null);
+                      setShowIdHedgeInstrumentResultsModal(false);
+                      setMaturityDateInstrument('');
+                      setNumNotionalInstrument(''); 
                     }                    
                   }}  />
                   { renderIdHedgeInstrumentSearchResults()}

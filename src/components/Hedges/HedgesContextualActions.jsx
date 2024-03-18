@@ -5,13 +5,11 @@ import { EllipsisHorizontalIcon } from "@heroicons/react/24/solid";
 import { IconButSm } from "../UI/buttons/IconButtons";
 
 
-export const HedgesContextualActions = ({ hedgeId }) => {
+export const HedgesContextualActions = ({ hedgeId, hedgeStatus }) => {
 
-  // const SERVER = window?._env_?.DB_SERVER;
-  // const PORT = window?._env_?.DB_PORT;
-  const SERVER = import.meta.env.VITE_SERVER;
-  const PORT = import.meta.env.VITE_PORT;
-
+  const SERVER = import.meta.env.VITE_DB_SERVER;
+  console.log('server',SERVER);
+  console.log('status para id ',hedgeId,': es:',hedgeStatus);
 
   const navigate = useNavigate();
   const [optionsBoxOpen, setOptionsBoxOpen] = useState(false);
@@ -61,13 +59,17 @@ export const HedgesContextualActions = ({ hedgeId }) => {
         <EllipsisHorizontalIcon/>
       </IconButSm>
       <div className={optionsBoxOpen ? 'bi-c-overlay--entryOptions' : 'bi-u-inactive'}>
-        <Link 
-          onClick={(e) => {
-            e.preventDefault();
-            requestDisarm(hedgeId)}}
-          className='bi-o-overlay__notification'>
-            <div className="notification--text">Desarmar</div>
-        </Link>
+        {hedgeStatus == 1 ?
+          <>
+            <Link 
+            onClick={(e) => {
+              e.preventDefault();
+              requestDisarm(hedgeId)}}
+            className='bi-o-overlay__notification'>
+              <div className="notification--text">Desarmar</div>
+          </Link>
+          </>
+          : ''}
         <Link
           onClick={(e) => {
             e.preventDefault();
@@ -76,26 +78,11 @@ export const HedgesContextualActions = ({ hedgeId }) => {
             <div className="notification--text">Ver status</div>
         </Link>
         <Link 
-          to={`http://${SERVER}:${PORT}/api/hedges/getSheet?id=${hedgeId}`}
+          to={`${SERVER}/api/hedges/getSheet?id=${hedgeId}`}
           download
           className='bi-o-overlay__notification'>
             <div className="notification--text">Descargar ficha</div>
         </Link>
-        {/* <Link 
-          onClick={(e) => {
-            e.preventDefault();
-            downloadSheet(hedgeId)}}
-          className='bi-o-overlay__notification'>
-            <div className="notification--text">Descargar ficha</div>
-        </Link> */}
-        {/* <Link
-          onClick={(e) => {
-            e.preventDefault();
-            navigate('/hedges-status')}
-          }
-          className='bi-o-overlay__notification'>
-            <div className="notification--text">Ver status</div>
-        </Link> */}
       </div>
     </>
   );

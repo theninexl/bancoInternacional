@@ -198,7 +198,8 @@ function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPag
                     <TableCellShort style={{'position':'relative'}}>
                       { hedge.disarmVisible ? 
                         <HedgesContextualActions
-                          hedgeId={hedge.id_hedge_relationship}  
+                          hedgeId={hedge.id_hedge_relationship}
+                          hedgeStatus={hedge.status}   
                         />
                         :
                         ''

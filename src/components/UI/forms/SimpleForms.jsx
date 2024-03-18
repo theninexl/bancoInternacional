@@ -33,7 +33,7 @@ export const LabelElement = (props) => {
         name={props.htmlFor}
         id={props.htmlFor}
         placeholder={props.placeholder}
-        defaultValue={props.value}
+        value={props.value}
         onChange={props.handleOnChange}
         required={props.required}
         disabled={props.disabled}

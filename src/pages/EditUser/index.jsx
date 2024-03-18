@@ -75,9 +75,11 @@ function EditUser(){
         "surname":data.surname,
         "email":data.email,
         "password":data.password,
-        "cat_display":data.department,
-        "cat_role":""
+        "cat_display":"",
+        "cat_role":data.department
       }
+
+      console.log('dataSent',dataSent);
 
       Api.call.post("users/edit",dataSent,{ headers:headers })
       .then(res => {

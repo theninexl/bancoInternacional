@@ -40,8 +40,8 @@ function NewUser(){
       "surname":data.surname,
       "email":data.email,
       "password":data.password,
-      "cat_display":data.department,
-      "cat_role":""
+      "cat_display":"",
+      "cat_role":data.department
     }
 
     if (data.password === data.password2) {

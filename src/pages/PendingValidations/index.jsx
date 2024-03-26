@@ -20,8 +20,7 @@ function PendingValidations({ totalPages,setTotalPages,hedges,setHedges,page,set
   const navigate = useNavigate();
   const rowspage = 10;
 
-  const SERVER = import.meta.env.VITE_SERVER;
-  const PORT = import.meta.env.VITE_PORT;
+  const SERVER = import.meta.env.VITE_DB_SERVER;
 
 
   const [searchValue, setSearchValue] = useState('');
@@ -337,7 +336,7 @@ function PendingValidations({ totalPages,setTotalPages,hedges,setHedges,page,set
                     <TableCellMedium className='bi-u-centerText'>{hedge.user_insert}</TableCellMedium>
                     <TableCellShort>
                       <Link
-                        to={`http://${SERVER}:${PORT}/api/hedges/getSheet?id=${hedge.id_hedge_relationship}`}
+                        to={`${SERVER}/api/hedges/getSheet?id=${hedge.id_hedge_relationship}`}
                         download
                         className='bi-o-icon-button-small--primary'>
                           <DocumentArrowDownIcon />

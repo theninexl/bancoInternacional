@@ -316,10 +316,14 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
       id_hedge_item: formData.get('id_hedge_item'),
       dt_maturity_date_item: formData.get('dt_maturity_date_item'),
       num_item_notional: formData.get('num_item_notional'),
+      item_rate: formData.get('item_rate'),
+      pct_item_rate: formData.get('pct_item_rate'),
       cat_hedge_item_type: formData.get('cat_hedge_item_type'),
       id_hedge_instrument: formData.get('id_hedge_instrument'),      
       dt_maturity_date_instrument: formData.get('dt_maturity_date_instrument'),      
       num_instrument_notional: formData.get('num_instrument_notional'),
+      instrument_rate: formData.get('instrument_rate'),
+      pct_instrument_rate: formData.get('pct_instrument_rate'),
       pct: formData.get('pct'),
       cat_hedge_file: formData.get('cat_hedge_file'),
       cat_hedge_item: formData.get('cat_hedge_item'),
@@ -376,6 +380,8 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
             <TableCellMedium>Partida cubierta</TableCellMedium>
             <TableCellMedium>Fecha vencimiento</TableCellMedium>
             <TableCellMedium>Nocional</TableCellMedium>
+            <TableCellMedium>Tasa de interés</TableCellMedium>
+            <TableCellMedium>% de tasa de obj. cubierto</TableCellMedium>
             <TableCellMedium>Activo/Pasivo</TableCellMedium>
           </TableDataHeader>      
           <TableDataRow>
@@ -423,6 +429,22 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
                 </LabelElement>
               </TableCellMedium>
               <TableCellMedium>
+                <LabelElement
+                  htmlFor='item_rate'
+                  type='number'
+                  placeholder=''
+                  >
+                </LabelElement>
+              </TableCellMedium>
+              <TableCellMedium>
+                <LabelElement
+                  htmlFor='pct_item_rate'
+                  type='number'
+                  placeholder=''
+                  >
+                </LabelElement>
+              </TableCellMedium>
+              <TableCellMedium>
                 <SelectElement
                   htmlFor='cat_hedge_item_type'>
                   <option value='0'>Activo</option>
@@ -440,6 +462,8 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
             <TableCellMedium>Derivado</TableCellMedium>
             <TableCellMedium>Fecha vencimiento</TableCellMedium>
             <TableCellMedium>Nocional</TableCellMedium>
+            <TableCellMedium>Tasa de interés</TableCellMedium>
+            <TableCellMedium>% de tasa de obj. cubierto</TableCellMedium>
             <TableCellMedium>% Utilizado</TableCellMedium>
           </TableDataHeader>
           <TableDataRow>
@@ -482,6 +506,22 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
                   value={numNotionalInstrument}
                   placeholder=''
                   readOnly={true}
+                  >
+                </LabelElement>
+              </TableCellMedium>
+              <TableCellMedium>
+                <LabelElement
+                  htmlFor='instrument_rate'
+                  type='number'
+                  placeholder=''
+                  >
+                </LabelElement>
+              </TableCellMedium>
+              <TableCellMedium>
+                <LabelElement
+                  htmlFor='pct_instrument_rate'
+                  type='number'
+                  placeholder=''
                   >
                 </LabelElement>
               </TableCellMedium>

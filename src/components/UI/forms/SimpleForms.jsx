@@ -71,7 +71,7 @@ export const SelectElement = (props) => {
             type="file" 
             name={props.htmlFor}
             id={props.htmlFor}
-            defaultValue={props.value}
+            value={props.value}
             onChange={props.handleOnChange}>
               {props.children}
           </select>

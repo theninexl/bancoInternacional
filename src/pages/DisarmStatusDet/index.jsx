@@ -15,6 +15,7 @@ import { FileDrop } from '../../components/UI/forms/FileDrop';
 function DisarmStatusDet({ hedgeStatusData,setHedgeStatusData,hedgeStatus,setHedgeStatus,setHedgeDisarmData,deferredFlowFile,setDeferredFlowFile,deferredFlowInfo,setDeferredFlowInfo }){
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const [formError, setFormError] = useState(null);
   const [freeTextRejectReason, setFreeTextRejectReason] = useState(false);
   const [showFlowsForApproval, setShowFlowsForApproval] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
@@ -78,7 +79,6 @@ function DisarmStatusDet({ hedgeStatusData,setHedgeStatusData,hedgeStatus,setHed
   },[deferredFlowFile])
 
   //manejar aprobado peticion validacion
-  //manejar rechazo peticion validacion
   const handleApproval = (e) => {
     e.preventDefault();
     setShowFlowsForApproval(true);
@@ -88,27 +88,34 @@ function DisarmStatusDet({ hedgeStatusData,setHedgeStatusData,hedgeStatus,setHed
   //manejar finalizacion aprobacion petición validacion
   const handleApprovalCompletion = (event, id) => {
     event.preventDefault();
+    const formData = new FormData(rejectForm.current);
     const dataSent = {
       'id_disassembly':id.toString(),
       'validate':'1',
-      "deferred_flows":deferredFlowInfo,
+      'deferred_flows':deferredFlowInfo,
+      'pct_item_rate': formData.get('pct_item_rate'),
+      'pct_instrument_rate': formData.get('pct_instrument_rate'),
     }
-    Api.call.post('hedges/validationDisarmExecute',dataSent,{ headers:headers })
-    .then(res => {
-      if (res.data.status != "ok") {
-        setErrorMsg(res.statusText);
-      } else {
-        navigate('/hedges');
-      }
-    }).catch(err => {
-      console.warn(err)})
+
+    if (dataSent.pct_item_rate == '' || dataSent.pct_instrument_rate == '') {
+      setFormError('Rellene los campos obligatorios');
+    } else {
+      Api.call.post('hedges/validationDisarmExecute',dataSent,{ headers:headers })
+      .then(res => {
+        if (res.data.status != "ok") {
+          setErrorMsg(res.statusText);
+        } else {
+          navigate('/hedges');
+        }
+      }).catch(err => {
+        console.warn(err)})
+    }
   }
 
   //manejar rechazo peticion validacion
   const handleReject = (e) => {
     e.preventDefault();
     setFreeTextRejectReason(true);
-
   }
 
   //manejar finalizacion rechazo petición validacion
@@ -276,6 +283,26 @@ function DisarmStatusDet({ hedgeStatusData,setHedgeStatusData,hedgeStatus,setHed
                                 setDeferredFlowFile={setDeferredFlowFile}
                               >Flujos diferidos</FileDrop>
                             </SimpleFormRow>
+                            <SimpleFormRow>
+                              <LabelElement
+                                htmlFor='pct_item_rate'
+                                type='number'
+                                placeholder='%'
+                                required={true}
+                                >
+                                  % de tasa obj. cubierto*
+                              </LabelElement>
+                            </SimpleFormRow>
+                            <SimpleFormRow>
+                              <LabelElement
+                                htmlFor='pct_instrument_rate'
+                                type='number'
+                                placeholder='%'
+                                required={true}
+                                >
+                                  % de tasa derivado*
+                              </LabelElement>
+                            </SimpleFormRow>
                             <SimpleFormRow className='bi-u-centerText bi-u-spacer-pt-zero'>
                               <ButtonMPrimary
                                 handleClick={() => handleApprovalCompletion(event, hedge.id_disassembly)}>
@@ -285,6 +312,11 @@ function DisarmStatusDet({ hedgeStatusData,setHedgeStatusData,hedgeStatus,setHed
                           </>
                           :
                           '' }
+                          {formError && 
+                            <SimpleFormRow className='bi-u-centerText'>
+                              <span className='error'>{formError}</span>
+                            </SimpleFormRow>
+                          } 
                         
                       </SimpleFormHrz>                   
                     </>

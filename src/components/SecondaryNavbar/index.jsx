@@ -3,7 +3,8 @@ import { v4 as uuidv4 } from 'uuid';
 
 const SecNavbar = ({ currentPath }) => {
   const path = useLocation().pathname;
-  console.log('path en secNavbar',currentPath);
+  //console.log('path en location', path)
+  //console.log('path en secNavbar',currentPath);
 
   const secNavInfo = [
     { currentPath: `/`,
@@ -100,6 +101,7 @@ const SecNavbar = ({ currentPath }) => {
   
 
   const currentInfo = secNavInfo.find(item => item.currentPath === path);
+  //console.log('currentInfo',currentInfo)
   const secondaryLinks = Object.values(currentInfo.secNavLinks);  
 
   return(

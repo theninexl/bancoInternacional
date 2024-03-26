@@ -37,6 +37,7 @@ const Users = ({ totalPages,setTotalPages,users,setUsers,page,setPage }) => {
     }
     Api.call.post('users/getAll',data,{ headers:headers })
     .then(response => {
+      console.log(response);
       calcTotalPages(response?.data?.rowscount[0]?.count, rowspage)
       setUsers(response?.data?.data)
     }).catch(err => console.warn(err))
@@ -139,7 +140,7 @@ const Users = ({ totalPages,setTotalPages,users,setUsers,page,setPage }) => {
                     <TableCellMedium
                       className='bi-u-text-base-black'>{user.name}</TableCellMedium>
                     <TableCellMedium>{user.surname}</TableCellMedium>
-                    <TableCellMedium>{`Departamento ${user.department}`}</TableCellMedium>
+                    <TableCellMedium>{`Departamento ${user.cat_display}`}</TableCellMedium>
                     <TableCellMedium>{user.email}</TableCellMedium>
                     <TableCellShort>
                       <IconButSmPrimary

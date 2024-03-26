@@ -162,7 +162,7 @@ function DisarmHedge({ hedgeStatusData,setHedgeStatusData,hedgeDisarmData }){
       } else if (executeDisarm.responseUpload.status === 'ok') { navigate('/hedges');
       } else {
         setModalOpen(false);
-        setFormError('Error  al realizar la solicitud, inténtelo de nuevo')
+        setFormError('Error  al realizar la solicitud, inténtelo de nuevo');
       }
     }
   },[executeDisarm.responseUpload])

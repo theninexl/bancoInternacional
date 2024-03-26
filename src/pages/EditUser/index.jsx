@@ -75,7 +75,7 @@ function EditUser(){
         "surname":data.surname,
         "email":data.email,
         "password":data.password,
-        "cat_display":"",
+        "cat_display":data.department,
         "cat_role":data.department
       }
 

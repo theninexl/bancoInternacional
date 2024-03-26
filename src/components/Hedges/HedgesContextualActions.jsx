@@ -9,7 +9,7 @@ export const HedgesContextualActions = ({ hedgeId, hedgeStatus }) => {
 
   const SERVER = import.meta.env.VITE_DB_SERVER;
   console.log('server',SERVER);
-  console.log('status para id ',hedgeId,': es:',hedgeStatus);
+ 
 
   const navigate = useNavigate();
   const [optionsBoxOpen, setOptionsBoxOpen] = useState(false);

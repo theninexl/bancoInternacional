@@ -1,5 +1,5 @@
 import { useEffect,useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Navigate, useNavigate, Link } from 'react-router-dom';
 import Api from '../../services/api';
 import Papa from 'papaparse';
 import { TableHeader } from '../../components/UI/tables/TableHeaders';
@@ -87,8 +87,16 @@ function EfficacyTest({ efficacyTestFile,setEfficacyTestFile,efficacyTestInfo,se
     navigate('/hedges');
   }
 
+  //renderizar allowed
+  const renderAllowed = () => {
+    if (parsedAccount.permission == 3) {
+      return <Navigate to="/hedges" replace={true}/>
+    }
+  }
+
   return (
     <main className="bi-u-h-screen--wSubNav">
+      {renderAllowed()}
       <TableHeader>
         <MainHeading>
           Test de Eficacia

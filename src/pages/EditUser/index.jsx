@@ -37,7 +37,7 @@ function EditUser(){
       console.log(response);
       setUserName(response?.data?.name);
       setSurName(response?.data?.surname);
-      setDepartment(response?.data?.cat_display);
+      setDepartment(response?.data?.cat_role);
       setEmail(response?.data?.email)
     }).catch(err => {
       setFormError(err);
@@ -75,7 +75,6 @@ function EditUser(){
         "surname":data.surname,
         "email":data.email,
         "password":data.password,
-        "cat_display":data.department,
         "cat_role":data.department
       }
 
@@ -135,9 +134,10 @@ function EditUser(){
                 title='Departamento'
                 value={department}
                 handleOnChange={e => setDepartment(e.target.value)}>
-                <option value='1'>Departamento 1</option>
-                <option value='2'>Departamento 2</option>
-                <option value='3'>Departamento 3</option>
+                <option value='1'>Control de Gestión</option>
+                <option value='2'>Gestión Financiera</option>
+                <option value='3'>Riesgo Financiero</option>
+                <option value='4'>BackOffice_Mesa</option>
               </SelectElement>
               {/* <LabelElement
                 htmlFor='UserDepartment'

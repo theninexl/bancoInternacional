@@ -1901,8 +1901,10 @@ strong {
   box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.1);
   margin: 0 auto;
   padding: 24px;
-  position: relative;
-  top: 40%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: 352px;
 }
 .bi-c-modal__smallContent .modal-footer {
@@ -1915,11 +1917,20 @@ strong {
   border: 2px solid #CECECE;
   border-radius: 8px;
   box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
   margin: 0 auto;
+  max-height: 80vh;
   padding: 24px;
-  position: relative;
-  top: 15%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -ms-transform: translate(-50%,-50%);
+  transform: translate(-50%, -50%);
   width: 928px;
+}
+.bi-c-modal__bigContent .modal-body {
+  overflow: auto;
 }
 .bi-c-modal__bigContent .modal-footer {
   display: flex;

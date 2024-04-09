@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useGetData } from "../../hooks/useGetData";
 import { usePostData } from "../../hooks/usePostData";
 import { useSaveData } from "../../hooks/useSaveData";
@@ -13,6 +13,8 @@ import { TableData, TableDataHeader, TableCellMedium, TableDataRow, TableDataRow
 
 
 const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowscount, setTotalrowscount }) => {
+  const account = localStorage.getItem('account');
+  const parsedAccount = JSON.parse(account);
   const navigate = useNavigate();
   const form = useRef(null);
   const [formError, setFormError] = useState(null);
@@ -31,11 +33,15 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
   const [loadedCatHedgeInstruments, setLoadedCatHedgeInstruments] = useState('');
   const [maturityDateItem, setMaturityDateItem] = useState('');
   const [numNotionalItem, setNumNotionalItem] = useState(); 
+  const [itemRate, setItemRate] = useState();
+  const [itemPCTRate, setItemPCTRate] = useState(); 
   const [maturityDateInstrument, setMaturityDateInstrument] = useState('');
   const [numNotionalInstrument, setNumNotionalInstrument] = useState();
+  const [instrumentRate, setInstrumentRate] = useState();
+  const [instrumentPCTRate, setInstrumentPCTRate] = useState(); 
   const [createHedgeItems, setCreateHedgeItems] = useState([]);
 
-  //get CreateGet
+  //get CreateGet (get tipos de coberturas)
   const getCreateHedge = useGetData('hedges/createGetCombos');
   useEffect (() => {    
     if (getCreateHedge.responseGetData) { 
@@ -72,6 +78,8 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
     if(getItem.responsePostData) {
       setMaturityDateItem(getItem.responsePostData.data.dt_maturity_date);
       setNumNotionalItem(getItem.responsePostData.data.num_notional); 
+      setItemRate(getItem.responsePostData.data.item_rate);
+      setItemPCTRate(getItem.responsePostData.data.pct_item_rate); 
     }
   },[getItem.responsePostData])
 
@@ -102,7 +110,9 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
   useEffect(()=>{
     if(getInstrument.responsePostData) {
       setMaturityDateInstrument(getInstrument.responsePostData.data.dt_maturity_date);
-      setNumNotionalInstrument(getInstrument.responsePostData.data.num_notional); 
+      setNumNotionalInstrument(getInstrument.responsePostData.data.num_notional);
+      setInstrumentRate(getInstrument.responsePostData.data.instrument_rate); 
+      setInstrumentPCTRate(getInstrument.responsePostData.data.pct_instrument_rate); 
     }
   },[getInstrument.responsePostData])
 
@@ -146,14 +156,14 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
   },[loadedCatHedgeItems])
 
   //mirar cuando cambia selectedCatHedgeItem para llamar a la función que obtiene la info de tipo de derivado
-  useEffect(()=> {
+  /*useEffect(()=> {
     if (selectedCatHedgeItem) {
       getCatHedgeItemDetails(catHedgeFile, selectedCatHedgeItem)
     }
-  },[selectedCatHedgeItem])
+  },[selectedCatHedgeItem])*/
 
   //get info select tipo de derivado
-  const getCatHedgeItem = usePostData();
+  /*const getCatHedgeItem = usePostData();
   const getCatHedgeItemDetails = (hedgeFile, hedgeIem) => {
     if(hedgeFile){
       getCatHedgeItem.postData('hedges/createGetHedgeInstrument',{'cat_hedge_file':hedgeFile, 'cat_hedge_item': hedgeIem});
@@ -161,16 +171,17 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
   }
   useEffect(()=>{
     if(getCatHedgeItem.responsePostData) {
-      setLoadedCatHedgeInstruments(getCatHedgeItem.responsePostData.data.items);
+      console.log(getCatHedgeItem.responsePostDat);
+      //setLoadedCatHedgeInstruments(getCatHedgeItem.responsePostData.data.items);
     }
-  },[getCatHedgeItem.responsePostData])
+  },[getCatHedgeItem.responsePostData])*/
 
   //llamar a rellenar el select de tipo de derivado cuando seleccionas un tipo de objeto cubierto
-  useEffect(()=>{
+  /*useEffect(()=>{
     if (loadedCatHedgeInstruments) {
       setCatHedgeInstrumentsOnSelect();
     }
-  },[loadedCatHedgeInstruments])
+  },[loadedCatHedgeInstruments])*/
 
   
   // rellenar select tipo de cobertura
@@ -217,14 +228,14 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
 
     loadedCatHedgeItems.map(hedgeItem => {
       const option = document.createElement('option');
-      option.setAttribute('value',hedgeItem.cat_hedge_item);
-      option.textContent = hedgeItem.cat_hedge_item;
+      option.setAttribute('value',hedgeItem.strategy);
+      option.textContent = hedgeItem.strategy;
       hedgeItemSelect.appendChild(option);
     })
   }
   
   //rellenar select tipo derivado
-  const setCatHedgeInstrumentsOnSelect = () => {
+  /*const setCatHedgeInstrumentsOnSelect = () => {
     const itemSelect = document.getElementById('cat_hedge_instrument');
     if (itemSelect) {
       itemSelect.innerHTML = '';
@@ -240,7 +251,7 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
       option.textContent = hedgeInstrument.cat_hedge_instrument;
       itemSelect.appendChild(option);
     })
-  }
+  }*/
 
   //Render results Hedge (Partida cubierta)
   const renderIdHedgeSearchResults = () => {
@@ -314,20 +325,22 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
 
     const formItems = {
       id_hedge_item: formData.get('id_hedge_item'),
-      dt_maturity_date_item: formData.get('dt_maturity_date_item'),
-      num_item_notional: formData.get('num_item_notional'),
-      item_rate: formData.get('item_rate'),
-      pct_item_rate: formData.get('pct_item_rate'),
+      //dt_maturity_date_item: formData.get('dt_maturity_date_item'),
+      //num_item_notional: formData.get('num_item_notional'),
+      //item_rate: formData.get('item_rate'),
+      //pct_item_rate: formData.get('pct_item_rate'),
       cat_hedge_item_type: formData.get('cat_hedge_item_type'),
       id_hedge_instrument: formData.get('id_hedge_instrument'),      
-      dt_maturity_date_instrument: formData.get('dt_maturity_date_instrument'),      
-      num_instrument_notional: formData.get('num_instrument_notional'),
-      instrument_rate: formData.get('instrument_rate'),
-      pct_instrument_rate: formData.get('pct_instrument_rate'),
-      pct: formData.get('pct'),
+      //dt_maturity_date_instrument: formData.get('dt_maturity_date_instrument'),      
+      //num_instrument_notional: formData.get('num_instrument_notional'),
+      //instrument_rate: formData.get('instrument_rate'),
+      //pct_instrument_rate: formData.get('pct_instrument_rate'),
+      //pct_item_rate: formData.get('pct_item_rate'),
       cat_hedge_file: formData.get('cat_hedge_file'),
       cat_hedge_item: formData.get('cat_hedge_item'),
-      cat_hedge_instrument: formData.get('cat_hedge_instrument'),
+      //cat_hedge_instrument: formData.get('cat_hedge_instrument'),
+      pct_item: formData.get('pct_item'),
+      pct_instrument: formData.get('pct_instrument'),
       date_from: dateFromTocado
     }
     const dataSent = {};
@@ -345,6 +358,7 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
       }
 
       if (Object.keys(formItems).length === Object.keys(dataSent).length) {
+        console.log(dataSent);
         createNewHedge.uploadData('hedges/create', dataSent)
       }
     }
@@ -365,10 +379,19 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
     navigate('/hedges');
   }
 
+  //renderizar allowed
+  const renderAllowed = () => {
+    if (parsedAccount.permission == 4) {
+      return <Navigate to="/hedges" replace={true}/>
+    } else if (parsedAccount.permission == 3) {
+      return <Navigate to="/users" replace={true}/>
+    }
+  }
   
 
   return (
     <main className="bi-u-h-screen--wSubNav">
+      {renderAllowed()}
       <TableHeader className='bi-u-border-bb-gm'>
         <MainHeading>
           Crear cobertura
@@ -381,8 +404,8 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
             <TableCellMedium>Fecha vencimiento</TableCellMedium>
             <TableCellMedium>Nocional</TableCellMedium>
             <TableCellMedium>Tasa de interés</TableCellMedium>
-            <TableCellMedium>% de tasa de obj. cubierto</TableCellMedium>
-            <TableCellMedium>Activo/Pasivo</TableCellMedium>
+            {/*<TableCellMedium>% de tasa de obj. cubierto</TableCellMedium>*/}
+            <TableCellMedium>% utilizado</TableCellMedium>
           </TableDataHeader>      
           <TableDataRow>
             <TableDataRowWrapper>
@@ -433,23 +456,28 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
                   htmlFor='item_rate'
                   type='number'
                   placeholder=''
+                  value={itemRate}
+                  readOnly={true}
                   >
                 </LabelElement>
               </TableCellMedium>
-              <TableCellMedium>
+              {/*<TableCellMedium>
                 <LabelElement
                   htmlFor='pct_item_rate'
                   type='number'
                   placeholder=''
+                  value={itemPCTRate}
+                  readOnly={true}
                   >
                 </LabelElement>
-              </TableCellMedium>
+                </TableCellMedium>*/}
               <TableCellMedium>
-                <SelectElement
-                  htmlFor='cat_hedge_item_type'>
-                  <option value='0'>Activo</option>
-                  <option value='1'>Pasivo</option>
-                </SelectElement>
+                <LabelElement
+                  htmlFor='pct_item'
+                  type='number'
+                  placeholder='Introducir %'
+                  >
+                </LabelElement>
               </TableCellMedium>
             </TableDataRowWrapper>
           </TableDataRow>    
@@ -463,7 +491,7 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
             <TableCellMedium>Fecha vencimiento</TableCellMedium>
             <TableCellMedium>Nocional</TableCellMedium>
             <TableCellMedium>Tasa de interés</TableCellMedium>
-            <TableCellMedium>% de tasa de obj. cubierto</TableCellMedium>
+            {/*<TableCellMedium>% de tasa derivado</TableCellMedium>*/}
             <TableCellMedium>% Utilizado</TableCellMedium>
           </TableDataHeader>
           <TableDataRow>
@@ -514,22 +542,26 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
                   htmlFor='instrument_rate'
                   type='number'
                   placeholder=''
+                  value={instrumentRate}
+                  readOnly={true}
                   >
                 </LabelElement>
               </TableCellMedium>
-              <TableCellMedium>
+              {/*<TableCellMedium>
                 <LabelElement
                   htmlFor='pct_instrument_rate'
                   type='number'
                   placeholder=''
+                  value={instrumentPCTRate}
+                  readOnly={true}
                   >
                 </LabelElement>
-              </TableCellMedium>
+                </TableCellMedium>*/}
               <TableCellMedium>
                 <LabelElement
-                  htmlFor='pct'
+                  htmlFor='pct_instrument'
                   type='number'
-                  placeholder=''
+                  placeholder='Introducir %'
                   >
                 </LabelElement>
               </TableCellMedium>
@@ -542,9 +574,10 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
         <TableData>
           <TableDataHeader>
             <TableCellMedium>Tipo cobertura</TableCellMedium>
-            <TableCellMedium>Tipo objeto cubierto</TableCellMedium>
-            <TableCellMedium>Tipo derivado</TableCellMedium>
+            <TableCellMedium>Tipo estrategia</TableCellMedium>
             <TableCellMedium>Fecha inicio</TableCellMedium>
+            <TableCellMedium>Activo/Pasivo</TableCellMedium>
+            <TableCellMedium></TableCellMedium>
           </TableDataHeader>
           {
             createHedgeItems && 
@@ -577,7 +610,7 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
                         <option value='-1'>Seleccionar</option>
                       </SelectElement>
                   </TableCellMedium>
-                  <TableCellMedium>
+                  {/*<TableCellMedium>
                   <SelectElement
                         htmlFor='cat_hedge_instrument'
                         //value={idHedgeItem}
@@ -588,18 +621,26 @@ const NewHedge = ({ hedges, setHedges, allHedges, setAllHedges, page, totalrowsc
                         >
                         <option value='-1'>Seleccionar</option>
                       </SelectElement>
-                  </TableCellMedium>
+                      </TableCellMedium>*/}
                   <TableCellMedium>
 
                     <LabelElement
                       htmlFor='date_from'
                       type='date'
-                      placeholder=''
+                      placeholder='Introduce fecha'
                       >
                     </LabelElement>
 
 
                   </TableCellMedium>
+                  <TableCellMedium>
+                    <SelectElement
+                      htmlFor='cat_hedge_item_type'>
+                      <option value='0'>Activo</option>
+                      <option value='1'>Pasivo</option>
+                    </SelectElement>
+                  </TableCellMedium>
+                  <TableCellMedium></TableCellMedium>
                 </TableDataRowWrapper>            
               </TableDataRow>
             </>

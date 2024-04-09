@@ -8,8 +8,9 @@ import { IconButSm } from "../UI/buttons/IconButtons";
 export const HedgesContextualActions = ({ hedgeId, hedgeStatus }) => {
 
   const SERVER = import.meta.env.VITE_DB_SERVER;
-  console.log('server',SERVER);
- 
+  
+  const account = localStorage.getItem('account');
+  const parsedAccount = JSON.parse(account);
 
   const navigate = useNavigate();
   const [optionsBoxOpen, setOptionsBoxOpen] = useState(false);
@@ -51,6 +52,7 @@ export const HedgesContextualActions = ({ hedgeId, hedgeStatus }) => {
     if(getSheet.responsePostData) console.log(getSheet.responsePostData);
   },[getSheet.responsePostData])
 
+
   return (
     <>
       <IconButSm
@@ -59,24 +61,29 @@ export const HedgesContextualActions = ({ hedgeId, hedgeStatus }) => {
         <EllipsisHorizontalIcon/>
       </IconButSm>
       <div className={optionsBoxOpen ? 'bi-c-overlay--entryOptions' : 'bi-u-inactive'}>
-        {hedgeStatus == 1 ?
+        {(hedgeStatus == 1 && parsedAccount.permission == 1) ?
           <>
             <Link 
-            onClick={(e) => {
-              e.preventDefault();
-              requestDisarm(hedgeId)}}
-            className='bi-o-overlay__notification'>
-              <div className="notification--text">Desarmar</div>
-          </Link>
+              onClick={(e) => {
+                e.preventDefault();
+                requestDisarm(hedgeId)}}
+              className='bi-o-overlay__notification'>
+                <div className="notification--text">Desarmar</div>
+            </Link>
           </>
           : ''}
-        <Link
-          onClick={(e) => {
-            e.preventDefault();
-            validateStatus(hedgeId)}} 
-          className='bi-o-overlay__notification'>
-            <div className="notification--text">Ver status</div>
-        </Link>
+        {(parsedAccount.permission < 4) ? 
+          <>
+            <Link
+              onClick={(e) => {
+                e.preventDefault();
+                validateStatus(hedgeId)}} 
+              className='bi-o-overlay__notification'>
+                <div className="notification--text">Ver status</div>
+            </Link>
+          </>
+          :''        
+        }        
         <Link 
           to={`${SERVER}/api/hedges/getSheet?id=${hedgeId}`}
           download

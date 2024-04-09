@@ -5,10 +5,13 @@ import Logo from '../UI/Logo';
 import UserBox from './UserBox';
 
 const MainNavbar = ({ currentPath,signOut,setSignOut,setAccount,userBoxOpen,setUserBoxOpen }) => {
+  
   const path = useLocation().pathname;  
   //evaluar account
   const account = localStorage.getItem('account');
   const parsedAccount = JSON.parse(account);
+  
+
  //evaluar signout
   const signOUT = localStorage.getItem('sign-out');
   const parsedSignOut = JSON.parse(signOUT);
@@ -38,7 +41,8 @@ const MainNavbar = ({ currentPath,signOut,setSignOut,setAccount,userBoxOpen,setU
         <>
           <UserBox 
             handleClick={handleUserOverlay}
-            username={parsedAccount ? parsedAccount.name: 'Username'}/>
+            username={parsedAccount ? parsedAccount.name: 'Username'}
+            />
         </>
       )
     }
@@ -49,7 +53,8 @@ const MainNavbar = ({ currentPath,signOut,setSignOut,setAccount,userBoxOpen,setU
     const isHedgeActive = path.includes('/hedges');
     const isBalanceMangementActive = path.includes('/mgmt');
 
-    if (!isUserSignOut) {
+
+    if ((!isUserSignOut && parsedAccount.permission < 3) || (!isUserSignOut && parsedAccount.permission > 3)) {
       return (
         <>
           <Link
@@ -62,6 +67,11 @@ const MainNavbar = ({ currentPath,signOut,setSignOut,setAccount,userBoxOpen,setU
             className={isBalanceMangementActive ? 'bi-c-navbar-links__textbutt active' : 'bi-c-navbar-links__textbutt'}>
             Gestión de balance
           </Link>
+        </>
+      )
+    } else if (!isUserSignOut && parsedAccount.permission == 3) {
+      return (
+        <>
           <Link
             to='/users'
             className={isUsersActive ? 'bi-c-navbar-links__textbutt active' : 'bi-c-navbar-links__textbutt'}>
@@ -69,7 +79,7 @@ const MainNavbar = ({ currentPath,signOut,setSignOut,setAccount,userBoxOpen,setU
           </Link>
         </>
       )
-    } 
+    }
   }  
 
   return (
@@ -98,7 +108,7 @@ const MainNavbar = ({ currentPath,signOut,setSignOut,setAccount,userBoxOpen,setU
           </div>
         </div>
       </div>
-      {path.includes('/login') ? null : <SecNavbar currentPath={currentPath}/>}
+      {path.includes('/login') ? null : <SecNavbar currentPath={currentPath} account={account}/>}
     </header>
     </>
   );

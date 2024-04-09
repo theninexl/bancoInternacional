@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDropzone } from "react-dropzone";
 
-export const FileDrop = ({deferredFlowFile,setDeferredFlowFile,deferredFlowInfo,setDeferredFlowInfo,htmlFor,accept,placeholder, className, style, children}) => {
+export const FileDrop = ({deferredFlowFile,setDeferredFlowFile,deferredFlowInfo,setDeferredFlowInfo,htmlFor,accept,placeholder, className, style, children, required}) => {
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: (acceptedFile) => {
       setDeferredFlowFile(acceptedFile);
@@ -15,7 +15,8 @@ export const FileDrop = ({deferredFlowFile,setDeferredFlowFile,deferredFlowInfo,
         <span>{children}</span>
       <div
         {...getRootProps()} 
-        className='bi-c-uploadfield-icon'>
+        className='bi-c-uploadfield-icon'
+        onClick={(e)=>e.stopPropagation()}>
       <input
           {...getInputProps()}
           className={`bi-c-uploadfield-icon__input ${className}`} 
@@ -23,6 +24,7 @@ export const FileDrop = ({deferredFlowFile,setDeferredFlowFile,deferredFlowInfo,
           name={htmlFor}
           id={htmlFor}
           accept={accept}
+          required={required}
         />
         <span
             id={`${htmlFor}Placeholder`}

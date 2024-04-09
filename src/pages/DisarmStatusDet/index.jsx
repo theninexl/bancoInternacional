@@ -30,6 +30,12 @@ function DisarmStatusDet({ hedgeStatusData,setHedgeStatusData,hedgeStatus,setHed
     'Content-Type': 'application/json',
     'x-access-token': token,
   }
+
+  //resetear nombre del archivo cuando cambiamos de pagina
+  useState(()=>{
+    setUploadedFileName(null);
+    console.log('uploadedFileName',uploadedFileName)
+  },[])
   
   //get id de la cobertura a validar
   const hedgeID = searchParams.get('id');
@@ -81,6 +87,7 @@ function DisarmStatusDet({ hedgeStatusData,setHedgeStatusData,hedgeStatus,setHed
   //manejar aprobado peticion validacion
   const handleApproval = (e) => {
     e.preventDefault();
+    setUploadedFileName(null);
     setShowFlowsForApproval(true);
   }
 
@@ -88,21 +95,25 @@ function DisarmStatusDet({ hedgeStatusData,setHedgeStatusData,hedgeStatus,setHed
   //manejar finalizacion aprobacion petición validacion
   const handleApprovalCompletion = (event, id) => {
     event.preventDefault();
+    setUploadedFileName(null);
     const formData = new FormData(rejectForm.current);
     const dataSent = {
       'id_disassembly':id.toString(),
       'validate':'1',
       'deferred_flows':deferredFlowInfo,
-      'pct_item_rate': formData.get('pct_item_rate'),
-      'pct_instrument_rate': formData.get('pct_instrument_rate'),
+      //'pct_item_rate': formData.get('pct_item_rate'),
+      //'pct_instrument_rate': formData.get('pct_instrument_rate'),
     }
+    //console.log('deferred_flows',dataSent.deferred_flows);
+    //console.log('deferredFlowFile', deferredFlowFile);
 
-    if (dataSent.pct_item_rate == '' || dataSent.pct_instrument_rate == '') {
+    if (dataSent.deferred_flows === undefined || dataSent.deferred_flows === null || dataSent.deferred_flows === '') {
       setFormError('Rellene los campos obligatorios');
     } else {
       Api.call.post('hedges/validationDisarmExecute',dataSent,{ headers:headers })
       .then(res => {
         if (res.data.status != "ok") {
+
           setErrorMsg(res.statusText);
         } else {
           navigate('/hedges');
@@ -281,9 +292,10 @@ function DisarmStatusDet({ hedgeStatusData,setHedgeStatusData,hedgeStatus,setHed
                                 accept='.csv'
                                 deferredFlowFile={deferredFlowFile}
                                 setDeferredFlowFile={setDeferredFlowFile}
-                              >Flujos diferidos</FileDrop>
+                                required={true}
+                              >Flujos diferidos*</FileDrop>
                             </SimpleFormRow>
-                            <SimpleFormRow>
+                            {/*<SimpleFormRow>
                               <LabelElement
                                 htmlFor='pct_item_rate'
                                 type='number'
@@ -302,7 +314,7 @@ function DisarmStatusDet({ hedgeStatusData,setHedgeStatusData,hedgeStatus,setHed
                                 >
                                   % de tasa derivado*
                               </LabelElement>
-                            </SimpleFormRow>
+                        </SimpleFormRow>*/}
                             <SimpleFormRow className='bi-u-centerText bi-u-spacer-pt-zero'>
                               <ButtonMPrimary
                                 handleClick={() => handleApprovalCompletion(event, hedge.id_disassembly)}>

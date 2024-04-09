@@ -1,5 +1,5 @@
 import { useEffect,useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import Api from '../../services/api';
 import { TableHeader } from '../../components/UI/tables/TableHeaders';
@@ -17,7 +17,7 @@ import { HedgesContextualActions } from '../../components/Hedges/HedgesContextua
 
 function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPage,totalrowscount,setTotalrowscount }){
   const navigate = useNavigate();
-  const rowspage = 10;
+  const rowspage = 30;
   const [searchValue, setSearchValue] = useState('');
   const [order, setOrder] = useState(1);
   const [allHedges, setAllHedges] = useState([]);
@@ -119,8 +119,16 @@ function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPag
     }
   }
 
+  //renderizar allowed
+  const renderAllowed = () => {
+    if (parsedAccount.permission == 3) {
+      return <Navigate to="/users" replace={true}/>
+    }
+  }
+
   return (
     <main className="bi-u-h-screen--wSubNav">
+      {renderAllowed()}
        <TableHeader>
           <MainHeading>
             Relación de coberturas
@@ -141,7 +149,7 @@ function HedgeAccounting({ totalPages,setTotalPages,hedges,setHedges,page,setPag
                 setHedgeStatus(event.target.value)
               }}
               >
-              <option value='1'>En curso</option>
+              <option value='1'>Activas</option>
               <option value='3'>Desarmadas</option>
               <option value='2'>Rechazadas</option>
             </SelectElement>

@@ -40,7 +40,6 @@ function NewUser(){
       "surname":data.surname,
       "email":data.email,
       "password":data.password,
-      "cat_display":data.department,
       "cat_role":data.department
     }
 
@@ -92,9 +91,10 @@ function NewUser(){
               <SelectElement
                 htmlFor='newUserDepartment'
                 title='Departamento'>
-                <option value='1'>Departamento 1</option>
-                <option value='2'>Departamento 2</option>
-                <option value='3'>Departamento 3</option>
+                <option value='1'>Control de Gestión</option>
+                <option value='2'>Gestión Financiera</option>
+                <option value='3'>Riesgo Financiero</option>
+                <option value='4'>BackOffice_Mesa</option>
               </SelectElement>
             </SimpleFormRow>
             <SimpleFormRow>

@@ -1,10 +1,10 @@
 import { NavLink, useLocation } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
 
-const SecNavbar = ({ currentPath }) => {
+const SecNavbar = ({ currentPath,account }) => {
   const path = useLocation().pathname;
-  //console.log('path en location', path)
-  //console.log('path en secNavbar',currentPath);
+  const parsedAccount = JSON.parse(account);
+  //console.log('parsedAccount', parsedAccount);
 
   const secNavInfo = [
     { currentPath: `/`,
@@ -18,55 +18,55 @@ const SecNavbar = ({ currentPath }) => {
     { currentPath: `/hedges`,
       pageTitle: 'Coberturas',
       secNavLinks: {
-        1: { url:'/hedges', title:'Listar coberturas'},
-        2: { url:'/hedges-new', title:'Crear cobertura'},
-        3: { url:'/hedges-pending-validations', title:'Validaciones pendientes'},
-        4: { url:'/hedges-efficacy-test', title:'Test de eficacia'},
+        1: { url:'/hedges', title:'Listar coberturas', forbidden:''},
+        2: { url:'/hedges-new', title:'Crear cobertura', forbidden:2},
+        3: { url:'/hedges-pending-validations', title:'Validaciones pendientes', forbidden:''},
+        4: { url:'/hedges-efficacy-test', title:'Test de eficacia', forbidden:1},
       }
     },
     { currentPath: `/hedges-new`,
       pageTitle: 'Coberturas',
       secNavLinks: {
-        1: { url:'/hedges', title:'Listar coberturas'},
-        2: { url:'/hedges-new', title:'Crear cobertura'},
-        3: { url:'/hedges-pending-validations', title:'Validaciones pendientes'},
-        4: { url:'/hedges-efficacy-test', title:'Test de eficacia'},
+        1: { url:'/hedges', title:'Listar coberturas', forbidden:''},
+        2: { url:'/hedges-new', title:'Crear cobertura', forbidden:2},
+        3: { url:'/hedges-pending-validations', title:'Validaciones pendientes', forbidden:''},
+        4: { url:'/hedges-efficacy-test', title:'Test de eficacia', forbidden:1},
       }
     },
     { currentPath: `/hedges-pending-validations`,
       pageTitle: 'Coberturas',
       secNavLinks: {
-        1: { url:'/hedges', title:'Listar coberturas'},
-        2: { url:'/hedges-new', title:'Crear cobertura'},
-        3: { url:'/hedges-pending-validations', title:'Validaciones pendientes'},
-        4: { url:'/hedges-efficacy-test', title:'Test de eficacia'},
+        1: { url:'/hedges', title:'Listar coberturas', forbidden:''},
+        2: { url:'/hedges-new', title:'Crear cobertura', forbidden:2},
+        3: { url:'/hedges-pending-validations', title:'Validaciones pendientes', forbidden:''},
+        4: { url:'/hedges-efficacy-test', title:'Test de eficacia', forbidden:1},
       }
     },
     { currentPath: `/hedges-status-det`,
       pageTitle: 'Coberturas',
       secNavLinks: {
-        1: { url:'/hedges', title:'Listar coberturas'},
-        2: { url:'/hedges-new', title:'Crear cobertura'},
-        3: { url:'/hedges-pending-validations', title:'Validaciones pendientes'},
-        4: { url:'/hedges-efficacy-test', title:'Test de eficacia'},
+        1: { url:'/hedges', title:'Listar coberturas', forbidden:''},
+        2: { url:'/hedges-new', title:'Crear cobertura', forbidden:2},
+        3: { url:'/hedges-pending-validations', title:'Validaciones pendientes', forbidden:''},
+        4: { url:'/hedges-efficacy-test', title:'Test de eficacia', forbidden:1},
       }
     },
     { currentPath: `/hedges-disarm`,
       pageTitle: 'Coberturas',
       secNavLinks: {
-        1: { url:'/hedges', title:'Listar coberturas'},
-        2: { url:'/hedges-new', title:'Crear cobertura'},
-        3: { url:'/hedges-pending-validations', title:'Validaciones pendientes'},
-        4: { url:'/hedges-efficacy-test', title:'Test de eficacia'},
+        1: { url:'/hedges', title:'Listar coberturas', forbidden:''},
+        2: { url:'/hedges-new', title:'Crear cobertura', forbidden:2},
+        3: { url:'/hedges-pending-validations', title:'Validaciones pendientes', forbidden:''},
+        4: { url:'/hedges-efficacy-test', title:'Test de eficacia', forbidden:1},
       }
     },
     { currentPath: `/hedges-efficacy-test`,
       pageTitle: 'Coberturas',
       secNavLinks: {
-        1: { url:'/hedges', title:'Listar coberturas'},
-        2: { url:'/hedges-new', title:'Crear cobertura'},
-        3: { url:'/hedges-pending-validations', title:'Validaciones pendientes'},
-        4: { url:'/hedges-efficacy-test', title:'Test de eficacia'},
+        1: { url:'/hedges', title:'Listar coberturas', forbidden:''},
+        2: { url:'/hedges-new', title:'Crear cobertura', forbidden:2},
+        3: { url:'/hedges-pending-validations', title:'Validaciones pendientes', forbidden:''},
+        4: { url:'/hedges-efficacy-test', title:'Test de eficacia', forbidden:1},
       }
     },
     { currentPath: `/mgmt-balance-view`,
@@ -101,8 +101,8 @@ const SecNavbar = ({ currentPath }) => {
   
 
   const currentInfo = secNavInfo.find(item => item.currentPath === path);
-  //console.log('currentInfo',currentInfo)
-  const secondaryLinks = Object.values(currentInfo.secNavLinks);  
+  const secondaryLinks = Object.values(currentInfo.secNavLinks);
+  const allowedLinks = secondaryLinks.filter(item => item.forbidden != parsedAccount.permission)
 
   return(
     <>
@@ -114,7 +114,7 @@ const SecNavbar = ({ currentPath }) => {
             </div>
             <div className="bi-c-navbar__center"> 
               {
-                secondaryLinks.map(item => {
+                allowedLinks.map(item => {
                   return (
                     <NavLink
                       key={uuidv4()}

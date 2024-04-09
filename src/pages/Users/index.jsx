@@ -140,7 +140,7 @@ const Users = ({ totalPages,setTotalPages,users,setUsers,page,setPage }) => {
                     <TableCellMedium
                       className='bi-u-text-base-black'>{user.name}</TableCellMedium>
                     <TableCellMedium>{user.surname}</TableCellMedium>
-                    <TableCellMedium>{`Departamento ${user.cat_display}`}</TableCellMedium>
+                    <TableCellMedium>{user.cat_role}</TableCellMedium>
                     <TableCellMedium>{user.email}</TableCellMedium>
                     <TableCellShort>
                       <IconButSmPrimary

@@ -1,14 +1,14 @@
-import { useEffect,useState } from 'react';
-import { Link, createSearchParams, useNavigate } from 'react-router-dom';
+import { useRef,useEffect,useState } from 'react';
+import { Link, createSearchParams, Navigate, useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
-// import { GlobalContext } from '../../context';
+import { useSaveData } from "../../hooks/useSaveData";
 import Api from '../../services/api';
 import { TableHeader } from '../../components/UI/tables/TableHeaders';
 import { TableData, TableDataHeader, TableDataRow, TableCellMedium, TableCellShort, TableDataRowWrapper } from '../../components/UI/tables/TableDataElements';
 import TablePagination from '../../components/TablePagination';
 import { ButtonLGhost, ButtonLPrimary, ButtonLSecondary, ButtonLTransparent, SortButton } from '../../components/UI/buttons/Buttons';
 import { MainHeading } from '../../components/UI/headings';
-import { LabelElement } from '../../components/UI/forms/SimpleForms';
+import { LabelElement, SimpleFormHrz, SimpleFormRow } from '../../components/UI/forms/SimpleForms';
 import ModalBig from "../../components/ModalBig";
 import ModalSmall from '../../components/ModalSmall';
 import { ColsContainer, SectionThird, SimpleCol } from '../../components/UI/layout/LayoutSections';
@@ -17,8 +17,11 @@ import { DocumentArrowDownIcon } from '@heroicons/react/24/solid';
 
 
 function PendingValidations({ totalPages,setTotalPages,hedges,setHedges,page,setPage }){
+  
   const navigate = useNavigate();
   const rowspage = 10;
+  const validateForm = useRef(null); 
+  const [formError, setFormError] = useState(null);
 
   const SERVER = import.meta.env.VITE_DB_SERVER;
 
@@ -121,12 +124,38 @@ function PendingValidations({ totalPages,setTotalPages,hedges,setHedges,page,set
   }
 
   //ejecutar validación cobertura
+  const validateCreate = useSaveData()
+  
   const validateExecute = (id,validation) => {
+    const formData = new FormData(validateForm.current);
+
     const data = {
       'id_hedge_relationship':id.toString(),
       'validate':validation,
+      'pct_item_rate': formData.get('pct_item_rate'),
+      'pct_instrument_rate': formData.get('pct_instrument_rate'),
     }
-    Api.call.post('hedges/validationCreateExecute',data,{ headers:headers })
+    const dataSent = {}
+    ;
+    if (data) {
+      for (const [key, value] of Object.entries(data)) {        
+        if (value == '-1' || value == '') {
+          // console.log(`${key}: ${value}`);
+          // console.log('no pasa');
+          setFormError('Es necesario rellenar todos los campos editables');
+          break;
+        } else {
+          dataSent[key] = value;
+        } 
+      }
+
+      if (Object.keys(data).length === Object.keys(dataSent).length) {
+        console.log(dataSent);
+        validateCreate.uploadData('hedges/validationCreateExecute', dataSent)
+      }
+    }
+
+    /*Api.call.post('hedges/validationCreateExecute',data,{ headers:headers })
     .then(res => {
       if (res.data.status == 'ok') {
         setModalOpen(false);
@@ -135,8 +164,21 @@ function PendingValidations({ totalPages,setTotalPages,hedges,setHedges,page,set
         setModalOpen(false);
         setModalValidateFail(true);
       }
-    }).catch(err => console.warn(err))
+    }).catch(err => console.warn(err))*/
   }
+
+  //mirar la respuesta de subir datos para setear error
+  useEffect(()=> {
+    if (validateCreate.responseUpload) {
+      if (validateCreate.responseUpload.code === 'ERR_NETWORK') { setFormError('Error de conexión, inténtelo más tarde')
+      } else if (validateCreate.responseUpload.status === 'ok') { 
+        setModalOpen(false);
+        execGetHedges(searchValue,order);
+      } else {
+        setFormError('Existe un error en el formulario, inténtelo de nuevo')
+      }
+    }
+  },[validateCreate.responseUpload])
 
   //contenido modal validacion creacion de cobertura
   const renderView = () => {
@@ -151,6 +193,7 @@ function PendingValidations({ totalPages,setTotalPages,hedges,setHedges,page,set
           title={`Validación creación de cobertura`} 
           body={
             <>
+              <SimpleFormHrz innerRef={validateForm}>
               <TableData className='bi-u-spacer-mt-large'>
                 <TableDataHeader>
                   <TableCellMedium>Fecha creación</TableCellMedium>
@@ -181,18 +224,54 @@ function PendingValidations({ totalPages,setTotalPages,hedges,setHedges,page,set
                   </TableDataRowWrapper>
                 </TableDataRow>
                 <TableDataHeader>
+                  <TableCellMedium>ID Tipo cobertura</TableCellMedium>
                   <TableCellMedium>Tipo cobertura</TableCellMedium>
-                  <TableCellMedium>Tipo objeto cubierto</TableCellMedium>
-                  <TableCellMedium>Tipo derivado</TableCellMedium>
+                  <TableCellMedium>Tipo estrategia</TableCellMedium>
                 </TableDataHeader>
                 <TableDataRow>
                   <TableDataRowWrapper> 
+                    <TableCellMedium>{`${hedgeRelationshipData.id_hedge_file}`}</TableCellMedium>
                     <TableCellMedium>{`${hedgeRelationshipData.cat_hedge_file}`}</TableCellMedium>
-                    <TableCellMedium>{`${hedgeRelationshipData.cat_hedge_item}`}</TableCellMedium>
-                    <TableCellMedium>{`${hedgeRelationshipData.cat_hedge_instrument}`}</TableCellMedium>
+                    <TableCellMedium>{`${hedgeRelationshipData.DES_HEDGE_STRATEGY}`}</TableCellMedium>
                   </TableDataRowWrapper>
-                </TableDataRow>                 
-              </TableData>
+                </TableDataRow>
+                <TableDataHeader>
+                  <TableCellMedium>% de tasa de obj. cubierto*</TableCellMedium>
+                  <TableCellMedium>% de tasa derivado*</TableCellMedium>
+                  <TableCellMedium></TableCellMedium>
+                </TableDataHeader>                
+                <TableDataRow>
+                  <TableDataRowWrapper>
+                    <TableCellMedium>
+                      <LabelElement
+                        htmlFor='pct_item_rate'
+                        type='number'
+                        placeholder='Introducir %'
+                        required={true}
+                        ></LabelElement>
+                    </TableCellMedium>
+                    <TableCellMedium>
+                      <LabelElement
+                        htmlFor='pct_instrument_rate'
+                        type='number'
+                        placeholder='Introducir %'
+                        required={true}
+                        ></LabelElement>
+                    </TableCellMedium>
+                    <TableCellMedium></TableCellMedium>
+                  </TableDataRowWrapper>
+                </TableDataRow>             
+                </TableData>
+                <ColsContainer>
+                  <SimpleCol>
+                  {formError && 
+                    <SimpleFormRow className='bi-u-centerText'>
+                      <span className='error'>{formError}</span>
+                    </SimpleFormRow>
+                  }     
+                  </SimpleCol>
+                </ColsContainer>
+              </SimpleFormHrz>
             </>
           }
           buttons={
@@ -222,10 +301,6 @@ function PendingValidations({ totalPages,setTotalPages,hedges,setHedges,page,set
                 </ButtonLGhost>
               </SectionThird>
             </ColsContainer>
-            
-              
-              
-              
             </>
           }
         />
@@ -257,8 +332,16 @@ function PendingValidations({ totalPages,setTotalPages,hedges,setHedges,page,set
     }
   }
 
+  //renderizar allowed
+  const renderAllowed = () => {
+    if (parsedAccount.permission == 3) {
+      return <Navigate to="/users" replace={true}/>
+    }
+  }
+
   return (    
     <main className="bi-u-h-screen--wSubNav">
+      {renderAllowed()}
       {renderFailModal()}
       {renderView()}
        <TableHeader>
@@ -294,7 +377,7 @@ function PendingValidations({ totalPages,setTotalPages,hedges,setHedges,page,set
               <SortButton orderCol={5} handleClick={() => sortItems()}>Tipo cobertura</SortButton>
             </TableCellMedium>
             <TableCellMedium className='bi-u-centerText'>
-              <SortButton orderCol={6} handleClick={() => sortItems()}>Tipo objeto cubierto</SortButton>
+              <SortButton orderCol={6} handleClick={() => sortItems()}>Tipo estrategia</SortButton>
             </TableCellMedium>
             <TableCellMedium className='bi-u-textRight'>
               <SortButton orderCol={7} handleClick={() => sortItems()}>Nocional derivado</SortButton>
@@ -329,7 +412,7 @@ function PendingValidations({ totalPages,setTotalPages,hedges,setHedges,page,set
                     <TableCellMedium className='bi-u-centerText'>{hedge.id_hedge_item}</TableCellMedium>
                     <TableCellMedium className='bi-u-centerText'>{hedge.id_hedge_instrument}</TableCellMedium>
                     <TableCellMedium className='bi-u-centerText'>{hedge.cat_hedge_file}</TableCellMedium>
-                    <TableCellMedium className='bi-u-centerText'>{hedge.cat_hedge_item}</TableCellMedium>
+                    <TableCellMedium className='bi-u-centerText'>{hedge.DES_HEDGE_STRATEGY}</TableCellMedium>
                     <TableCellMedium className='bi-u-textRight'>{hedge.num_instrument_notional}</TableCellMedium>
                     <TableCellMedium className='bi-u-centerText'>{hedge.dt_start_date}</TableCellMedium>
                     <TableCellMedium className='bi-u-centerText'>{hedge.dt_maturity_date}</TableCellMedium>
@@ -343,22 +426,26 @@ function PendingValidations({ totalPages,setTotalPages,hedges,setHedges,page,set
                       </Link>
                     </TableCellShort>
                     <TableCellShort>
-                      <ButtonLPrimary
-                        handleClick={() => {
-                          if (hedge.validation_type == 'CREATE') {
-                            validateStatus(hedge.id_hedge_relationship);
-                          } else {
-                            navigate({      
-                              pathname:'/hedges-status-det',
-                                search: createSearchParams({
-                                  id:hedge.id_hedge_relationship
-                              }).toString()
-                            });
-                          }
-                        }}
-                        >
-                      Validar
-                    </ButtonLPrimary>
+                      {parsedAccount.permission == 2 ?
+                       <>
+                        <ButtonLPrimary
+                          handleClick={() => {
+                              if (hedge.validation_type == 'CREATE') {
+                                validateStatus(hedge.id_hedge_relationship);
+                              } else {
+                                navigate({      
+                                  pathname:'/hedges-status-det',
+                                    search: createSearchParams({
+                                      id:hedge.id_hedge_relationship
+                                  }).toString()
+                                });
+                              }
+                            }}
+                            >
+                          Validar
+                        </ButtonLPrimary>
+                       </>
+                       :''}
                     </TableCellShort>
                     </TableDataRowWrapper>
                 </TableDataRow>

@@ -23,9 +23,11 @@ function Login({ setAccount,setSignOut }){
     })
     .then(res => {
       console.log(res);
+      console.log('permission',res.data.permission)
       const stringifiedAccount = JSON.stringify(res.data);
       localStorage.setItem('account', stringifiedAccount);
       setAccount(res.data);
+
       handleSignIn()
     }).catch(err => {
       console.log(err);
